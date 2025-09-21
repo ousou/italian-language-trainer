@@ -56,7 +56,8 @@ Repository: **italian-language-trainer**
 
 ## 🧱 Tech Stack (Browser-Only)
 
-- **Build/Framework**: Vite + React (or SvelteKit—TBD).
+- **Build/Framework**: Vite + TypeScript (vanilla, no React).
+- **State & UI**: Pure JavaScript/TypeScript DOM rendering with small helper functions.
 - **Storage**: IndexedDB (via [`idb`](https://github.com/jakearchibald/idb) helper) + localStorage.
 - **PWA**: Service Worker + Web App Manifest; offline caching strategy (stale-while-revalidate).
 - **Audio**: Web Speech Synthesis API + Web Audio API.
@@ -77,14 +78,14 @@ italian-language-trainer/
 │  └─ phrasepacks/         # Built-in content (JSON)
 ├─ src/
 │  ├─ app/                 # App shell, routes
-│  ├─ components/
+│  ├─ components/          # Small reusable UI functions
 │  ├─ data/                # Data access (idb wrapper, repositories)
 │  ├─ logic/               # SRS algorithms, schedulers, scoring
 │  ├─ pages/               # Views (Drill, Phrasebook, Settings, Export)
 │  ├─ speech/              # TTS / STT adapters
 │  ├─ styles/
 │  ├─ sw.ts                # Service worker (workbox or manual)
-│  └─ main.tsx
+│  └─ main.ts              # Entry point (vanilla JS/TS)
 ├─ scripts/                # Content tooling (validate packs)
 ├─ tests/                  # Unit + e2e
 ├─ README.md
@@ -229,7 +230,11 @@ No secrets needed. Optional env vars: `VITE_APP_NAME`, `VITE_DEFAULT_PAIR=it-fi`
 
 ## 🗺️ Roadmap
 
--
+- [ ] Import/export progress
+- [ ] Web Share Target for decks
+- [ ] In-browser editor for custom decks
+- [ ] Pronunciation check via STT
+- [ ] Smarter multiple-choice distractors
 
 ---
 
