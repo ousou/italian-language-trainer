@@ -10,22 +10,22 @@ export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
   {
     id: 'core-it-fi-a1',
     title: 'Core A1 — Italian⇄Finnish',
-    path: '/phrasepacks/core-it-fi-a1.json'
+    path: 'phrasepacks/core-it-fi-a1.json'
   },
   {
     id: 'core-it-sv-a1',
     title: 'Core A1 — Italienska⇄Svenska',
-    path: '/phrasepacks/core-it-sv-a1.json'
+    path: 'phrasepacks/core-it-sv-a1.json'
   },
   {
     id: 'restaurant-it-fi',
     title: 'Restaurant — Italian⇄Finnish',
-    path: '/phrasepacks/restaurant-it-fi.json'
+    path: 'phrasepacks/restaurant-it-fi.json'
   },
   {
     id: 'restaurant-it-sv',
     title: 'Restaurant — Italienska⇄Svenska',
-    path: '/phrasepacks/restaurant-it-sv.json'
+    path: 'phrasepacks/restaurant-it-sv.json'
   }
 ];
 
