@@ -1,0 +1,29 @@
+{
+  "type": "phrases",
+  "id": "restaurant-it-sv",
+  "title": "På Restaurangen",
+  "src": "it",
+  "dst": "sv",
+  "sections": [
+    {
+      "title": "Beställa",
+      "items": [
+        {
+          "id": "menu",
+          "it": "Posso avere il menù, per favore?",
+          "sv": "Kan jag få menyn, tack?"
+        },
+        {
+          "id": "ordine",
+          "it": "Vorrei la pasta, per favore.",
+          "sv": "Jag skulle vilja ha pasta, tack."
+        },
+        {
+          "id": "conto",
+          "it": "Il conto, per favore.",
+          "sv": "Notan, tack."
+        }
+      ]
+    }
+  ]
+}

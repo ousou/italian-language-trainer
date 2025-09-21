@@ -1,0 +1,37 @@
+{
+  "type": "vocab",
+  "id": "core-it-fi-a1",
+  "title": "Core A1 — Italian⇄Finnish",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    { "id": "ciao", "src": "ciao", "dst": "moi / hei" },
+    { "id": "buongiorno", "src": "buongiorno", "dst": "hyvää huomenta / päivää" },
+    { "id": "buonasera", "src": "buonasera", "dst": "hyvää iltaa" },
+    { "id": "buonanotte", "src": "buonanotte", "dst": "hyvää yötä" },
+    { "id": "arrivederci", "src": "arrivederci", "dst": "näkemiin" },
+    { "id": "per-favore", "src": "per favore", "dst": "ole hyvä" },
+    { "id": "grazie", "src": "grazie", "dst": "kiitos" },
+    { "id": "prego", "src": "prego", "dst": "ole hyvä / eipä kestä" },
+    { "id": "si", "src": "sì", "dst": "kyllä" },
+    { "id": "no", "src": "no", "dst": "ei" },
+    { "id": "scusi", "src": "scusi / scusa", "dst": "anteeksi" },
+    { "id": "come-stai", "src": "Come stai?", "dst": "Mitä kuuluu?" },
+    { "id": "sto-bene", "src": "Sto bene.", "dst": "Hyvin menee." },
+    { "id": "mi-chiamo", "src": "Mi chiamo…", "dst": "Nimeni on…" },
+    { "id": "piacere", "src": "Piacere!", "dst": "Hauska tutustua!" },
+
+    { "id": "dove", "src": "dove", "dst": "missä" },
+    { "id": "quando", "src": "quando", "dst": "milloin" },
+    { "id": "quanto-costa", "src": "Quanto costa?", "dst": "Paljonko se maksaa?" },
+    { "id": "che-cosa", "src": "che cosa / cosa", "dst": "mitä" },
+    { "id": "chi", "src": "chi", "dst": "kuka" },
+
+    { "id": "uno", "src": "uno", "dst": "yksi" },
+    { "id": "due", "src": "due", "dst": "kaksi" },
+    { "id": "tre", "src": "tre", "dst": "kolme" },
+    { "id": "quattro", "src": "quattro", "dst": "neljä" },
+    { "id": "cinque", "src": "cinque", "dst": "viisi" },
+    { "id": "dieci", "src": "dieci", "dst": "kymmenen" }
+  ]
+}

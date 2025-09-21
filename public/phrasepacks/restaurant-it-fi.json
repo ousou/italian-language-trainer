@@ -1,0 +1,29 @@
+{
+  "type": "phrases",
+  "id": "restaurant-it-fi",
+  "title": "Ravintolassa",
+  "src": "it",
+  "dst": "fi",
+  "sections": [
+    {
+      "title": "Tilatessa",
+      "items": [
+        {
+          "id": "menu",
+          "it": "Posso avere il menù, per favore?",
+          "fi": "Saisinko ruokalistan, kiitos?"
+        },
+        {
+          "id": "ordine",
+          "it": "Vorrei la pasta, per favore.",
+          "fi": "Haluaisin pastaa, kiitos."
+        },
+        {
+          "id": "conto",
+          "it": "Il conto, per favore.",
+          "fi": "Lasku, kiitos."
+        }
+      ]
+    }
+  ]
+}

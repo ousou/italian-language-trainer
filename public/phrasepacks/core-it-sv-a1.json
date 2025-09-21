@@ -1,0 +1,38 @@
+{
+  "type": "vocab",
+  "id": "core-it-sv-a1",
+  "title": "Core A1 — Italienska⇄Svenska",
+  "src": "it",
+  "dst": "sv",
+  "items": [
+    { "id": "ciao", "src": "ciao", "dst": "hej / tja" },
+    { "id": "buongiorno", "src": "buongiorno", "dst": "god morgon / god dag" },
+    { "id": "buonasera", "src": "buonasera", "dst": "god kväll" },
+    { "id": "buonanotte", "src": "buonanotte", "dst": "god natt" },
+    { "id": "arrivederci", "src": "arrivederci", "dst": "hej då" },
+    { "id": "per-favore", "src": "per favore", "dst": "snälla / varsågod" },
+    { "id": "grazie", "src": "grazie", "dst": "tack" },
+    { "id": "prego", "src": "prego", "dst": "varsågod / ingen orsak" },
+    { "id": "si", "src": "sì", "dst": "ja" },
+    { "id": "no", "src": "no", "dst": "nej" },
+    { "id": "scusi", "src": "scusi / scusa", "dst": "ursäkta" },
+    { "id": "come-stai", "src": "Come stai?", "dst": "Hur mår du?" },
+    { "id": "sto-bene", "src": "Sto bene.", "dst": "Jag mår bra." },
+    { "id": "mi-chiamo", "src": "Mi chiamo…", "dst": "Jag heter…" },
+    { "id": "piacere", "src": "Piacere!", "dst": "Trevligt att träffas!" },
+
+    { "id": "dove", "src": "dove", "dst": "var" },
+    { "id": "quando", "src": "quando", "dst": "när" },
+    { "id": "quanto-costa", "src": "Quanto costa?", "dst": "vad kostar det?" },
+    { "id": "che-cosa", "src": "che cosa / cosa", "dst": "vad" },
+    { "id": "chi", "src": "chi", "dst": "vem" },
+
+    { "id": "uno", "src": "uno", "dst": "ett" },
+    { "id": "due", "src": "due", "dst": "två" },
+    { "id": "tre", "src": "tre", "dst": "tre" },
+    { "id": "quattro", "src": "quattro", "dst": "fyra" },
+    { "id": "cinque", "src": "cinque", "dst": "fem" },
+    { "id": "dieci", "src": "dieci", "dst": "tio" }
+  ]
+}
+
