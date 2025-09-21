@@ -279,3 +279,6 @@ export interface ReviewCard {
 **Sync across devices?** Use export/import.\
 **Which language pair?** Determined by chosen UI (Finnish → IT⇄FI, Swedish → IT⇄SV).\
 **Will TTS work everywhere?** Depends on OS voices; falls back gracefully.
+
+
+## Testing
