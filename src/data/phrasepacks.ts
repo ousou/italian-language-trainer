@@ -1,4 +1,4 @@
-import type { VocabPack } from '../types.ts';
+import type { LanguageCode, VocabItem, VocabPack } from '../types.ts';
 
 export interface PhrasePackMeta {
   id: string;
@@ -29,6 +29,71 @@ export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
   }
 ];
 
+type RawPhrasePack = PhrasePackJson | VocabPack;
+
+interface PhrasePackJson {
+  type: 'phrases';
+  id: string;
+  title: string;
+  src: LanguageCode;
+  dst: LanguageCode;
+  sections?: PhrasePackSection[];
+}
+
+interface PhrasePackSection {
+  title?: string;
+  items?: PhrasePackEntry[];
+}
+
+type PhrasePackEntry = {
+  id?: string;
+} & Partial<Record<LanguageCode, string>>;
+
+function normalizePack(raw: RawPhrasePack): VocabPack {
+  if (raw.type === 'vocab') {
+    return raw;
+  }
+
+  const srcKey = raw.src;
+  const dstKey = raw.dst;
+
+  const items: VocabItem[] = [];
+
+  const sections = Array.isArray(raw.sections) ? raw.sections : [];
+
+  sections.forEach((section, sectionIndex) => {
+    const entries = Array.isArray(section.items) ? section.items : [];
+
+    entries.forEach((entry, itemIndex) => {
+      const srcText = entry[srcKey];
+      const dstText = entry[dstKey];
+
+      if (typeof srcText !== 'string' || typeof dstText !== 'string') {
+        const sectionLabel = section.title ?? `Section ${sectionIndex + 1}`;
+        const entryLabel = entry.id ?? `item-${itemIndex + 1}`;
+        throw new Error(`Missing phrase data (${sectionLabel} → ${entryLabel}) for ${raw.title}`);
+      }
+
+      const id = entry.id ?? `${raw.id}-${sectionIndex}-${itemIndex}`;
+
+      items.push({
+        id,
+        src: srcText,
+        dst: dstText
+      });
+    });
+  });
+
+  return {
+    type: 'vocab',
+    id: raw.id,
+    title: raw.title,
+    src: raw.src,
+    dst: raw.dst,
+    items
+  };
+}
+
 export async function fetchPhrasePack(id: string): Promise<VocabPack> {
   const meta = AVAILABLE_PHRASEPACKS.find((pack) => pack.id === id);
 
@@ -42,13 +107,14 @@ export async function fetchPhrasePack(id: string): Promise<VocabPack> {
     throw new Error(`Failed to load phrase pack: ${meta.title}`);
   }
 
-  const data = (await response.json()) as VocabPack;
+  const data = (await response.json()) as RawPhrasePack;
 
-  if (!data || data.type !== 'vocab') {
-    throw new Error(`Unexpected phrase pack format for ${meta.title}`);
+  try {
+    return normalizePack(data);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : `Unexpected phrase pack format for ${meta.title}`;
+    throw new Error(message);
   }
-
-  return data;
 }
 
 export function getPhrasePackMeta(id: string): PhrasePackMeta | undefined {

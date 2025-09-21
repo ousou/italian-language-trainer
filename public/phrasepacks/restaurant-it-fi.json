@@ -6,6 +6,26 @@
   "dst": "fi",
   "sections": [
     {
+      "title": "Saapuminen",
+      "items": [
+        {
+          "id": "arrivo-prenotazione",
+          "it": "Buonasera, abbiamo una prenotazione a nome Rossi.",
+          "fi": "Hyvää iltaa, meillä on varaus nimellä Rossi."
+        },
+        {
+          "id": "arrivo-quanti",
+          "it": "Siamo in due.",
+          "fi": "Meitä on kaksi."
+        },
+        {
+          "id": "arrivo-finestra",
+          "it": "Possiamo sederci al tavolo vicino alla finestra?",
+          "fi": "Voimmeko istua ikkunan viereiseen pöytään?"
+        }
+      ]
+    },
+    {
       "title": "Tilatessa",
       "items": [
         {
@@ -14,14 +34,154 @@
           "fi": "Saisinko ruokalistan, kiitos?"
         },
         {
+          "id": "menu-inglese",
+          "it": "Potrei avere il menù in inglese?",
+          "fi": "Saisinko ruokalistan englanniksi?"
+        },
+        {
           "id": "ordine",
           "it": "Vorrei la pasta, per favore.",
           "fi": "Haluaisin pastaa, kiitos."
         },
         {
+          "id": "ordinare-antipasto",
+          "it": "Vorrei ordinare un antipasto per iniziare.",
+          "fi": "Haluaisin aloittaa alkupalalla."
+        },
+        {
+          "id": "lista-vini",
+          "it": "Potrei vedere la carta dei vini?",
+          "fi": "Saisinko viinilistan?"
+        },
+        {
+          "id": "piatto-giorno",
+          "it": "Qual è il piatto del giorno?",
+          "fi": "Mikä on päivän annos?"
+        },
+        {
+          "id": "bistecca-sangue",
+          "it": "Per me la bistecca al sangue, per favore.",
+          "fi": "Minulle pihvi verisenä, kiitos."
+        },
+        {
+          "id": "birra-spina",
+          "it": "Per me una birra alla spina, grazie.",
+          "fi": "Minulle hanaolut, kiitos."
+        },
+        {
+          "id": "condividere-piatto",
+          "it": "Vorremmo condividere questo piatto.",
+          "fi": "Haluaisimme jakaa tämän annoksen."
+        }
+      ]
+    },
+    {
+      "title": "Erityistoiveet",
+      "items": [
+        {
+          "id": "allergia-noci",
+          "it": "Ho un'allergia alle noci.",
+          "fi": "Olen allerginen pähkinöille."
+        },
+        {
+          "id": "intollerante-lattosio",
+          "it": "Sono intollerante al lattosio.",
+          "fi": "Olen laktoosi-intolerantti."
+        },
+        {
+          "id": "senza-glutine",
+          "it": "C'è qualcosa senza glutine?",
+          "fi": "Onko teillä jotain gluteenitonta?"
+        },
+        {
+          "id": "piatto-vegetariano",
+          "it": "Questo piatto è vegetariano?",
+          "fi": "Onko tämä annos kasvisruokaa?"
+        },
+        {
+          "id": "senza-formaggio",
+          "it": "Posso avere questa senza formaggio?",
+          "fi": "Voinko saada tämän ilman juustoa?"
+        }
+      ]
+    },
+    {
+      "title": "Aterian aikana",
+      "items": [
+        {
+          "id": "acqua-rubinetto",
+          "it": "Può portarmi un po' d'acqua del rubinetto?",
+          "fi": "Voisitteko tuoda hanavettä?"
+        },
+        {
+          "id": "piu-pane",
+          "it": "Potremmo avere un po' più di pane?",
+          "fi": "Saisimmeko lisää leipää?"
+        },
+        {
+          "id": "olio-aceto",
+          "it": "Possiamo avere anche dell'olio e dell'aceto?",
+          "fi": "Saisimmeko myös öljyä ja etikkaa?"
+        },
+        {
+          "id": "piu-tovaglioli",
+          "it": "Possiamo avere dei tovaglioli in più?",
+          "fi": "Saisimmeko lisää lautasliinoja?"
+        },
+        {
+          "id": "consigliare-dessert",
+          "it": "Ci può consigliare un dessert?",
+          "fi": "Voisitteko suositella jälkiruokaa?"
+        },
+        {
+          "id": "cibo-delizioso",
+          "it": "Il cibo è delizioso.",
+          "fi": "Ruoka on herkullista."
+        },
+        {
+          "id": "piu-minuti",
+          "it": "Possiamo avere qualche minuto in più?",
+          "fi": "Voimmeko saada pari lisäminuuttia?"
+        },
+        {
+          "id": "manca-coltello",
+          "it": "Scusi, manca il coltello.",
+          "fi": "Anteeksi, veitsi puuttuu."
+        },
+        {
+          "id": "portare-via",
+          "it": "Ci può impacchettare il resto da portare via?",
+          "fi": "Voisitteko pakata loput mukaan?"
+        }
+      ]
+    },
+    {
+      "title": "Maksaminen",
+      "items": [
+        {
           "id": "conto",
           "it": "Il conto, per favore.",
           "fi": "Lasku, kiitos."
+        },
+        {
+          "id": "conto-separato",
+          "it": "Mi potrebbe portare il conto separato?",
+          "fi": "Saisimmeko erillisen laskun?"
+        },
+        {
+          "id": "servizio-incluso",
+          "it": "Il servizio è incluso?",
+          "fi": "Sisältyykö palvelu hintaan?"
+        },
+        {
+          "id": "paghiamo-carta",
+          "it": "Paghiamo con carta, grazie.",
+          "fi": "Maksamme kortilla, kiitos."
+        },
+        {
+          "id": "grazie-ottimo",
+          "it": "Grazie, era tutto ottimo.",
+          "fi": "Kiitos, kaikki oli erinomaista."
         }
       ]
     }

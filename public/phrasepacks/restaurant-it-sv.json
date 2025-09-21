@@ -6,6 +6,26 @@
   "dst": "sv",
   "sections": [
     {
+      "title": "Ankomst",
+      "items": [
+        {
+          "id": "arrivo-prenotazione",
+          "it": "Buonasera, abbiamo una prenotazione a nome Rossi.",
+          "sv": "God kväll, vi har en reservation på namnet Rossi."
+        },
+        {
+          "id": "arrivo-quanti",
+          "it": "Siamo in due.",
+          "sv": "Vi är två."
+        },
+        {
+          "id": "arrivo-finestra",
+          "it": "Possiamo sederci al tavolo vicino alla finestra?",
+          "sv": "Kan vi sitta vid bordet vid fönstret?"
+        }
+      ]
+    },
+    {
       "title": "Beställa",
       "items": [
         {
@@ -14,14 +34,154 @@
           "sv": "Kan jag få menyn, tack?"
         },
         {
+          "id": "menu-inglese",
+          "it": "Potrei avere il menù in inglese?",
+          "sv": "Skulle jag kunna få menyn på engelska?"
+        },
+        {
           "id": "ordine",
           "it": "Vorrei la pasta, per favore.",
-          "sv": "Jag skulle vilja ha pasta, tack."
+          "sv": "Jag skulle vilja ha pastan, tack."
         },
+        {
+          "id": "ordinare-antipasto",
+          "it": "Vorrei ordinare un antipasto per iniziare.",
+          "sv": "Jag skulle vilja beställa en förrätt till att börja med."
+        },
+        {
+          "id": "lista-vini",
+          "it": "Potrei vedere la carta dei vini?",
+          "sv": "Skulle jag kunna få vinlistan?"
+        },
+        {
+          "id": "piatto-giorno",
+          "it": "Qual è il piatto del giorno?",
+          "sv": "Vilken är dagens rätt?"
+        },
+        {
+          "id": "bistecca-sangue",
+          "it": "Per me la bistecca al sangue, per favore.",
+          "sv": "För mig en biff blodig, tack."
+        },
+        {
+          "id": "birra-spina",
+          "it": "Per me una birra alla spina, grazie.",
+          "sv": "För mig en fatöl, tack."
+        },
+        {
+          "id": "condividere-piatto",
+          "it": "Vorremmo condividere questo piatto.",
+          "sv": "Vi skulle vilja dela den här rätten."
+        }
+      ]
+    },
+    {
+      "title": "Särskilda önskemål",
+      "items": [
+        {
+          "id": "allergia-noci",
+          "it": "Ho un'allergia alle noci.",
+          "sv": "Jag är allergisk mot nötter."
+        },
+        {
+          "id": "intollerante-lattosio",
+          "it": "Sono intollerante al lattosio.",
+          "sv": "Jag är laktosintolerant."
+        },
+        {
+          "id": "senza-glutine",
+          "it": "C'è qualcosa senza glutine?",
+          "sv": "Finns det något glutenfritt?"
+        },
+        {
+          "id": "piatto-vegetariano",
+          "it": "Questo piatto è vegetariano?",
+          "sv": "Är den här rätten vegetarisk?"
+        },
+        {
+          "id": "senza-formaggio",
+          "it": "Posso avere questa senza formaggio?",
+          "sv": "Kan jag få den här utan ost?"
+        }
+      ]
+    },
+    {
+      "title": "Under måltiden",
+      "items": [
+        {
+          "id": "acqua-rubinetto",
+          "it": "Può portarmi un po' d'acqua del rubinetto?",
+          "sv": "Kan ni komma med lite kranvatten?"
+        },
+        {
+          "id": "piu-pane",
+          "it": "Potremmo avere un po' più di pane?",
+          "sv": "Kan vi få lite mer bröd?"
+        },
+        {
+          "id": "olio-aceto",
+          "it": "Possiamo avere anche dell'olio e dell'aceto?",
+          "sv": "Kan vi också få lite olja och vinäger?"
+        },
+        {
+          "id": "piu-tovaglioli",
+          "it": "Possiamo avere dei tovaglioli in più?",
+          "sv": "Kan vi få några extra servetter?"
+        },
+        {
+          "id": "consigliare-dessert",
+          "it": "Ci può consigliare un dessert?",
+          "sv": "Kan ni rekommendera en dessert?"
+        },
+        {
+          "id": "cibo-delizioso",
+          "it": "Il cibo è delizioso.",
+          "sv": "Maten är utsökt."
+        },
+        {
+          "id": "piu-minuti",
+          "it": "Possiamo avere qualche minuto in più?",
+          "sv": "Kan vi få några minuter till?"
+        },
+        {
+          "id": "manca-coltello",
+          "it": "Scusi, manca il coltello.",
+          "sv": "Ursäkta, kniven saknas."
+        },
+        {
+          "id": "portare-via",
+          "it": "Ci può impacchettare il resto da portare via?",
+          "sv": "Kan ni packa resten att ta med hem?"
+        }
+      ]
+    },
+    {
+      "title": "Betala",
+      "items": [
         {
           "id": "conto",
           "it": "Il conto, per favore.",
           "sv": "Notan, tack."
+        },
+        {
+          "id": "conto-separato",
+          "it": "Mi potrebbe portare il conto separato?",
+          "sv": "Kan vi få separata notor?"
+        },
+        {
+          "id": "servizio-incluso",
+          "it": "Il servizio è incluso?",
+          "sv": "Ingår service?"
+        },
+        {
+          "id": "paghiamo-carta",
+          "it": "Paghiamo con carta, grazie.",
+          "sv": "Vi betalar med kort, tack."
+        },
+        {
+          "id": "grazie-ottimo",
+          "it": "Grazie, era tutto ottimo.",
+          "sv": "Tack, allt var utmärkt."
         }
       ]
     }
