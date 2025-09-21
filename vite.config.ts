@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   root: '.',
+  base: command === 'build' ? '/italian-language-trainer/' : '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
@@ -11,4 +12,4 @@ export default defineConfig({
   build: {
     target: 'esnext'
   }
-});
+}));
