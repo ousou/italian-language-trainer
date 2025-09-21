@@ -62,7 +62,7 @@ Repository: **italian-language-trainer**
 - **PWA**: Service Worker + Web App Manifest; offline caching strategy (stale-while-revalidate).
 - **Audio**: Web Speech Synthesis API + Web Audio API.
 - **Testing**: Vitest + Playwright.
-- **Styling**: Tailwind CSS; light/dark mode.
+- **Styling**: Hand-authored CSS; light/dark mode.
 
 > **Why PWA?** Installable on iOS/Android/desktop; works offline; deployable as static files (GitHub Pages/Netlify/Cloudflare Pages).
 
@@ -279,4 +279,3 @@ export interface ReviewCard {
 **Sync across devices?** Use export/import.\
 **Which language pair?** Determined by chosen UI (Finnish → IT⇄FI, Swedish → IT⇄SV).\
 **Will TTS work everywhere?** Depends on OS voices; falls back gracefully.
-
