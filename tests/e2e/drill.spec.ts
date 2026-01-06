@@ -68,3 +68,26 @@ test('finishes a 20-word session and offers redo/new session options', async ({ 
   await page.getByRole('button', { name: 'Redo incorrect' }).click();
   await expect(page.getByText('Word 1 of 20')).toBeVisible();
 });
+
+test('disables buttons until answer is checked and Enter advances after checking', async ({ page }) => {
+  await page.goto('/');
+
+  await page.selectOption('#pack-select', 'core-it-fi-a1');
+  await page.getByText('ciao', { exact: false }).first().waitFor();
+
+  const checkButton = page.getByRole('button', { name: 'Check answer' });
+  const nextButton = page.getByRole('button', { name: 'Next word' });
+
+  await expect(checkButton).toBeDisabled();
+  await expect(nextButton).toBeDisabled();
+
+  await page.locator('.answer-input').fill('x');
+  await expect(checkButton).toBeEnabled();
+
+  await page.keyboard.press('Enter');
+  await expect(checkButton).toBeDisabled();
+  await expect(nextButton).toBeEnabled();
+
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('Word 2 of 20')).toBeVisible();
+});

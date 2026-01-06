@@ -30,6 +30,7 @@ const state: AppState = {
 };
 
 let loadToken = 0;
+let globalKeyListenerAttached = false;
 
 const rootElement = document.querySelector<HTMLDivElement>('#app');
 
@@ -38,6 +39,23 @@ if (!rootElement) {
 }
 
 const root = rootElement;
+
+function attachGlobalKeyListener(): void {
+  if (globalKeyListenerAttached) {
+    return;
+  }
+  globalKeyListenerAttached = true;
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter') {
+      return;
+    }
+    if (!state.session || state.session.lastResult === undefined || state.session.sessionComplete) {
+      return;
+    }
+    event.preventDefault();
+    goToNext();
+  });
+}
 
 function setState(partial: Partial<AppState>): void {
   Object.assign(state, partial);
@@ -281,7 +299,7 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   input.value = answerInput;
   input.autocomplete = 'off';
   input.spellcheck = false;
-  input.disabled = showAnswer || sessionComplete;
+  input.readOnly = showAnswer || sessionComplete;
 
   const checkButton = document.createElement('button');
   checkButton.type = 'submit';
@@ -295,12 +313,17 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
       return;
     }
     state.session.answerInput = target.value;
-    checkButton.disabled = showAnswer || target.value.trim() === '';
+    const answered = state.session.lastResult !== undefined || state.session.sessionComplete;
+    checkButton.disabled = answered || target.value.trim() === '';
   });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    if (!state.session || state.session.lastResult !== undefined) {
+    if (!state.session) {
+      return;
+    }
+    if (state.session.lastResult !== undefined) {
+      goToNext();
       return;
     }
     const nextSession = submitAnswer(pack, state.session, state.session.answerInput);
@@ -327,6 +350,9 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   nextButton.textContent = 'Next word';
   nextButton.disabled = !showAnswer || sessionComplete;
   nextButton.addEventListener('click', () => {
+    if (!state.session || state.session.lastResult === undefined) {
+      return;
+    }
     goToNext();
   });
 
@@ -334,6 +360,10 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
 
   card.append(meta, prompt, answer, form, feedback, controls);
   container.append(card);
+
+  if (showAnswer && !sessionComplete) {
+    input.focus();
+  }
 }
 
 function renderSessionPanel(container: HTMLElement): void {
@@ -414,6 +444,7 @@ function renderSessionPanel(container: HTMLElement): void {
 }
 
 function render(): void {
+  attachGlobalKeyListener();
   root.innerHTML = '';
 
   const container = document.createElement('main');
