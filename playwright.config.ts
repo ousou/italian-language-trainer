@@ -5,11 +5,11 @@ export default defineConfig({
   retries: 0,
   timeout: 30_000,
   use: {
-    baseURL: 'http://127.0.0.1:4173'
+    baseURL: 'http://localhost:5173'
   },
   webServer: {
-    command: 'pnpm dev -- --host 127.0.0.1 --port 4173',
-    url: 'http://127.0.0.1:4173',
+    command: 'pnpm dev -- --host 127.0.0.1 --port 5173 --strictPort',
+    url: 'http://localhost:5173',
     reuseExistingServer: true,
     timeout: 60_000
   }
