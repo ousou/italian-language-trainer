@@ -197,6 +197,31 @@ main.app {
   font-style: italic;
 }
 
+.answer-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.answer-input {
+  min-height: 3rem;
+}
+
+.answer-feedback {
+  margin: 0;
+  font-weight: 600;
+  min-height: 1.5rem;
+}
+
+.answer-feedback.correct {
+  color: #16a34a;
+}
+
+.answer-feedback.incorrect {
+  color: #b91c1c;
+}
+
 .drill-controls {
   display: flex;
   flex-wrap: wrap;
@@ -233,6 +258,25 @@ button.primary {
 
 button.primary:hover {
   box-shadow: 0 16px 32px rgba(99, 102, 241, 0.28);
+}
+
+.session-panel {
+  gap: 0.5rem;
+}
+
+.session-summary {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.incorrect-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  color: #1f2937;
+}
+
+.incorrect-item {
+  margin-bottom: 0.35rem;
 }
 
 .status {
@@ -306,6 +350,18 @@ button.primary:hover {
 
   .drill-answer.hidden .answer-text {
     color: rgba(148, 163, 184, 0.7);
+  }
+
+  .answer-feedback.correct {
+    color: #4ade80;
+  }
+
+  .answer-feedback.incorrect {
+    color: #f87171;
+  }
+
+  .incorrect-list {
+    color: rgba(226, 232, 240, 0.92);
   }
 
   button:hover {

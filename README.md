@@ -185,6 +185,9 @@ pnpm build
 pnpm preview
 ```
 
+Local app: run `pnpm dev`, then open the URL shown by Vite (usually
+`http://localhost:5173`).
+
 No secrets needed. Optional env vars: `VITE_APP_NAME`, `VITE_DEFAULT_PAIR=it-fi`.
 
 ---
@@ -215,9 +218,17 @@ No secrets needed. Optional env vars: `VITE_APP_NAME`, `VITE_DEFAULT_PAIR=it-fi`
 
 ## 🧪 Testing
 
-- **Unit**: Vitest for logic.
-- **E2E**: Playwright for offline/PWA flows.
-- **Lighthouse** audits.
+- Unit tests with Vitest:
+
+```bash
+pnpm test
+```
+
+- E2E tests with Playwright (runs the Vite dev server):
+
+```bash
+pnpm test:e2e
+```
 
 ---
 
@@ -225,6 +236,17 @@ No secrets needed. Optional env vars: `VITE_APP_NAME`, `VITE_DEFAULT_PAIR=it-fi`
 
 - GitHub Pages (dist → gh-pages).
 - Netlify/Cloudflare Pages with SPA fallback.
+
+### GitHub Pages (manual)
+
+```bash
+pnpm i
+pnpm build
+```
+
+Then publish `dist/` to a `gh-pages` branch and set **Settings → Pages** to
+serve from that branch. If you plan to host from a subpath, set Vite's
+`base` in `vite.config.ts` before building.
 
 ---
 
