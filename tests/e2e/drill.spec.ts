@@ -90,4 +90,5 @@ test('disables buttons until answer is checked and Enter advances after checking
 
   await page.keyboard.press('Enter');
   await expect(page.getByText('Word 2 of 20')).toBeVisible();
+  await expect(page.locator('.answer-input')).toBeFocused();
 });

@@ -136,6 +136,12 @@ function goToNext(): void {
   const session = nextCard(state.session);
   if (session !== state.session) {
     setState({ session });
+    queueMicrotask(() => {
+      const input = root.querySelector<HTMLInputElement>('.answer-input');
+      if (input && !input.readOnly) {
+        input.focus();
+      }
+    });
   }
 }
 
@@ -257,7 +263,7 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   const showAnswer = lastResult !== undefined;
 
   const card = document.createElement('section');
-  card.className = 'drill-card';
+  card.className = sessionComplete ? 'drill-card session-complete-card' : 'drill-card';
 
   const meta = document.createElement('div');
   meta.className = 'drill-meta';
@@ -288,6 +294,13 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   answerTextNode.textContent = showAnswer ? answerText : 'Translation hidden';
 
   answer.append(answerBadge, answerTextNode);
+
+  if (sessionComplete) {
+    const endNotice = document.createElement('p');
+    endNotice.className = 'session-end-notice';
+    endNotice.textContent = 'Session complete — review your results below or start a new round.';
+    answer.append(endNotice);
+  }
 
   const form = document.createElement('form');
   form.className = 'answer-form';
@@ -361,7 +374,7 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   card.append(meta, prompt, answer, form, feedback, controls);
   container.append(card);
 
-  if (showAnswer && !sessionComplete) {
+  if (!sessionComplete && state.session && state.session.lastResult === undefined) {
     input.focus();
   }
 }
