@@ -1,29 +1,16 @@
 import './style.css';
 import type { DrillDirection, LanguageCode, VocabPack } from './types.ts';
 import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
-import { isAnswerCorrect } from './logic/answerCheck.ts';
+import { nextCard, redoIncorrect, startNewSession as createNewSession, submitAnswer, type SessionState } from './logic/session.ts';
 
 interface AppState {
   packId?: string;
   pack?: VocabPack;
   loading: boolean;
   error?: string;
-  direction: DrillDirection;
-  currentIndex: number;
-  answerInput: string;
-  lastResult?: 'correct' | 'incorrect';
-  order: number[];
-  sessionCorrect: number;
-  sessionIncorrect: number;
-  incorrectItems: Array<{
-    key: string;
-    itemIndex: number;
-    prompt: string;
-    expected: string;
-    answer: string;
-  }>;
   showIncorrect: boolean;
-  sessionComplete: boolean;
+  session?: SessionState;
+  direction: DrillDirection;
 }
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
@@ -37,20 +24,12 @@ const state: AppState = {
   pack: undefined,
   loading: false,
   error: undefined,
-  direction: 'src-to-dst',
-  currentIndex: 0,
-  answerInput: '',
-  lastResult: undefined,
-  order: [],
-  sessionCorrect: 0,
-  sessionIncorrect: 0,
-  incorrectItems: [],
   showIncorrect: false,
-  sessionComplete: false
+  session: undefined,
+  direction: 'src-to-dst'
 };
 
 let loadToken = 0;
-const SESSION_SIZE = 20;
 
 const rootElement = document.querySelector<HTMLDivElement>('#app');
 
@@ -65,50 +44,25 @@ function setState(partial: Partial<AppState>): void {
   render();
 }
 
-function shuffle(length: number): number[] {
-  const indices = Array.from({ length }, (_, index) => index);
-
-  for (let i = indices.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
-  }
-
-  return indices;
-}
-
-function buildSessionOrder(totalItems: number): number[] {
-  return shuffle(totalItems).slice(0, Math.min(SESSION_SIZE, totalItems));
-}
-
-function startSession(order: number[]): void {
-  setState({
-    order,
-    currentIndex: 0,
-    answerInput: '',
-    lastResult: undefined,
-    sessionCorrect: 0,
-    sessionIncorrect: 0,
-    incorrectItems: [],
-    showIncorrect: false,
-    sessionComplete: false
-  });
-}
-
 function startNewSession(): void {
   if (!state.pack) {
     return;
   }
 
-  startSession(buildSessionOrder(state.pack.items.length));
+  const session = startNewSessionLogic(state.pack, state.direction);
+  setState({ session, showIncorrect: false });
 }
 
 function redoIncorrectSession(): void {
-  if (!state.pack || state.incorrectItems.length === 0) {
+  if (!state.pack || !state.session) {
     return;
   }
 
-  const order = state.incorrectItems.map((item) => item.itemIndex);
-  startSession(order);
+  const session = redoIncorrect(state.pack, state.session);
+  if (session === state.session) {
+    return;
+  }
+  setState({ session, showIncorrect: false });
 }
 
 async function selectPack(id: string | undefined): Promise<void> {
@@ -117,15 +71,8 @@ async function selectPack(id: string | undefined): Promise<void> {
       packId: undefined,
       pack: undefined,
       error: undefined,
-      order: [],
-      currentIndex: 0,
-      answerInput: '',
-      lastResult: undefined,
-      sessionCorrect: 0,
-      sessionIncorrect: 0,
-      incorrectItems: [],
       showIncorrect: false,
-      sessionComplete: false
+      session: undefined
     });
     return;
   }
@@ -148,15 +95,10 @@ async function selectPack(id: string | undefined): Promise<void> {
     setState({
       pack,
       loading: false,
-      order: buildSessionOrder(pack.items.length),
-      currentIndex: 0,
-      answerInput: '',
-      lastResult: undefined,
-      sessionCorrect: 0,
-      sessionIncorrect: 0,
-      incorrectItems: [],
       showIncorrect: false,
-      sessionComplete: false
+      session: {
+        ...startNewSessionLogic(pack, state.direction)
+      }
     });
   } catch (error) {
     if (currentToken !== loadToken) {
@@ -169,15 +111,13 @@ async function selectPack(id: string | undefined): Promise<void> {
 }
 
 function goToNext(): void {
-  const { pack, order, currentIndex, sessionComplete } = state;
-
-  if (!pack || order.length === 0 || sessionComplete) {
+  if (!state.pack || !state.session) {
     return;
   }
 
-  if (currentIndex < order.length - 1) {
-    setState({ currentIndex: currentIndex + 1, answerInput: '', lastResult: undefined });
-    return;
+  const session = nextCard(state.session);
+  if (session !== state.session) {
+    setState({ session });
   }
 }
 
@@ -188,14 +128,13 @@ function toggleDirection(direction: DrillDirection): void {
 
   setState({
     direction,
-    answerInput: '',
-    lastResult: undefined,
-    sessionCorrect: 0,
-    sessionIncorrect: 0,
-    incorrectItems: [],
     showIncorrect: false,
-    sessionComplete: false
+    session: state.pack ? startNewSessionLogic(state.pack, direction) : undefined
   });
+}
+
+function startNewSessionLogic(pack: VocabPack, direction: DrillDirection): SessionState {
+  return createNewSession(pack, direction);
 }
 
 function renderPackSelector(container: HTMLElement): void {
@@ -274,7 +213,13 @@ function renderDirectionToggle(container: HTMLElement, pack: VocabPack): void {
 }
 
 function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
-  const { order, currentIndex, direction, lastResult, answerInput, sessionComplete } = state;
+  const { session, direction } = state;
+
+  if (!session) {
+    return;
+  }
+
+  const { order, currentIndex, lastResult, answerInput, sessionComplete } = session;
 
   if (order.length === 0) {
     const emptyNotice = document.createElement('p');
@@ -346,40 +291,20 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
 
   input.addEventListener('input', (event) => {
     const target = event.target as HTMLInputElement;
-    state.answerInput = target.value;
+    if (!state.session) {
+      return;
+    }
+    state.session.answerInput = target.value;
     checkButton.disabled = showAnswer || target.value.trim() === '';
   });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    if (state.lastResult !== undefined) {
+    if (!state.session || state.session.lastResult !== undefined) {
       return;
     }
-    const correct = isAnswerCorrect(answerText, state.answerInput);
-    const result = correct ? 'correct' : 'incorrect';
-    const updates: Partial<AppState> = { lastResult: result };
-
-    if (correct) {
-      updates.sessionCorrect = state.sessionCorrect + 1;
-    } else {
-      updates.sessionIncorrect = state.sessionIncorrect + 1;
-      const key = `${item.id}:${state.direction}`;
-      const entry = { key, itemIndex, prompt: promptText, expected: answerText, answer: state.answerInput };
-      const existingIndex = state.incorrectItems.findIndex((item) => item.key === key);
-      if (existingIndex >= 0) {
-        const updated = [...state.incorrectItems];
-        updated[existingIndex] = entry;
-        updates.incorrectItems = updated;
-      } else {
-        updates.incorrectItems = [...state.incorrectItems, entry];
-      }
-    }
-
-    if (state.currentIndex === state.order.length - 1) {
-      updates.sessionComplete = true;
-    }
-
-    setState(updates);
+    const nextSession = submitAnswer(pack, state.session, state.session.answerInput);
+    setState({ session: nextSession });
   });
 
   form.append(input, checkButton);
@@ -415,20 +340,24 @@ function renderSessionPanel(container: HTMLElement): void {
   const panel = document.createElement('section');
   panel.className = 'panel session-panel';
 
+  if (!state.session) {
+    return;
+  }
+
   const heading = document.createElement('span');
   heading.className = 'panel-label';
   heading.textContent = 'Session stats';
 
   const summary = document.createElement('div');
   summary.className = 'session-summary';
-  summary.textContent = `Correct: ${state.sessionCorrect} · Incorrect: ${state.sessionIncorrect}`;
+  summary.textContent = `Correct: ${state.session.sessionCorrect} · Incorrect: ${state.session.sessionIncorrect}`;
 
   panel.append(heading, summary);
 
   const actions = document.createElement('div');
   actions.className = 'session-actions';
 
-  if (state.sessionComplete) {
+  if (state.session.sessionComplete) {
     const doneMessage = document.createElement('p');
     doneMessage.className = 'session-complete';
     doneMessage.textContent = 'Session complete! Want to try the misses again or start fresh?';
@@ -438,7 +367,7 @@ function renderSessionPanel(container: HTMLElement): void {
   const toggleButton = document.createElement('button');
   toggleButton.type = 'button';
   toggleButton.textContent = state.showIncorrect ? 'Hide incorrect words' : 'Show incorrect words';
-  toggleButton.disabled = state.incorrectItems.length === 0;
+  toggleButton.disabled = state.session.incorrectItems.length === 0;
   toggleButton.addEventListener('click', () => {
     setState({ showIncorrect: !state.showIncorrect });
   });
@@ -446,7 +375,7 @@ function renderSessionPanel(container: HTMLElement): void {
   const redoButton = document.createElement('button');
   redoButton.type = 'button';
   redoButton.textContent = 'Redo incorrect';
-  redoButton.disabled = state.incorrectItems.length === 0;
+  redoButton.disabled = state.session.incorrectItems.length === 0;
   redoButton.addEventListener('click', () => {
     redoIncorrectSession();
   });
@@ -459,7 +388,7 @@ function renderSessionPanel(container: HTMLElement): void {
   });
 
   actions.append(toggleButton);
-  if (state.sessionComplete) {
+  if (state.session.sessionComplete) {
     actions.append(redoButton, newSessionButton);
   } else {
     actions.append(newSessionButton);
@@ -467,11 +396,11 @@ function renderSessionPanel(container: HTMLElement): void {
 
   panel.append(actions);
 
-  if (state.showIncorrect && state.incorrectItems.length > 0) {
+  if (state.showIncorrect && state.session.incorrectItems.length > 0) {
     const list = document.createElement('ul');
     list.className = 'incorrect-list';
 
-    for (const item of state.incorrectItems) {
+    for (const item of state.session.incorrectItems) {
       const listItem = document.createElement('li');
       listItem.className = 'incorrect-item';
       listItem.textContent = `${item.prompt} → ${item.expected} (you answered: ${item.answer || '—'})`;
