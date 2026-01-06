@@ -327,16 +327,18 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   input.value = answerInput;
   input.autocomplete = 'off';
   input.spellcheck = false;
-  input.addEventListener('input', (event) => {
-    const target = event.target as HTMLInputElement;
-    setState({ answerInput: target.value });
-  });
 
   const checkButton = document.createElement('button');
   checkButton.type = 'submit';
   checkButton.className = 'primary';
   checkButton.textContent = 'Check answer';
   checkButton.disabled = showAnswer || answerInput.trim() === '';
+
+  input.addEventListener('input', (event) => {
+    const target = event.target as HTMLInputElement;
+    state.answerInput = target.value;
+    checkButton.disabled = showAnswer || target.value.trim() === '';
+  });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
