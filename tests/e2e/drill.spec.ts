@@ -31,3 +31,40 @@ test('checks answers, tracks session stats, and shows incorrect list', async ({ 
   await expect(page.getByText('Correct!')).toBeVisible();
   await expect(page.getByText('Correct: 1 · Incorrect: 1')).toBeVisible();
 });
+
+test('keeps focus on the answer input while typing', async ({ page }) => {
+  await page.goto('/');
+
+  await page.selectOption('#pack-select', 'core-it-fi-a1');
+  await page.getByText('ciao', { exact: false }).first().waitFor();
+
+  const input = page.locator('.answer-input');
+  await input.focus();
+
+  for (const char of ['c', 'i', 'a', 'o']) {
+    await page.keyboard.type(char);
+    await expect(input).toBeFocused();
+  }
+});
+
+test('finishes a 20-word session and offers redo/new session options', async ({ page }) => {
+  await page.goto('/');
+
+  await page.selectOption('#pack-select', 'core-it-fi-a1');
+  await page.getByText('ciao', { exact: false }).first().waitFor();
+
+  for (let i = 0; i < 20; i += 1) {
+    await page.locator('.answer-input').fill('x');
+    await page.getByRole('button', { name: 'Check answer' }).click();
+
+    if (i < 19) {
+      await page.getByRole('button', { name: 'Next word' }).click();
+    }
+  }
+
+  await expect(page.getByText('Session complete! Want to try the misses again or start fresh?')).toBeVisible();
+  await expect(page.getByText('Correct: 0 · Incorrect: 20')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Redo incorrect' }).click();
+  await expect(page.getByText('Word 1 of 20')).toBeVisible();
+});

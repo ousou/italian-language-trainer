@@ -269,6 +269,17 @@ button.primary:hover {
   font-weight: 600;
 }
 
+.session-complete {
+  margin: 0;
+  font-weight: 600;
+}
+
+.session-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .incorrect-list {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
