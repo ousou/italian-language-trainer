@@ -22,9 +22,8 @@
 - After tests pass, create a git commit for each change set.
 - Commit messages must explain both why the change was made and what was changed.
 
-## User Profile (fill in)
+## User Profile
 
-- Goals:
-- Learning preferences:
-- Study constraints:
-- Devices:
+- Goals: Learn basic and intermediate Italian vocabulary quickly.
+- Learning preferences: Short session each day, with a good mix of new words and repetition of old ones.
+- Devices: Mobile phone, and desktop/laptop computer
