@@ -14,3 +14,7 @@
 - Every new logic module gets unit tests first; e2e only for happy-path flows.
 - No network calls in app runtime; any `fetch` is build-time or test-only.
 - Prefer deterministic time/randomness: inject `now()`/RNG into logic for tests.
+- Write unit tests for new features, and run unit tests after every change.
+- Run unit tests with `pnpm test`.
+- Run end-to-end tests with `pnpm test:e2e` when a feature is complete.
+- Automatically fix any issues uncovered by unit tests before reporting back.
