@@ -1,9 +1,21 @@
 import './style.css';
 import type { DrillDirection, LanguageCode, VocabPack } from './types.ts';
 import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
-import { listReviewCardsByPack, recordReviewResult } from './data/reviewStore.ts';
+import {
+  listReviewCardsByPack,
+  listReviewCardsByPackAndDirection,
+  recordReviewResult
+} from './data/reviewStore.ts';
 import type { ReviewCard } from './logic/review.ts';
-import { nextCard, redoIncorrect, startNewSession as createNewSession, submitAnswer, type SessionState } from './logic/session.ts';
+import { buildSrsOrder } from './logic/srs.ts';
+import {
+  DEFAULT_SESSION_SIZE,
+  createSession,
+  nextCard,
+  redoIncorrect,
+  submitAnswer,
+  type SessionState
+} from './logic/session.ts';
 
 interface AppState {
   packId?: string;
@@ -39,6 +51,7 @@ const state: AppState = {
 
 let loadToken = 0;
 let statsToken = 0;
+let sessionToken = 0;
 let globalKeyListenerAttached = false;
 
 const rootElement = document.querySelector<HTMLDivElement>('#app');
@@ -75,9 +88,7 @@ function startNewSession(): void {
   if (!state.pack) {
     return;
   }
-
-  const session = startNewSessionLogic(state.pack, state.direction);
-  setState({ session, showIncorrect: false });
+  void startSrsSession(state.pack, state.direction);
 }
 
 function redoIncorrectSession(): void {
@@ -127,11 +138,10 @@ async function selectPack(id: string | undefined): Promise<void> {
       loading: false,
       showIncorrect: false,
       showStats: false,
-      session: {
-        ...startNewSessionLogic(pack, state.direction)
-      }
+      session: undefined
     });
     void refreshReviewStats(pack);
+    void startSrsSession(pack, state.direction);
   } catch (error) {
     if (currentToken !== loadToken) {
       return;
@@ -159,8 +169,21 @@ function goToNext(): void {
   }
 }
 
-function startNewSessionLogic(pack: VocabPack, direction: DrillDirection): SessionState {
-  return createNewSession(pack, direction);
+async function startSrsSession(pack: VocabPack, direction: DrillDirection): Promise<void> {
+  const token = ++sessionToken;
+  const cards = await listReviewCardsByPackAndDirection(pack.id, direction);
+  if (token !== sessionToken) {
+    return;
+  }
+  const order = buildSrsOrder(pack.items, direction, cards, {
+    now: Date.now(),
+    sessionSize: DEFAULT_SESSION_SIZE,
+    maxNew: 15,
+    maxReview: 120,
+    rng: Math.random
+  });
+  const session = createSession(pack, direction, order);
+  setState({ session, showIncorrect: false });
 }
 
 function renderPackSelector(container: HTMLElement): void {

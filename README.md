@@ -182,12 +182,15 @@ italian-language-trainer/
 - Algorithm: **SM-2** with EF starting at 2.3.
 - Daily caps: **15 new cards**, **120 reviews**.
 - Leitner fallback for new users.
+- Sessions are built per pack: due cards first, then new items, then upcoming reviews to fill the session size.
+- If caps limit the queue, sessions can be shorter than the default size.
 
 ### Current storage behavior (prototype)
 
 - **Stats scope**: Per item per direction, keyed by `packId:itemId:direction`. This means the same word in different packs tracks separately, and `src→dst` vs `dst→src` are independent.
 - **What is recorded**: Attempts/correct/incorrect counts, streaks, lapses, last result, SM-2 scheduling fields (`ef`, `intervalDays`, `repetitions`, `dueAt`), plus `lastReviewedAt` and optional `lastQuality`.
 - **How items are chosen**: Current sessions still use randomized order from the selected pack (no SRS queue yet). Review stats are collected during sessions to enable a future “due cards” queue.
+- **How items are chosen**: Sessions now build an SRS queue per pack, prioritizing due cards, then new items, then upcoming reviews to fill the session.
 - **Stats UI**: The session view includes a button to reveal a stats panel that summarizes attempts/accuracy for the current pack and lists per-item progress.
 
 ---

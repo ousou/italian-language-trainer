@@ -88,3 +88,11 @@ export async function listReviewCardsByPack(packId: string): Promise<ReviewCard[
   await transactionDone(transaction);
   return result;
 }
+
+export async function listReviewCardsByPackAndDirection(
+  packId: string,
+  direction: ReviewCard['direction']
+): Promise<ReviewCard[]> {
+  const cards = await listReviewCardsByPack(packId);
+  return cards.filter((card) => card.direction === direction);
+}
