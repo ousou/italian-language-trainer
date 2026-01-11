@@ -10,6 +10,10 @@ describe('normalizeAnswer', () => {
     expect(normalizeAnswer('Città')).toBe('citta');
     expect(normalizeAnswer('perché')).toBe('perche');
   });
+
+  it('strips punctuation', () => {
+    expect(normalizeAnswer('Ciao! Come va?')).toBe('ciao come va');
+  });
 });
 
 describe('isAnswerCorrect', () => {
