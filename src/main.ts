@@ -4,9 +4,11 @@ import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
 import {
   listReviewCardsByPack,
   listReviewCardsByPackAndDirection,
+  listReviewEventsByPackSince,
   recordReviewResult
 } from './data/reviewStore.ts';
 import type { ReviewCard } from './logic/review.ts';
+import { buildDailyAttemptCounts, startOfLocalDay, type DailyAttemptCount } from './logic/reviewEvents.ts';
 import { buildSrsOrder } from './logic/srs.ts';
 import {
   DEFAULT_SESSION_SIZE,
@@ -27,6 +29,7 @@ interface AppState {
   session?: SessionState;
   direction: DrillDirection;
   reviewCards: ReviewCard[];
+  dailyAttempts: DailyAttemptCount[];
   reviewStatsLoading: boolean;
 }
 
@@ -46,6 +49,7 @@ const state: AppState = {
   session: undefined,
   direction: 'dst-to-src',
   reviewCards: [],
+  dailyAttempts: [],
   reviewStatsLoading: false
 };
 
@@ -113,6 +117,7 @@ async function selectPack(id: string | undefined): Promise<void> {
       showStats: false,
       session: undefined,
       reviewCards: [],
+      dailyAttempts: [],
       reviewStatsLoading: false
     });
     return;
@@ -474,11 +479,18 @@ async function refreshReviewStats(pack: VocabPack): Promise<void> {
   const token = ++statsToken;
   setState({ reviewStatsLoading: true });
   try {
+    const now = Date.now();
     const cards = await listReviewCardsByPack(pack.id);
+    const statsDays = 14;
+    const windowStart = startOfLocalDay(now);
+    const since = new Date(windowStart);
+    since.setDate(since.getDate() - (statsDays - 1));
+    const events = await listReviewEventsByPackSince(pack.id, since.getTime());
+    const dailyAttempts = buildDailyAttemptCounts(events, now, statsDays);
     if (token !== statsToken) {
       return;
     }
-    setState({ reviewCards: cards, reviewStatsLoading: false });
+    setState({ reviewCards: cards, dailyAttempts, reviewStatsLoading: false });
   } catch (error) {
     if (token !== statsToken) {
       return;
@@ -534,6 +546,24 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
   summary.className = 'session-summary';
   summary.textContent = `Attempts: ${totals.attempts} · Correct: ${totals.correct} · Accuracy: ${accuracy}% · Due now: ${totals.due}`;
   panel.append(summary);
+
+  if (state.dailyAttempts.length > 0) {
+    const dailyHeading = document.createElement('p');
+    dailyHeading.className = 'session-summary';
+    dailyHeading.textContent = `Daily attempts (last ${state.dailyAttempts.length} days)`;
+    panel.append(dailyHeading);
+
+    const dailyList = document.createElement('ul');
+    dailyList.className = 'stats-daily-list';
+    for (const entry of state.dailyAttempts) {
+      const listItem = document.createElement('li');
+      listItem.className = 'stats-item';
+      const attemptsLabel = entry.count === 1 ? 'attempt' : 'attempts';
+      listItem.textContent = `${entry.dayKey} — ${entry.count} ${attemptsLabel}`;
+      dailyList.append(listItem);
+    }
+    panel.append(dailyList);
+  }
 
   const itemStats = new Map<string, { attempts: number; correct: number }>();
   for (const card of cards) {
