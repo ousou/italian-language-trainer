@@ -26,7 +26,7 @@ const state: AppState = {
   error: undefined,
   showIncorrect: false,
   session: undefined,
-  direction: 'src-to-dst'
+  direction: 'dst-to-src'
 };
 
 let loadToken = 0;
@@ -145,18 +145,6 @@ function goToNext(): void {
   }
 }
 
-function toggleDirection(direction: DrillDirection): void {
-  if (state.direction === direction) {
-    return;
-  }
-
-  setState({
-    direction,
-    showIncorrect: false,
-    session: state.pack ? startNewSessionLogic(state.pack, direction) : undefined
-  });
-}
-
 function startNewSessionLogic(pack: VocabPack, direction: DrillDirection): SessionState {
   return createNewSession(pack, direction);
 }
@@ -195,44 +183,6 @@ function renderPackSelector(container: HTMLElement): void {
   });
 
   section.append(label, select);
-  container.append(section);
-}
-
-function renderDirectionToggle(container: HTMLElement, pack: VocabPack): void {
-  const section = document.createElement('section');
-  section.className = 'panel direction-toggle';
-
-  const heading = document.createElement('span');
-  heading.className = 'panel-label';
-  heading.textContent = 'Drill direction';
-  section.append(heading);
-
-  const options: Array<{ value: DrillDirection; label: string }> = [
-    { value: 'src-to-dst', label: `${LANGUAGE_LABELS[pack.src]} → ${LANGUAGE_LABELS[pack.dst]}` },
-    { value: 'dst-to-src', label: `${LANGUAGE_LABELS[pack.dst]} → ${LANGUAGE_LABELS[pack.src]}` }
-  ];
-
-  for (const option of options) {
-    const wrapper = document.createElement('label');
-    wrapper.className = 'direction-option';
-
-    const input = document.createElement('input');
-    input.type = 'radio';
-    input.name = 'direction';
-    input.value = option.value;
-    input.checked = state.direction === option.value;
-
-    input.addEventListener('change', () => {
-      toggleDirection(option.value);
-    });
-
-    const text = document.createElement('span');
-    text.textContent = option.label;
-
-    wrapper.append(input, text);
-    section.append(wrapper);
-  }
-
   container.append(section);
 }
 
@@ -471,7 +421,7 @@ function render(): void {
 
   const subtitle = document.createElement('p');
   subtitle.className = 'app-subtitle';
-  subtitle.textContent = 'Pick a phrase pack and practice going between Italian and your target language.';
+  subtitle.textContent = 'Pick a phrase pack and practice translating into Italian.';
 
   header.append(title, subtitle);
   container.append(header);
@@ -493,7 +443,6 @@ function render(): void {
   }
 
   if (state.pack && !state.loading) {
-    renderDirectionToggle(container, state.pack);
     renderDrillCard(container, state.pack);
     renderSessionPanel(container);
   } else if (!state.loading) {

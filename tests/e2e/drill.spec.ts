@@ -10,9 +10,7 @@ test('checks answers, tracks session stats, and shows incorrect list', async ({ 
   await page.goto('/');
 
   await page.selectOption('#pack-select', 'core-it-fi-a1');
-  await page.getByText('ciao', { exact: false }).first().waitFor();
-
-  await page.locator('input[name="direction"][value="dst-to-src"]').check();
+  await page.getByText('moi / hei', { exact: false }).first().waitFor();
 
   await page.locator('.answer-input').fill('hello');
   await page.getByRole('button', { name: 'Check answer' }).click();
@@ -21,7 +19,7 @@ test('checks answers, tracks session stats, and shows incorrect list', async ({ 
   await expect(page.getByText('Correct: 0 · Incorrect: 1')).toBeVisible();
 
   await page.getByRole('button', { name: 'Show incorrect words' }).click();
-  await expect(page.locator('.incorrect-list')).toContainText('ciao');
+  await expect(page.locator('.incorrect-list')).toContainText('moi / hei');
 
   await page.getByRole('button', { name: 'Next word' }).click();
 
@@ -36,7 +34,7 @@ test('keeps focus on the answer input while typing', async ({ page }) => {
   await page.goto('/');
 
   await page.selectOption('#pack-select', 'core-it-fi-a1');
-  await page.getByText('ciao', { exact: false }).first().waitFor();
+  await page.getByText('moi / hei', { exact: false }).first().waitFor();
 
   const input = page.locator('.answer-input');
   await input.focus();
@@ -51,7 +49,7 @@ test('finishes a 20-word session and offers redo/new session options', async ({ 
   await page.goto('/');
 
   await page.selectOption('#pack-select', 'core-it-fi-a1');
-  await page.getByText('ciao', { exact: false }).first().waitFor();
+  await page.getByText('moi / hei', { exact: false }).first().waitFor();
 
   for (let i = 0; i < 20; i += 1) {
     await page.locator('.answer-input').fill('x');
@@ -73,7 +71,7 @@ test('disables buttons until answer is checked and Enter advances after checking
   await page.goto('/');
 
   await page.selectOption('#pack-select', 'core-it-fi-a1');
-  await page.getByText('ciao', { exact: false }).first().waitFor();
+  await page.getByText('moi / hei', { exact: false }).first().waitFor();
 
   const checkButton = page.getByRole('button', { name: 'Check answer' });
   const nextButton = page.getByRole('button', { name: 'Next word' });
