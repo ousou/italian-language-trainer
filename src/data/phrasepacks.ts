@@ -9,42 +9,42 @@ export interface PhrasePackMeta {
 export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
   {
     id: 'bella-vista-1-1',
-    title: 'Bella Vista 1 ch 1',
+    title: 'Bella Vista 1, kappale 1',
     path: 'phrasepacks/bella-vista-1-ch-1.json'
   },
   {
     id: 'bella-vista-1-2',
-    title: 'Bella Vista 1 ch 2',
+    title: 'Bella Vista 1, kappale 2',
     path: 'phrasepacks/bella-vista-1-ch-2.json'
   },
   {
     id: 'bella-vista-1-3',
-    title: 'Bella Vista 1 ch 3',
+    title: 'Bella Vista 1, kappale 3',
     path: 'phrasepacks/bella-vista-1-ch-3.json'
   },
   {
     id: 'bella-vista-1-4',
-    title: 'Bella Vista 1 ch 4',
+    title: 'Bella Vista 1, kappale 4',
     path: 'phrasepacks/bella-vista-1-ch-4.json'
   },
   {
     id: 'bella-vista-1-5',
-    title: 'Bella Vista 1 ch 5',
+    title: 'Bella Vista 1, kappale 5',
     path: 'phrasepacks/bella-vista-1-ch-5.json'
   },
   {
     id: 'bella-vista-1-6',
-    title: 'Bella Vista 1 ch 6',
+    title: 'Bella Vista 1, kappale 6',
     path: 'phrasepacks/bella-vista-1-ch-6.json'
   },
   {
     id: 'core-it-fi-a1',
-    title: 'Core vocabulary — Italian⇄Finnish',
+    title: 'Perussanastoa — Italia⇄Suomi',
     path: 'phrasepacks/core-it-fi-a1.json'
   },
   {
     id: 'core-it-sv-a1',
-    title: 'Core vocabulary — Italienska⇄Svenska',
+    title: 'Vanliga ord — Italienska⇄Svenska',
     path: 'phrasepacks/core-it-sv-a1.json'
   }
 ];
