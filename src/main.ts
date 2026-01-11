@@ -1,7 +1,8 @@
 import './style.css';
 import type { DrillDirection, LanguageCode, VocabPack } from './types.ts';
 import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
-import { recordReviewResult } from './data/reviewStore.ts';
+import { listReviewCardsByPack, recordReviewResult } from './data/reviewStore.ts';
+import type { ReviewCard } from './logic/review.ts';
 import { nextCard, redoIncorrect, startNewSession as createNewSession, submitAnswer, type SessionState } from './logic/session.ts';
 
 interface AppState {
@@ -12,6 +13,8 @@ interface AppState {
   showIncorrect: boolean;
   session?: SessionState;
   direction: DrillDirection;
+  reviewCards: ReviewCard[];
+  reviewStatsLoading: boolean;
 }
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
@@ -27,10 +30,13 @@ const state: AppState = {
   error: undefined,
   showIncorrect: false,
   session: undefined,
-  direction: 'dst-to-src'
+  direction: 'dst-to-src',
+  reviewCards: [],
+  reviewStatsLoading: false
 };
 
 let loadToken = 0;
+let statsToken = 0;
 let globalKeyListenerAttached = false;
 
 const rootElement = document.querySelector<HTMLDivElement>('#app');
@@ -91,7 +97,9 @@ async function selectPack(id: string | undefined): Promise<void> {
       pack: undefined,
       error: undefined,
       showIncorrect: false,
-      session: undefined
+      session: undefined,
+      reviewCards: [],
+      reviewStatsLoading: false
     });
     return;
   }
@@ -119,6 +127,7 @@ async function selectPack(id: string | undefined): Promise<void> {
         ...startNewSessionLogic(pack, state.direction)
       }
     });
+    void refreshReviewStats(pack);
   } catch (error) {
     if (currentToken !== loadToken) {
       return;
@@ -305,9 +314,11 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
           correct: nextSession.lastResult === 'correct',
           now: Date.now()
         }
-      ).catch((error) => {
-        console.warn('Failed to record review result', error);
-      });
+      )
+        .then(() => refreshReviewStats(pack))
+        .catch((error) => {
+          console.warn('Failed to record review result', error);
+        });
     }
     setState({ session: nextSession });
   });
@@ -409,16 +420,120 @@ function renderSessionPanel(container: HTMLElement): void {
   panel.append(actions);
 
   if (state.showIncorrect && state.session.incorrectItems.length > 0) {
-    const list = document.createElement('ul');
-    list.className = 'incorrect-list';
+  const list = document.createElement('ul');
+  list.className = 'incorrect-list';
 
     for (const item of state.session.incorrectItems) {
       const listItem = document.createElement('li');
-      listItem.className = 'incorrect-item';
+    listItem.className = 'incorrect-item';
       listItem.textContent = `${item.prompt} → ${item.expected} (you answered: ${item.answer || '—'})`;
       list.append(listItem);
     }
 
+    panel.append(list);
+  }
+
+  container.append(panel);
+}
+
+async function refreshReviewStats(pack: VocabPack): Promise<void> {
+  const token = ++statsToken;
+  setState({ reviewStatsLoading: true });
+  try {
+    const cards = await listReviewCardsByPack(pack.id);
+    if (token !== statsToken) {
+      return;
+    }
+    setState({ reviewCards: cards, reviewStatsLoading: false });
+  } catch (error) {
+    if (token !== statsToken) {
+      return;
+    }
+    console.warn('Failed to load review stats', error);
+    setState({ reviewStatsLoading: false });
+  }
+}
+
+function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
+  const panel = document.createElement('section');
+  panel.className = 'panel stats-panel';
+
+  const heading = document.createElement('span');
+  heading.className = 'panel-label';
+  heading.textContent = 'Progress stats';
+  panel.append(heading);
+
+  if (state.reviewStatsLoading) {
+    const loading = document.createElement('p');
+    loading.className = 'status loading';
+    loading.textContent = 'Loading stats…';
+    panel.append(loading);
+    container.append(panel);
+    return;
+  }
+
+  const cards = state.reviewCards.filter((card) => card.attempts > 0);
+  if (cards.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'status hint';
+    empty.textContent = 'No review stats yet. Answer a few prompts to see progress.';
+    panel.append(empty);
+    container.append(panel);
+    return;
+  }
+
+  const totals = cards.reduce(
+    (acc, card) => {
+      acc.attempts += card.attempts;
+      acc.correct += card.correct;
+      acc.incorrect += card.incorrect;
+      if (typeof card.dueAt === 'number' && card.dueAt <= Date.now()) {
+        acc.due += 1;
+      }
+      return acc;
+    },
+    { attempts: 0, correct: 0, incorrect: 0, due: 0 }
+  );
+
+  const accuracy = totals.attempts > 0 ? Math.round((totals.correct / totals.attempts) * 100) : 0;
+  const summary = document.createElement('p');
+  summary.className = 'session-summary';
+  summary.textContent = `Attempts: ${totals.attempts} · Correct: ${totals.correct} · Accuracy: ${accuracy}% · Due now: ${totals.due}`;
+  panel.append(summary);
+
+  const itemStats = new Map<string, { attempts: number; correct: number }>();
+  for (const card of cards) {
+    const existing = itemStats.get(card.itemId) ?? { attempts: 0, correct: 0 };
+    existing.attempts += card.attempts;
+    existing.correct += card.correct;
+    itemStats.set(card.itemId, existing);
+  }
+
+  const entries = pack.items
+    .map((item) => {
+      const stats = itemStats.get(item.id);
+      if (!stats) {
+        return undefined;
+      }
+      const itemAccuracy = stats.attempts > 0 ? Math.round((stats.correct / stats.attempts) * 100) : 0;
+      return {
+        label: `${item.src} ↔ ${item.dst}`,
+        attempts: stats.attempts,
+        accuracy: itemAccuracy
+      };
+    })
+    .filter((entry): entry is { label: string; attempts: number; accuracy: number } => Boolean(entry))
+    .sort((a, b) => b.attempts - a.attempts);
+
+  if (entries.length > 0) {
+    const list = document.createElement('ul');
+    list.className = 'stats-list';
+    for (const entry of entries) {
+      const listItem = document.createElement('li');
+      listItem.className = 'stats-item';
+      listItem.textContent = `${entry.label} — ${entry.accuracy}% over ${entry.attempts} attempts`;
+      list.append(listItem);
+    }
     panel.append(list);
   }
 
@@ -464,6 +579,7 @@ function render(): void {
   if (state.pack && !state.loading) {
     renderDrillCard(container, state.pack);
     renderSessionPanel(container);
+    renderStatsPanel(container, state.pack);
   } else if (!state.loading) {
     const hint = document.createElement('p');
     hint.className = 'status hint';

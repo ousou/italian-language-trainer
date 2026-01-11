@@ -315,6 +315,16 @@ button.primary[disabled] {
   margin-bottom: 0.35rem;
 }
 
+.stats-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  color: #1f2937;
+}
+
+.stats-item {
+  margin-bottom: 0.35rem;
+}
+
 .status {
   margin: 0;
   padding: 1rem 1.25rem;

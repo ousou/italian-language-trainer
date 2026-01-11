@@ -78,3 +78,13 @@ export async function recordReviewResult(seed: ReviewCardSeed, input: ReviewInpu
   await putReviewCard(updated);
   return updated;
 }
+
+export async function listReviewCardsByPack(packId: string): Promise<ReviewCard[]> {
+  const db = await getDb();
+  const transaction = db.transaction(STORE_REVIEW_CARDS, 'readonly');
+  const store = transaction.objectStore(STORE_REVIEW_CARDS);
+  const index = store.index('by-pack');
+  const result = await requestToPromise(index.getAll(packId));
+  await transactionDone(transaction);
+  return result;
+}
