@@ -677,7 +677,7 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
     for (const entry of state.dailyAttempts) {
       const label = document.createElement('span');
       label.className = 'stats-x-label';
-      label.textContent = entry.dayKey.slice(5);
+      label.textContent = entry.dayKey;
       labels.append(label);
     }
     xAxis.append(spacer, labels);
