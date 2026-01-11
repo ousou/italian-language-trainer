@@ -18,6 +18,15 @@ Repository: **italian-language-trainer**
 
 ---
 
+## ✅ Core Principles
+
+- **No backend**: all features must function without servers; local-only storage.
+- **Business logic isolation**: keep domain logic separate from UI, storage, and framework code.
+- **Unit-first testing**: business logic has dedicated unit tests without mocks or DOM.
+- **Minimal e2e**: keep end-to-end tests lean and only for critical flows.
+
+---
+
 ## 🎯 Feature Overview
 
 - **Vocab Drills**
