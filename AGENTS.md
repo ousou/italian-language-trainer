@@ -20,3 +20,11 @@
 - Automatically fix any issues uncovered by unit tests before reporting back.
 - Keep README documentation in sync when behavior or data storage changes.
 - After tests pass, create a git commit for each change set.
+- Commit messages must explain both why the change was made and what was changed.
+
+## User Profile (fill in)
+
+- Goals:
+- Learning preferences:
+- Study constraints:
+- Devices:
