@@ -30,6 +30,8 @@ interface AppState {
   direction: DrillDirection;
   reviewCards: ReviewCard[];
   dailyAttempts: DailyAttemptCount[];
+  statsDays: number;
+  showItemStats: boolean;
   reviewStatsLoading: boolean;
 }
 
@@ -50,6 +52,8 @@ const state: AppState = {
   direction: 'dst-to-src',
   reviewCards: [],
   dailyAttempts: [],
+  statsDays: 14,
+  showItemStats: false,
   reviewStatsLoading: false
 };
 
@@ -118,6 +122,8 @@ async function selectPack(id: string | undefined): Promise<void> {
       session: undefined,
       reviewCards: [],
       dailyAttempts: [],
+      statsDays: 14,
+      showItemStats: false,
       reviewStatsLoading: false
     });
     return;
@@ -459,12 +465,12 @@ function renderSessionPanel(container: HTMLElement): void {
   panel.append(actions);
 
   if (state.showIncorrect && state.session.incorrectItems.length > 0) {
-  const list = document.createElement('ul');
-  list.className = 'incorrect-list';
+    const list = document.createElement('ul');
+    list.className = 'incorrect-list';
 
     for (const item of state.session.incorrectItems) {
       const listItem = document.createElement('li');
-    listItem.className = 'incorrect-item';
+      listItem.className = 'incorrect-item';
       listItem.textContent = `${item.prompt} → ${item.expected} (you answered: ${item.answer || '—'})`;
       list.append(listItem);
     }
@@ -481,7 +487,7 @@ async function refreshReviewStats(pack: VocabPack): Promise<void> {
   try {
     const now = Date.now();
     const cards = await listReviewCardsByPack(pack.id);
-    const statsDays = 14;
+    const statsDays = state.statsDays;
     const windowStart = startOfLocalDay(now);
     const since = new Date(windowStart);
     since.setDate(since.getDate() - (statsDays - 1));
@@ -547,22 +553,67 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
   summary.textContent = `Attempts: ${totals.attempts} · Correct: ${totals.correct} · Accuracy: ${accuracy}% · Due now: ${totals.due}`;
   panel.append(summary);
 
+  const controls = document.createElement('div');
+  controls.className = 'session-actions';
+
+  const statsLabel = document.createElement('label');
+  statsLabel.className = 'panel-label';
+  statsLabel.textContent = 'History window';
+  statsLabel.setAttribute('for', 'stats-days');
+
+  const statsSelect = document.createElement('select');
+  statsSelect.id = 'stats-days';
+  statsSelect.className = 'panel-control';
+  const options = [7, 14, 30];
+  for (const value of options) {
+    const option = document.createElement('option');
+    option.value = String(value);
+    option.textContent = `${value} days`;
+    if (value === state.statsDays) {
+      option.selected = true;
+    }
+    statsSelect.append(option);
+  }
+
+  statsSelect.addEventListener('change', () => {
+    const nextDays = Number(statsSelect.value);
+    if (!Number.isFinite(nextDays) || nextDays <= 0) {
+      return;
+    }
+    setState({ statsDays: nextDays });
+    void refreshReviewStats(pack);
+  });
+
+  controls.append(statsLabel, statsSelect);
+  panel.append(controls);
+
   if (state.dailyAttempts.length > 0) {
     const dailyHeading = document.createElement('p');
     dailyHeading.className = 'session-summary';
     dailyHeading.textContent = `Daily attempts (last ${state.dailyAttempts.length} days)`;
     panel.append(dailyHeading);
 
-    const dailyList = document.createElement('ul');
-    dailyList.className = 'stats-daily-list';
+    const maxCount = Math.max(1, ...state.dailyAttempts.map((entry) => entry.count));
+    const chart = document.createElement('div');
+    chart.className = 'stats-chart';
     for (const entry of state.dailyAttempts) {
-      const listItem = document.createElement('li');
-      listItem.className = 'stats-item';
-      const attemptsLabel = entry.count === 1 ? 'attempt' : 'attempts';
-      listItem.textContent = `${entry.dayKey} — ${entry.count} ${attemptsLabel}`;
-      dailyList.append(listItem);
+      const bar = document.createElement('div');
+      bar.className = 'stats-bar';
+      bar.title = `${entry.dayKey}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`;
+
+      const fill = document.createElement('div');
+      fill.className = 'stats-bar-fill';
+      const height = Math.round((entry.count / maxCount) * 80);
+      fill.style.height = `${height}px`;
+
+      const label = document.createElement('span');
+      label.className = 'stats-bar-label';
+      label.textContent = entry.dayKey.slice(5);
+
+      bar.append(fill, label);
+      chart.append(bar);
     }
-    panel.append(dailyList);
+    panel.append(chart);
   }
 
   const itemStats = new Map<string, { attempts: number; correct: number }>();
@@ -590,6 +641,17 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
     .sort((a, b) => b.attempts - a.attempts);
 
   if (entries.length > 0) {
+    const itemToggle = document.createElement('button');
+    itemToggle.type = 'button';
+    itemToggle.className = 'secondary';
+    itemToggle.textContent = state.showItemStats ? 'Hide word details' : 'Show word details';
+    itemToggle.addEventListener('click', () => {
+      setState({ showItemStats: !state.showItemStats });
+    });
+    panel.append(itemToggle);
+  }
+
+  if (entries.length > 0 && state.showItemStats) {
     const list = document.createElement('ul');
     list.className = 'stats-list';
     for (const entry of entries) {

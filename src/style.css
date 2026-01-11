@@ -331,6 +331,35 @@ button.primary[disabled] {
   color: #1f2937;
 }
 
+.stats-chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  align-items: end;
+}
+
+.stats-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 96px;
+}
+
+.stats-bar-fill {
+  width: 100%;
+  max-width: 28px;
+  background: linear-gradient(180deg, rgba(14, 165, 233, 0.8), rgba(59, 130, 246, 0.8));
+  border-radius: 8px;
+  height: 0;
+}
+
+.stats-bar-label {
+  font-size: 0.7rem;
+  color: #475569;
+}
+
 .status {
   margin: 0;
   padding: 1rem 1.25rem;
