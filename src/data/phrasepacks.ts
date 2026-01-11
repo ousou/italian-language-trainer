@@ -18,6 +18,36 @@ export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
     path: 'phrasepacks/core-it-sv-a1.json'
   },
   {
+    id: 'bella-vista-1-1',
+    title: 'Bella Vista 1 ch 1',
+    path: 'phrasepacks/bella-vista-1-ch-1.json'
+  },
+  {
+    id: 'bella-vista-1-2',
+    title: 'Bella Vista 1 ch 2',
+    path: 'phrasepacks/bella-vista-1-ch-2.json'
+  },
+  {
+    id: 'bella-vista-1-3',
+    title: 'Bella Vista 1 ch 3',
+    path: 'phrasepacks/bella-vista-1-ch-3.json'
+  },
+  {
+    id: 'bella-vista-1-4',
+    title: 'Bella Vista 1 ch 4',
+    path: 'phrasepacks/bella-vista-1-ch-4.json'
+  },
+  {
+    id: 'bella-vista-1-5',
+    title: 'Bella Vista 1 ch 5',
+    path: 'phrasepacks/bella-vista-1-ch-5.json'
+  },
+  {
+    id: 'bella-vista-1-6',
+    title: 'Bella Vista 1 ch 6',
+    path: 'phrasepacks/bella-vista-1-ch-6.json'
+  },
+  {
     id: 'restaurant-it-fi',
     title: 'Restaurant — Italian⇄Finnish',
     path: 'phrasepacks/restaurant-it-fi.json'
