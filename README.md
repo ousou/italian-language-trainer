@@ -192,7 +192,7 @@ italian-language-trainer/
 - **Review history**: Each answer also appends a local review event (timestamp, result, item, direction) to support daily activity tracking and future analytics.
 - **How items are chosen**: Current sessions still use randomized order from the selected pack (no SRS queue yet). Review stats are collected during sessions to enable a future “due cards” queue.
 - **How items are chosen**: Sessions now build an SRS queue per pack, prioritizing due cards, then new items, then upcoming reviews to fill the session.
-- **Stats UI**: The session view includes a button to reveal a stats panel that summarizes attempts/accuracy for the current pack, shows a configurable daily-activity chart (7/14/30 days), and keeps the per-item list collapsed until requested.
+- **Stats UI**: The session view includes a button to reveal a stats panel that summarizes attempts/accuracy for the current pack, shows a configurable daily-activity line chart (7/14/30 days) with axis labels, and keeps the per-item list collapsed until requested.
 
 ---
 

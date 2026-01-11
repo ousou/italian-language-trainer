@@ -331,33 +331,61 @@ button.primary[disabled] {
   color: #1f2937;
 }
 
-.stats-chart {
+.stats-chart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
+  grid-template-columns: 3rem 1fr;
   gap: 0.5rem;
   margin-top: 0.75rem;
-  align-items: end;
 }
 
-.stats-bar {
+.stats-y-axis {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  min-height: 96px;
-}
-
-.stats-bar-fill {
-  width: 100%;
-  max-width: 28px;
-  background: linear-gradient(180deg, rgba(14, 165, 233, 0.8), rgba(59, 130, 246, 0.8));
-  border-radius: 8px;
-  height: 0;
-}
-
-.stats-bar-label {
+  justify-content: space-between;
   font-size: 0.7rem;
   color: #475569;
+}
+
+.stats-chart-canvas {
+  width: 100%;
+}
+
+.stats-line-svg {
+  width: 100%;
+  height: 120px;
+}
+
+.stats-line-axis {
+  stroke: rgba(148, 163, 184, 0.7);
+  stroke-width: 0.6;
+}
+
+.stats-line-path {
+  fill: none;
+  stroke: rgba(14, 165, 233, 0.85);
+  stroke-width: 1.6;
+}
+
+.stats-line-point {
+  fill: rgba(14, 165, 233, 0.9);
+}
+
+.stats-x-axis {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.stats-x-labels {
+  display: grid;
+  grid-template-columns: repeat(var(--stats-days), minmax(0, 1fr));
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+.stats-x-label {
+  text-align: center;
 }
 
 .status {

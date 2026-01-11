@@ -594,26 +594,94 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
     panel.append(dailyHeading);
 
     const maxCount = Math.max(1, ...state.dailyAttempts.map((entry) => entry.count));
-    const chart = document.createElement('div');
-    chart.className = 'stats-chart';
-    for (const entry of state.dailyAttempts) {
-      const bar = document.createElement('div');
-      bar.className = 'stats-bar';
-      bar.title = `${entry.dayKey}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`;
+    const chartGrid = document.createElement('div');
+    chartGrid.className = 'stats-chart-grid';
 
-      const fill = document.createElement('div');
-      fill.className = 'stats-bar-fill';
-      const height = Math.round((entry.count / maxCount) * 80);
-      fill.style.height = `${height}px`;
+    const yAxis = document.createElement('div');
+    yAxis.className = 'stats-y-axis';
+    const yTop = document.createElement('span');
+    yTop.textContent = `${maxCount}`;
+    const yMid = document.createElement('span');
+    yMid.textContent = `${Math.round(maxCount / 2)}`;
+    const yBottom = document.createElement('span');
+    yBottom.textContent = '0';
+    yAxis.append(yTop, yMid, yBottom);
 
-      const label = document.createElement('span');
-      label.className = 'stats-bar-label';
-      label.textContent = entry.dayKey.slice(5);
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const width = 100;
+    const height = 60;
+    const paddingTop = 4;
+    const paddingBottom = 6;
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.classList.add('stats-line-svg');
 
-      bar.append(fill, label);
-      chart.append(bar);
+    const baseline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    const baselineY = height - paddingBottom;
+    baseline.setAttribute('x1', '0');
+    baseline.setAttribute('x2', `${width}`);
+    baseline.setAttribute('y1', `${baselineY}`);
+    baseline.setAttribute('y2', `${baselineY}`);
+    baseline.setAttribute('class', 'stats-line-axis');
+    svg.append(baseline);
+
+    const points: { x: number; y: number; title: string }[] = [];
+    const usableHeight = height - paddingTop - paddingBottom;
+    const count = state.dailyAttempts.length;
+    const step = count > 1 ? width / (count - 1) : 0;
+    state.dailyAttempts.forEach((entry, index) => {
+      const x = count > 1 ? index * step : width / 2;
+      const ratio = entry.count / maxCount;
+      const y = paddingTop + (1 - ratio) * usableHeight;
+      points.push({
+        x,
+        y,
+        title: `${entry.dayKey}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`
+      });
+    });
+
+    if (points.length > 0) {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const d = points
+        .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+        .join(' ');
+      path.setAttribute('d', d);
+      path.setAttribute('class', 'stats-line-path');
+      svg.append(path);
+
+      for (const point of points) {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', point.x.toFixed(2));
+        circle.setAttribute('cy', point.y.toFixed(2));
+        circle.setAttribute('r', '1.8');
+        circle.setAttribute('class', 'stats-line-point');
+        circle.appendChild(createSvgTitle(point.title));
+        svg.append(circle);
+      }
     }
-    panel.append(chart);
+
+    const chartCanvas = document.createElement('div');
+    chartCanvas.className = 'stats-chart-canvas';
+    chartCanvas.append(svg);
+
+    chartGrid.append(yAxis, chartCanvas);
+    panel.append(chartGrid);
+
+    const xAxis = document.createElement('div');
+    xAxis.className = 'stats-x-axis';
+    const spacer = document.createElement('span');
+    spacer.className = 'stats-x-spacer';
+    const labels = document.createElement('div');
+    labels.className = 'stats-x-labels';
+    labels.style.setProperty('--stats-days', String(state.dailyAttempts.length));
+    for (const entry of state.dailyAttempts) {
+      const label = document.createElement('span');
+      label.className = 'stats-x-label';
+      label.textContent = entry.dayKey.slice(5);
+      labels.append(label);
+    }
+    xAxis.append(spacer, labels);
+    panel.append(xAxis);
   }
 
   const itemStats = new Map<string, { attempts: number; correct: number }>();
@@ -716,6 +784,12 @@ function render(): void {
   }
 
   root.append(container);
+}
+
+function createSvgTitle(value: string): SVGTitleElement {
+  const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+  title.textContent = value;
+  return title;
 }
 
 render();
