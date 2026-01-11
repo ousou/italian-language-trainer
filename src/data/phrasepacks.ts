@@ -8,16 +8,6 @@ export interface PhrasePackMeta {
 
 export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
   {
-    id: 'core-it-fi-a1',
-    title: 'Core A1 — Italian⇄Finnish',
-    path: 'phrasepacks/core-it-fi-a1.json'
-  },
-  {
-    id: 'core-it-sv-a1',
-    title: 'Core A1 — Italienska⇄Svenska',
-    path: 'phrasepacks/core-it-sv-a1.json'
-  },
-  {
     id: 'bella-vista-1-1',
     title: 'Bella Vista 1 ch 1',
     path: 'phrasepacks/bella-vista-1-ch-1.json'
@@ -48,14 +38,14 @@ export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
     path: 'phrasepacks/bella-vista-1-ch-6.json'
   },
   {
-    id: 'restaurant-it-fi',
-    title: 'Restaurant — Italian⇄Finnish',
-    path: 'phrasepacks/restaurant-it-fi.json'
+    id: 'core-it-fi-a1',
+    title: 'Core vocabulary — Italian⇄Finnish',
+    path: 'phrasepacks/core-it-fi-a1.json'
   },
   {
-    id: 'restaurant-it-sv',
-    title: 'Restaurant — Italienska⇄Svenska',
-    path: 'phrasepacks/restaurant-it-sv.json'
+    id: 'core-it-sv-a1',
+    title: 'Core vocabulary — Italienska⇄Svenska',
+    path: 'phrasepacks/core-it-sv-a1.json'
   }
 ];
 
