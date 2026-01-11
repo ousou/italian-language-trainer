@@ -72,7 +72,7 @@
     { "id": "da", "src": "da", "dst": "jonkun luokse" },
     { "id": "l-amica", "src": "l’amica", "dst": "ystävä (nainen)" },
     { "id": "che-joka", "src": "che", "dst": "joka" },
-    { "id": "abita", "src": "abita", "dst": "asuu" },
+    { "id": "abita", "src": "abita", "dst": "hän asuu" },
     { "id": "qui-vicino", "src": "qui vicino", "dst": "tässä lähellä" },
     { "id": "bene", "src": "Bene.", "dst": "Selvä." },
     { "id": "a-presto", "src": "A presto!", "dst": "Nähdään pian!" },

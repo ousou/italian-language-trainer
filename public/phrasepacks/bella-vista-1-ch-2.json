@@ -11,7 +11,7 @@
     { "id": "il-ragazzo", "src": "il ragazzo", "dst": "poika" },
     { "id": "al-bar", "src": "al bar", "dst": "kahvilassa, kahvilaan" },
     { "id": "il-bar", "src": "il bar", "dst": "kahvila" },
-    { "id": "scusi", "src": "scusi", "dst": "anteeksi (teit.)" },
+    { "id": "scusi", "src": "scusi", "dst": "anteeksi" },
     { "id": "un-attimo-arrivo", "src": "Un attimo, arrivo", "dst": "Hetkinen, olen tulossa…" },
     { "id": "ecco", "src": "ecco", "dst": "Kas tässä. Tässä…" },
     { "id": "prendete", "src": "prendete", "dst": "otatte (mon.)" },
