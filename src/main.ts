@@ -1,6 +1,7 @@
 import './style.css';
 import type { DrillDirection, LanguageCode, VocabPack } from './types.ts';
 import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
+import { recordReviewResult } from './data/reviewStore.ts';
 import { nextCard, redoIncorrect, startNewSession as createNewSession, submitAnswer, type SessionState } from './logic/session.ts';
 
 interface AppState {
@@ -289,7 +290,25 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
       goToNext();
       return;
     }
-    const nextSession = submitAnswer(pack, state.session, state.session.answerInput);
+    const currentSession = state.session;
+    const nextSession = submitAnswer(pack, currentSession, currentSession.answerInput);
+    if (nextSession.lastResult) {
+      const itemIndex = currentSession.order[currentSession.currentIndex];
+      const item = pack.items[itemIndex];
+      void recordReviewResult(
+        {
+          packId: pack.id,
+          itemId: item.id,
+          direction: currentSession.direction
+        },
+        {
+          correct: nextSession.lastResult === 'correct',
+          now: Date.now()
+        }
+      ).catch((error) => {
+        console.warn('Failed to record review result', error);
+      });
+    }
     setState({ session: nextSession });
   });
 

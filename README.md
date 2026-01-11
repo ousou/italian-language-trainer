@@ -183,6 +183,12 @@ italian-language-trainer/
 - Daily caps: **15 new cards**, **120 reviews**.
 - Leitner fallback for new users.
 
+### Current storage behavior (prototype)
+
+- **Stats scope**: Per item per direction, keyed by `packId:itemId:direction`. This means the same word in different packs tracks separately, and `src→dst` vs `dst→src` are independent.
+- **What is recorded**: Attempts/correct/incorrect counts, streaks, lapses, last result, SM-2 scheduling fields (`ef`, `intervalDays`, `repetitions`, `dueAt`), plus `lastReviewedAt` and optional `lastQuality`.
+- **How items are chosen**: Current sessions still use randomized order from the selected pack (no SRS queue yet). Review stats are collected during sessions to enable a future “due cards” queue.
+
 ---
 
 ## 🚀 Getting Started
