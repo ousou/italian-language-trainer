@@ -19,3 +19,4 @@
 - Run end-to-end tests with `pnpm test:e2e` when a feature is complete.
 - Automatically fix any issues uncovered by unit tests before reporting back.
 - Keep README documentation in sync when behavior or data storage changes.
+- After tests pass, create a git commit for each change set.
