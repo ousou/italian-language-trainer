@@ -48,14 +48,14 @@
     { "id": "prego", "src": "Prego.", "dst": "Ole/Olkaa hyvä." },
 
     { "id": "una-cioccolata", "src": "una cioccolata", "dst": "kaakao" },
-    { "id": "unaranciata", "src": "un’aranciata", "dst": "appelsiinilimsä" },
+    { "id": "unaranciata", "src": "un’aranciata", "dst": "appelsiinilimsaa" },
     { "id": "un-succo-di-frutta", "src": "un succo di frutta", "dst": "hedelmämehu" },
     { "id": "una-spremuta-darancia", "src": "una spremuta d’arancia", "dst": "tuorepuristettu appelsiinimehu" },
     { "id": "di-pompelmo", "src": "di pompelmo", "dst": "greippi" },
     { "id": "un-aperitivo", "src": "un aperitivo", "dst": "aperitiivi" },
     { "id": "un-digestivo", "src": "un digestivo", "dst": "ruoansulatusryyppy" },
     { "id": "una-birra-alla-spina", "src": "una birra alla spina", "dst": "hanaolut" },
-    { "id": "una-birra-in-bottiglia", "src": "una birra in bottiglia", "dst": "pullollinen olut" },
+    { "id": "una-birra-in-bottiglia", "src": "una birra in bottiglia", "dst": "pullollinen olutta" },
     { "id": "una-birra-in-lattina", "src": "una birra in lattina", "dst": "tölkkiolut" },
     { "id": "un-bicchiere-di-vino-rosso", "src": "un bicchiere di vino rosso", "dst": "lasillinen punaviiniä" },
     { "id": "un-bicchiere-di-vino-bianco", "src": "un bicchiere di vino bianco", "dst": "lasillinen valkoviiniä" },
@@ -65,4 +65,3 @@
     { "id": "una-bottiglia-di-acqua", "src": "una bottiglia di acqua", "dst": "pullollinen vettä" }
   ]
 }
-

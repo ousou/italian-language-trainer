@@ -11,7 +11,7 @@
         {
           "id": "arrivo-prenotazione",
           "it": "Buonasera, abbiamo una prenotazione a nome Rossi.",
-          "sv": "God kväll, vi har en reservation på namnet Rossi."
+          "sv": "God kväll, vi har en reservation under namnet Rossi."
         },
         {
           "id": "arrivo-quanti",
@@ -61,7 +61,7 @@
         {
           "id": "bistecca-sangue",
           "it": "Per me la bistecca al sangue, per favore.",
-          "sv": "För mig en biff blodig, tack."
+          "sv": "En blodig biff för mig, tack."
         },
         {
           "id": "birra-spina",
@@ -71,7 +71,7 @@
         {
           "id": "condividere-piatto",
           "it": "Vorremmo condividere questo piatto.",
-          "sv": "Vi skulle vilja dela den här rätten."
+          "sv": "Vi skulle vilja dela på den här rätten."
         }
       ]
     },
@@ -151,7 +151,7 @@
         {
           "id": "portare-via",
           "it": "Ci può impacchettare il resto da portare via?",
-          "sv": "Kan ni packa resten att ta med hem?"
+          "sv": "Kan ni packa in resten så att vi kan ta med det?"
         }
       ]
     },
@@ -166,7 +166,7 @@
         {
           "id": "conto-separato",
           "it": "Mi potrebbe portare il conto separato?",
-          "sv": "Kan vi få separata notor?"
+          "sv": "Kan vi få separata notor, tack?"
         },
         {
           "id": "servizio-incluso",
