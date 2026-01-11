@@ -11,6 +11,7 @@ interface AppState {
   loading: boolean;
   error?: string;
   showIncorrect: boolean;
+  showStats: boolean;
   session?: SessionState;
   direction: DrillDirection;
   reviewCards: ReviewCard[];
@@ -29,6 +30,7 @@ const state: AppState = {
   loading: false,
   error: undefined,
   showIncorrect: false,
+  showStats: false,
   session: undefined,
   direction: 'dst-to-src',
   reviewCards: [],
@@ -97,6 +99,7 @@ async function selectPack(id: string | undefined): Promise<void> {
       pack: undefined,
       error: undefined,
       showIncorrect: false,
+      showStats: false,
       session: undefined,
       reviewCards: [],
       reviewStatsLoading: false
@@ -123,6 +126,7 @@ async function selectPack(id: string | undefined): Promise<void> {
       pack,
       loading: false,
       showIncorrect: false,
+      showStats: false,
       session: {
         ...startNewSessionLogic(pack, state.direction)
       }
@@ -395,6 +399,13 @@ function renderSessionPanel(container: HTMLElement): void {
     setState({ showIncorrect: !state.showIncorrect });
   });
 
+  const statsButton = document.createElement('button');
+  statsButton.type = 'button';
+  statsButton.textContent = state.showStats ? 'Hide progress stats' : 'Show progress stats';
+  statsButton.addEventListener('click', () => {
+    setState({ showStats: !state.showStats });
+  });
+
   const redoButton = document.createElement('button');
   redoButton.type = 'button';
   redoButton.textContent = 'Redo incorrect';
@@ -410,7 +421,7 @@ function renderSessionPanel(container: HTMLElement): void {
     startNewSession();
   });
 
-  actions.append(toggleButton);
+  actions.append(toggleButton, statsButton);
   if (state.session.sessionComplete) {
     actions.append(redoButton, newSessionButton);
   } else {
@@ -579,7 +590,9 @@ function render(): void {
   if (state.pack && !state.loading) {
     renderDrillCard(container, state.pack);
     renderSessionPanel(container);
-    renderStatsPanel(container, state.pack);
+    if (state.showStats) {
+      renderStatsPanel(container, state.pack);
+    }
   } else if (!state.loading) {
     const hint = document.createElement('p');
     hint.className = 'status hint';

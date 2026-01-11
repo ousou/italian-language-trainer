@@ -188,7 +188,7 @@ italian-language-trainer/
 - **Stats scope**: Per item per direction, keyed by `packId:itemId:direction`. This means the same word in different packs tracks separately, and `src→dst` vs `dst→src` are independent.
 - **What is recorded**: Attempts/correct/incorrect counts, streaks, lapses, last result, SM-2 scheduling fields (`ef`, `intervalDays`, `repetitions`, `dueAt`), plus `lastReviewedAt` and optional `lastQuality`.
 - **How items are chosen**: Current sessions still use randomized order from the selected pack (no SRS queue yet). Review stats are collected during sessions to enable a future “due cards” queue.
-- **Stats UI**: The session view includes a simple stats panel that summarizes attempts/accuracy for the current pack and lists per-item progress.
+- **Stats UI**: The session view includes a button to reveal a stats panel that summarizes attempts/accuracy for the current pack and lists per-item progress.
 
 ---
 
