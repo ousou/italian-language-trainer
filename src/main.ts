@@ -52,7 +52,7 @@ const state: AppState = {
   direction: 'dst-to-src',
   reviewCards: [],
   dailyAttempts: [],
-  statsDays: 14,
+  statsDays: 7,
   showItemStats: false,
   reviewStatsLoading: false
 };
@@ -122,7 +122,7 @@ async function selectPack(id: string | undefined): Promise<void> {
       session: undefined,
       reviewCards: [],
       dailyAttempts: [],
-      statsDays: 14,
+      statsDays: 7,
       showItemStats: false,
       reviewStatsLoading: false
     });
@@ -628,9 +628,9 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
     const points: { x: number; y: number; title: string }[] = [];
     const usableHeight = height - paddingTop - paddingBottom;
     const count = state.dailyAttempts.length;
-    const step = count > 1 ? width / (count - 1) : 0;
+    const step = count > 0 ? width / count : 0;
     state.dailyAttempts.forEach((entry, index) => {
-      const x = count > 1 ? index * step : width / 2;
+      const x = count > 0 ? step * (index + 0.5) : width / 2;
       const ratio = entry.count / maxCount;
       const y = paddingTop + (1 - ratio) * usableHeight;
       points.push({
