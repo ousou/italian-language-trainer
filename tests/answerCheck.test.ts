@@ -14,6 +14,11 @@ describe('normalizeAnswer', () => {
   it('strips punctuation', () => {
     expect(normalizeAnswer('Ciao! Come va?')).toBe('ciao come va');
   });
+
+  it('treats apostrophes as ignorable punctuation', () => {
+    expect(normalizeAnswer("Prendi l'autobus?")).toBe('prendi l autobus');
+    expect(normalizeAnswer('Prendi l’autobus?')).toBe('prendi l autobus');
+  });
 });
 
 describe('isAnswerCorrect', () => {
