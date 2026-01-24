@@ -26,7 +26,14 @@ def test_build_phrasepack_normalizes_and_ids():
 
 
 def test_build_phrasepack_splits_lemma_variant():
-    extracted = [ExtractedItem(surface="vanno", lemma="andare", dst="menevat")]
+    extracted = [
+        ExtractedItem(
+            surface="vanno",
+            lemma="andare",
+            lemma_dst="menn\u00e4",
+            dst="menevat",
+        )
+    ]
     pack = build_phrasepack(
         pack_id="test-pack",
         title="Test",
@@ -36,6 +43,26 @@ def test_build_phrasepack_splits_lemma_variant():
     )
 
     assert [item.src for item in pack.items] == ["vanno", "andare"]
+
+
+def test_build_phrasepack_skips_lemma_when_dst_matches():
+    extracted = [
+        ExtractedItem(
+            surface="abito",
+            lemma="abitare",
+            lemma_dst="asun",
+            dst="asun",
+        )
+    ]
+    pack = build_phrasepack(
+        pack_id="test-pack",
+        title="Test",
+        src_lang="it",
+        dst_lang="fi",
+        extracted_items=extracted,
+    )
+
+    assert [item.src for item in pack.items] == ["abito"]
 
 
 def test_build_phrasepack_splits_fallback_parentheses():
@@ -48,4 +75,4 @@ def test_build_phrasepack_splits_fallback_parentheses():
         extracted_items=extracted,
     )
 
-    assert [item.src for item in pack.items] == ["abiti", "abitare"]
+    assert [item.src for item in pack.items] == ["abiti"]

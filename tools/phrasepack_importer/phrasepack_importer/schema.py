@@ -10,6 +10,7 @@ from pydantic import BaseModel, ValidationError, model_validator
 class ExtractedItem(BaseModel):
     surface: str | None = None
     lemma: str | None = None
+    lemma_dst: str | None = None
     src: str | None = None
     dst: str | None = None
 
@@ -63,12 +64,25 @@ def _strip_code_fences(raw: str) -> str:
     return "\n".join(lines).strip()
 
 
+def _extract_json_object(raw: str) -> str:
+    text = raw.strip()
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        return text
+    return text[start : end + 1]
+
+
 def parse_extracted_json(raw: str) -> ExtractedPayload:
     """Parse and validate raw JSON from the LLM."""
     try:
-        data = json.loads(_strip_code_fences(raw))
+        cleaned = _strip_code_fences(raw)
+        data = json.loads(cleaned)
     except json.JSONDecodeError as exc:
-        raise ParseError(f"Invalid JSON: {exc}") from exc
+        try:
+            data = json.loads(_extract_json_object(_strip_code_fences(raw)))
+        except json.JSONDecodeError as inner_exc:
+            raise ParseError(f"Invalid JSON: {exc}") from inner_exc
 
     try:
         return ExtractedPayload.model_validate(data)

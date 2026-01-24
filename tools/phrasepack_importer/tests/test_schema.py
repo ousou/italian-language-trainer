@@ -15,6 +15,12 @@ def test_parse_extracted_json_code_fenced():
     assert payload.items[0].dst == "moi"
 
 
+def test_parse_extracted_json_extracts_embedded_object():
+    raw = 'prefix text {"items": [{"surface": "ciao", "dst": "moi"}]} trailing'
+    payload = parse_extracted_json(raw)
+    assert payload.items[0].surface == "ciao"
+
+
 def test_parse_extracted_json_requires_surface_or_src():
     raw = '{"items": [{"dst": "moi"}]}'
     with pytest.raises(ParseError):

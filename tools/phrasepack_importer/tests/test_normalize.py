@@ -25,6 +25,9 @@ def test_normalize_src_text_fixes_ocr_apostrophe():
     value = "I'appuntamento"
     assert normalize_src_text(value) == "l'appuntamento"
 
+    value = "si"
+    assert normalize_src_text(value) == "s\u00ec"
+
 
 def test_normalize_dst_text_sentence_cases_questions():
     value = "missä? minne?"
@@ -35,8 +38,8 @@ def test_normalize_dst_text_sentence_cases_questions():
 
 
 def test_split_surface_and_lemmas_fallback_parens():
-    assert split_surface_and_lemmas("vanno (andare*)", None) == ["vanno", "andare"]
-    assert split_surface_and_lemmas("abiti (abitare)", None) == ["abiti", "abitare"]
+    assert split_surface_and_lemmas("vanno (andare*)", None) == ["vanno"]
+    assert split_surface_and_lemmas("abiti (abitare)", None) == ["abiti"]
     assert split_surface_and_lemmas("essere", None) == ["essere"]
 
 

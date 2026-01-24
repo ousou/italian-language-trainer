@@ -6,7 +6,7 @@ import json
 
 _SCHEMA_EXAMPLE = {
     "items": [
-        {"surface": "vanno", "lemma": "andare", "dst": "menevat"},
+        {"surface": "vanno", "lemma": "andare", "lemma_dst": "mennä", "dst": "menevat"},
         {"surface": "come?", "dst": "miten?"},
     ]
 }
@@ -26,7 +26,9 @@ def build_extraction_prompt(src_lang: str, dst_lang: str) -> str:
         "- Output must be valid JSON, no markdown or extra text.\n"
         "- The JSON root object has a single field: items.\n"
         "- Each item has surface (the exact form shown in the image) and dst.\n"
-        "- If a base form/lemma is shown, put it in lemma (do not append to surface).\n"
+        "- If a base form/lemma is shown, put it in lemma and provide its translation in lemma_dst.\n"
+        "- If lemma_dst would be identical to dst, omit lemma and lemma_dst.\n"
+        "- Do not append lemma text to surface.\n"
         "- Keep terms as they appear in the image, preserving punctuation.\n"
         "- If multiple translations exist, include them in dst separated by '; '.\n\n"
         "Schema example:\n"

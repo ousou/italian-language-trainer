@@ -6,6 +6,16 @@
   "dst": "fi",
   "items": [
     {
+      "id": "e-2",
+      "src": "\" è",
+      "dst": "on; Te olette"
+    },
+    {
+      "id": "ah-si-che-bello",
+      "src": "Ah sì, che bello!",
+      "dst": "Ai niinkö, sepä mukavaa!"
+    },
+    {
       "id": "anchio",
       "src": "Anch'io!",
       "dst": "Niin minäkin!"
@@ -31,19 +41,9 @@
       "dst": "Roomassa"
     },
     {
-      "id": "abitare-2",
-      "src": "abitare",
-      "dst": "asua"
-    },
-    {
       "id": "abitare",
       "src": "abitare",
-      "dst": "asun"
-    },
-    {
-      "id": "abitare-3",
-      "src": "abitare",
-      "dst": "asut"
+      "dst": "asua"
     },
     {
       "id": "abiti",
@@ -56,11 +56,6 @@
       "dst": "asun"
     },
     {
-      "id": "al-bar",
-      "src": "al bar",
-      "dst": "kahvilaan, kahvilassa"
-    },
-    {
       "id": "anche",
       "src": "anche",
       "dst": "myös"
@@ -68,7 +63,7 @@
     {
       "id": "andare",
       "src": "andare",
-      "dst": "menevät"
+      "dst": "menn"
     },
     {
       "id": "arriva",
@@ -76,19 +71,9 @@
       "dst": "saapuu, tulee"
     },
     {
-      "id": "arrivare-2",
-      "src": "arrivare",
-      "dst": "saapua"
-    },
-    {
       "id": "arrivare",
       "src": "arrivare",
-      "dst": "saapuu, tulee"
-    },
-    {
-      "id": "avere",
-      "src": "avere",
-      "dst": "heillä on"
+      "dst": "saapua"
     },
     {
       "id": "con",
@@ -122,21 +107,6 @@
     },
     {
       "id": "essere",
-      "src": "essere",
-      "dst": "olen"
-    },
-    {
-      "id": "essere-3",
-      "src": "essere",
-      "dst": "olet"
-    },
-    {
-      "id": "essere-4",
-      "src": "essere",
-      "dst": "on; Te olette"
-    },
-    {
-      "id": "essere-2",
       "src": "essere*",
       "dst": "olla"
     },
@@ -154,11 +124,6 @@
       "id": "i-ragazzi",
       "src": "i ragazzi",
       "dst": "nuoret"
-    },
-    {
-      "id": "il-bar",
-      "src": "il bar",
-      "dst": "kahvila"
     },
     {
       "id": "il-centro",
@@ -281,14 +246,14 @@
       "dst": "olet"
     },
     {
-      "id": "si",
-      "src": "si",
-      "dst": "kyllä"
-    },
-    {
       "id": "sono",
       "src": "sono",
       "dst": "olen"
+    },
+    {
+      "id": "si",
+      "src": "sì",
+      "dst": "kyllä"
     },
     {
       "id": "vanno",
@@ -296,19 +261,9 @@
       "dst": "menevät"
     },
     {
-      "id": "vivere",
-      "src": "vivere",
-      "dst": "asun, elän"
-    },
-    {
       "id": "vivo",
       "src": "vivo",
       "dst": "asun, elän"
-    },
-    {
-      "id": "e-2",
-      "src": "è",
-      "dst": "on; Te olette"
     }
   ]
 }

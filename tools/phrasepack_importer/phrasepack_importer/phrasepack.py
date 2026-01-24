@@ -39,6 +39,13 @@ def build_phrasepack(
             item_id = ensure_unique_id(base_id, seen_ids)
             items.append(PhrasepackItem(id=item_id, src=src, dst=dst))
 
+        if item.lemma and item.lemma_dst and lemma:
+            if lemma.lower() not in {v.lower() for v in variants}:
+                lemma_dst = normalize_dst_text(item.lemma_dst)
+                if lemma_dst and lemma_dst != dst:
+                    lemma_id = ensure_unique_id(slugify(lemma), seen_ids)
+                    items.append(PhrasepackItem(id=lemma_id, src=lemma, dst=lemma_dst))
+
     return Phrasepack(
         type="vocab",
         id=pack_id,

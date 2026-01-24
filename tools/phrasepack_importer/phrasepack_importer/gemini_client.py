@@ -67,6 +67,7 @@ def extract_pairs(
                     "properties": {
                         "surface": {"type": "STRING"},
                         "lemma": {"type": "STRING"},
+                        "lemma_dst": {"type": "STRING"},
                         "src": {"type": "STRING"},
                         "dst": {"type": "STRING"},
                     },
@@ -85,29 +86,40 @@ def extract_pairs(
         responseMimeType="application/json",
         responseSchema=response_schema,
     )
-    response = client.models.generate_content(
-        model=model,
-        contents=[prompt, image_part],
-        config=config,
-    )
-    raw_text = _extract_text(response)
+    last_error: ParseError | None = None
+    retry_prompt = prompt + "\nReturn strictly valid JSON only."
 
-    try:
-        return parse_extracted_json(raw_text)
-    except ParseError:
-        if not allow_repair:
-            raise
+    for attempt in range(3):
+        response = client.models.generate_content(
+            model=model,
+            contents=[prompt if attempt == 0 else retry_prompt, image_part],
+            config=config,
+        )
+        raw_text = _extract_text(response)
 
-    repair_prompt = (
-        "Fix the following text into valid JSON that matches the schema shown. "
-        "Return ONLY JSON, no extra text.\n\n"
-        f"Schema: {{\"items\": [{{\"src\": \"...\", \"dst\": \"...\"}}]}}\n\n"
-        f"Text to fix:\n{raw_text}"
-    )
-    repair_response = client.models.generate_content(
-        model=model,
-        contents=repair_prompt,
-        config=config,
-    )
-    repaired_text = _extract_text(repair_response)
-    return parse_extracted_json(repaired_text)
+        try:
+            return parse_extracted_json(raw_text)
+        except ParseError as exc:
+            last_error = exc
+            if not allow_repair:
+                continue
+
+        repair_prompt = (
+            "Fix the following text into valid JSON that matches the schema shown. "
+            "Return ONLY JSON, no extra text.\n\n"
+            "Schema: {\"items\": [{\"surface\": \"...\", \"lemma\": \"...\", "
+            "\"lemma_dst\": \"...\", \"dst\": \"...\"}]}\n\n"
+            f"Text to fix:\n{raw_text}"
+        )
+        repair_response = client.models.generate_content(
+            model=model,
+            contents=repair_prompt,
+            config=config,
+        )
+        repaired_text = _extract_text(repair_response)
+        try:
+            return parse_extracted_json(repaired_text)
+        except ParseError as exc:
+            last_error = exc
+
+    raise last_error or ParseError("Failed to parse model output.")
