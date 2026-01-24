@@ -27,3 +27,5 @@ pictures/
 *.sln
 *.sw?
 **/.venv/
+**/__pycache__/
+*.pyc
