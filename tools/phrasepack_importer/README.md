@@ -39,6 +39,10 @@ python -m phrasepack_importer \
 ```
 
 Generated JSON preserves Unicode characters to match existing phrasepacks.
+Extraction normalizes casing for punctuated translations and fixes common OCR
+apostrophe errors like `i'amico` → `l'amico`.
+Sentence casing is only applied for questions/exclamations or sentence-ending
+periods (not abbreviations like `(prep.)`).
 
 ## Tests
 

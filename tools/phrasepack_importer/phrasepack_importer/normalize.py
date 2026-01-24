@@ -20,11 +20,38 @@ _PUNCT_TRANSLATION = str.maketrans(
     }
 )
 
+_SENTENCE_START_RE = re.compile(r"(^|[!?]\s+|\.\s+)([a-zåäö])")
+_OCR_APOSTROPHE_RE = re.compile(r"\b[iI][’'](?=[a-z])")
+_SENTENCE_PERIOD_RE = re.compile(r"\.(\s|$)")
+
 
 def normalize_text(value: str) -> str:
     """Normalize whitespace and punctuation without changing meaning."""
     normalized = value.translate(_PUNCT_TRANSLATION)
     normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized
+
+
+def normalize_src_text(value: str) -> str:
+    """Normalize source text and fix obvious OCR errors."""
+    normalized = normalize_text(value)
+    normalized = _OCR_APOSTROPHE_RE.sub("l'", normalized)
+    return normalized
+
+
+def normalize_dst_text(value: str) -> str:
+    """Normalize target text and enforce sentence casing when punctuated."""
+    normalized = normalize_text(value)
+    should_case = False
+    if "?" in normalized or "!" in normalized:
+        should_case = True
+    elif "." in normalized and _SENTENCE_PERIOD_RE.search(normalized):
+        should_case = True
+
+    if should_case:
+        normalized = _SENTENCE_START_RE.sub(
+            lambda match: f"{match.group(1)}{match.group(2).upper()}", normalized
+        )
     return normalized
 
 

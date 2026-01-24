@@ -1,7 +1,7 @@
 """Phrasepack assembly helpers."""
 from __future__ import annotations
 
-from .normalize import ensure_unique_id, normalize_text, slugify
+from .normalize import ensure_unique_id, normalize_dst_text, normalize_src_text, slugify
 from .schema import ExtractedItem, Phrasepack, PhrasepackItem
 
 
@@ -18,8 +18,8 @@ def build_phrasepack(
     items: list[PhrasepackItem] = []
 
     for item in extracted_items:
-        src = normalize_text(item.src)
-        dst = normalize_text(item.dst)
+        src = normalize_src_text(item.src)
+        dst = normalize_dst_text(item.dst)
         if not src or not dst:
             continue
 
