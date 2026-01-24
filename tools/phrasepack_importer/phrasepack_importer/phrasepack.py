@@ -18,14 +18,21 @@ def build_phrasepack(
     items: list[PhrasepackItem] = []
 
     for item in extracted_items:
-        src = normalize_src_text(item.src)
+        surface = normalize_src_text(item.resolved_surface())
         dst = normalize_dst_text(item.dst)
-        if not src or not dst:
+        if not surface or not dst:
             continue
 
-        base_id = slugify(src)
-        item_id = ensure_unique_id(base_id, seen_ids)
-        items.append(PhrasepackItem(id=item_id, src=src, dst=dst))
+        variants = [surface]
+        if item.lemma:
+            lemma = normalize_src_text(item.lemma)
+            if lemma and lemma.lower() != surface.lower():
+                variants.append(lemma)
+
+        for src in variants:
+            base_id = slugify(src)
+            item_id = ensure_unique_id(base_id, seen_ids)
+            items.append(PhrasepackItem(id=item_id, src=src, dst=dst))
 
     return Phrasepack(
         type="vocab",

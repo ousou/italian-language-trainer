@@ -4,9 +4,9 @@ from phrasepack_importer.schema import ExtractedItem
 
 def test_build_phrasepack_normalizes_and_ids():
     extracted = [
-        ExtractedItem(src=" Ciao ", dst=" Moi "),
-        ExtractedItem(src="Ciao", dst="Hei"),
-        ExtractedItem(src="", dst="skip"),
+        ExtractedItem(surface=" Ciao ", dst=" Moi "),
+        ExtractedItem(surface="Ciao", dst="Hei"),
+        ExtractedItem(surface="  ", dst="skip"),
     ]
     pack = build_phrasepack(
         pack_id="test-pack",
@@ -23,3 +23,16 @@ def test_build_phrasepack_normalizes_and_ids():
     assert [item.id for item in pack.items] == ["ciao", "ciao-2"]
     assert pack.items[0].src == "Ciao"
     assert pack.items[0].dst == "Moi"
+
+
+def test_build_phrasepack_splits_lemma_variant():
+    extracted = [ExtractedItem(surface="vanno", lemma="andare", dst="menevat")]
+    pack = build_phrasepack(
+        pack_id="test-pack",
+        title="Test",
+        src_lang="it",
+        dst_lang="fi",
+        extracted_items=extracted,
+    )
+
+    assert [item.src for item in pack.items] == ["vanno", "andare"]

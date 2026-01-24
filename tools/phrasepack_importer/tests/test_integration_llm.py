@@ -31,7 +31,7 @@ def test_extracts_known_terms_from_ch1_image():
     )
 
     items = assert_non_empty(extracted.items)
-    extracted_src = {normalize_text(item.src).lower() for item in items}
+    extracted_src = {normalize_text(item.resolved_surface()).lower() for item in items}
 
     pack_path = repo_root / "public/phrasepacks/bella-vista-1-ch-1.json"
     pack = json.loads(pack_path.read_text())

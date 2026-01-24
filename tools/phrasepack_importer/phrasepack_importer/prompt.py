@@ -6,8 +6,8 @@ import json
 
 _SCHEMA_EXAMPLE = {
     "items": [
-        {"src": "ciao", "dst": "moi"},
-        {"src": "come?", "dst": "miten?"},
+        {"surface": "vanno", "lemma": "andare", "dst": "menevat"},
+        {"surface": "come?", "dst": "miten?"},
     ]
 }
 
@@ -25,7 +25,8 @@ def build_extraction_prompt(src_lang: str, dst_lang: str) -> str:
         "- Only include entries that show a source term paired with its translation.\n"
         "- Output must be valid JSON, no markdown or extra text.\n"
         "- The JSON root object has a single field: items.\n"
-        "- Each item has src (source term) and dst (target term).\n"
+        "- Each item has surface (the exact form shown in the image) and dst.\n"
+        "- If a base form/lemma is shown, put it in lemma (do not append to surface).\n"
         "- Keep terms as they appear in the image, preserving punctuation.\n"
         "- If multiple translations exist, include them in dst separated by '; '.\n\n"
         "Schema example:\n"

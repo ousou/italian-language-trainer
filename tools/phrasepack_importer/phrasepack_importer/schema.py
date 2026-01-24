@@ -4,12 +4,23 @@ from __future__ import annotations
 import json
 from typing import Any, Iterable
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, model_validator
 
 
 class ExtractedItem(BaseModel):
-    src: str
+    surface: str | None = None
+    lemma: str | None = None
+    src: str | None = None
     dst: str
+
+    @model_validator(mode="after")
+    def _require_surface(self) -> "ExtractedItem":
+        if not (self.surface or self.src):
+            raise ValueError("Each item must include surface or src.")
+        return self
+
+    def resolved_surface(self) -> str:
+        return self.surface or self.src or ""
 
 
 class ExtractedPayload(BaseModel):

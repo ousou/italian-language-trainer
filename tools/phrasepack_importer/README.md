@@ -45,6 +45,8 @@ Sentence casing is only applied for questions/exclamations or sentence-ending
 periods (not abbreviations like `(prep.)`).
 Prompts instruct the model to ignore headings or instructions and only capture
 paired vocabulary entries.
+If a lemma/base form is present in the image, the model should place it in a
+separate `lemma` field so the surface form stays clean for quizzes.
 
 ## Tests
 
