@@ -38,6 +38,9 @@ python -m phrasepack_importer \
   --dst fi
 ```
 
+By default, this writes to the app folder: `public/phrasepacks/<id>.json` at the
+repository root (even if you run the command from `tools/phrasepack_importer/`).
+
 Generated JSON preserves Unicode characters to match existing phrasepacks.
 Extraction normalizes casing for punctuated translations and fixes common OCR
 apostrophe errors like `i'amico` → `l'amico`.

@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from .gemini_client import extract_pairs
-from .io import read_image_bytes, write_json
+from .io import default_phrasepack_output_path, read_image_bytes, write_json
 from .phrasepack import build_phrasepack
 from .prompt import build_image_pairs_prompt, build_pairs_to_items_prompt
 from .schema import ParseError, assert_non_empty, serialize_phrasepack
@@ -53,7 +53,7 @@ def run(argv: list[str]) -> int:
         print(f"Image not found: {image_path}", file=sys.stderr)
         return 2
 
-    output_path = Path(args.out) if args.out else Path("public/phrasepacks") / f"{args.id}.json"
+    output_path = Path(args.out) if args.out else default_phrasepack_output_path(args.id)
 
     try:
         image_prompt = build_image_pairs_prompt(args.src, args.dst)
