@@ -21,6 +21,8 @@ def build_extraction_prompt(src_lang: str, dst_lang: str) -> str:
         f"Source language: {src_lang}\n"
         f"Target language: {dst_lang}\n\n"
         "Rules:\n"
+        "- Ignore any non-vocabulary text like headings, instructions, or notes.\n"
+        "- Only include entries that show a source term paired with its translation.\n"
         "- Output must be valid JSON, no markdown or extra text.\n"
         "- The JSON root object has a single field: items.\n"
         "- Each item has src (source term) and dst (target term).\n"
