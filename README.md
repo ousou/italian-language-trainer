@@ -96,6 +96,7 @@ italian-language-trainer/
 │  ├─ sw.ts                # Service worker (workbox or manual)
 │  └─ main.ts              # Entry point (vanilla JS/TS)
 ├─ scripts/                # Content tooling (validate packs)
+├─ tools/                  # Offline tooling (phrasepack importer, etc.)
 ├─ tests/                  # Unit + e2e
 ├─ README.md
 └─ package.json
@@ -173,6 +174,27 @@ italian-language-trainer/
     }
   ]
 }
+```
+
+---
+
+## 🧰 Phrasepack Importer Tooling
+
+The command-line tooling for generating phrasepacks from images lives in
+`tools/phrasepack_importer/` and uses its own Python virtual environment.
+
+Quick setup (run from that folder):
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Smoke test:
+
+```bash
+python vertex_ai_sdk_smoke.py --image ../../pictures/bella_vista_1_ch_1.jpg
 ```
 
 ---

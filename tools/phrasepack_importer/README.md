@@ -5,7 +5,7 @@ from textbook images. It uses the Vertex AI Python SDK (Gemini).
 
 ## Setup
 
-From this folder:
+From this folder (keep the venv local to `tools/phrasepack_importer/`):
 
 ```bash
 python3 -m venv .venv
