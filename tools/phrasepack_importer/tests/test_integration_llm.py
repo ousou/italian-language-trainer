@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -5,11 +6,7 @@ import pytest
 
 from phrasepack_importer.gemini_client import extract_pairs
 from phrasepack_importer.io import read_image_bytes
-from phrasepack_importer.normalize import (
-    normalize_src_text,
-    normalize_text,
-    split_surface_and_lemmas,
-)
+from phrasepack_importer.normalize import normalize_text
 from phrasepack_importer.phrasepack import build_phrasepack
 from phrasepack_importer.prompt import build_extraction_prompt
 from phrasepack_importer.schema import assert_non_empty
@@ -43,15 +40,15 @@ def test_extracts_known_terms_from_ch1_image():
         extracted_items=items,
     )
 
-    actual_src = {normalize_text(item.src) for item in phrasepack.items}
-    assert actual_src
-    assert all("(" not in src and ")" not in src for src in actual_src)
+    fixture_path = repo_root / "tools/phrasepack_importer/tests/fixtures/ch1_expected.json"
+    expected = json.loads(fixture_path.read_text())
 
-    for extracted_item in items:
-        surface = normalize_src_text(extracted_item.resolved_surface())
-        lemma = normalize_src_text(extracted_item.lemma) if extracted_item.lemma else None
-        if "(" not in surface and ")" not in surface and not lemma:
-            continue
+    actual_items = sorted(
+        [(normalize_text(item.src), normalize_text(item.dst)) for item in phrasepack.items]
+    )
+    expected_items = sorted(
+        [(normalize_text(item["src"]), normalize_text(item["dst"])) for item in expected["items"]]
+    )
 
-        for variant in split_surface_and_lemmas(surface, lemma):
-            assert normalize_text(variant) in actual_src
+    assert actual_items == expected_items
+    assert all("(" not in src and ")" not in src for src, _ in actual_items)

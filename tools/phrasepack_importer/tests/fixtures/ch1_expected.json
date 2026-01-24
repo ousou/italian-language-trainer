@@ -6,250 +6,307 @@
   "dst": "fi",
   "items": [
     {
-      "src": "a",
-      "dst": "jossakin (prep.)"
-    },
-    {
-      "src": "a Roma",
-      "dst": "Roomassa"
-    },
-    {
-      "src": "abitare",
-      "dst": "asun"
-    },
-    {
-      "src": "abitare",
-      "dst": "asua"
-    },
-    {
-      "src": "abitare",
-      "dst": "asut"
-    },
-    {
-      "src": "abiti",
-      "dst": "asut"
-    },
-    {
-      "src": "abito",
-      "dst": "asun"
-    },
-    {
-      "src": "Ah sì, che bello!",
-      "dst": "Ai niinkö, sepä mukavaa!"
-    },
-    {
-      "src": "al bar",
-      "dst": "kahvilaan, kahvilassa"
-    },
-    {
+      "id": "anchio",
       "src": "Anch'io!",
       "dst": "Niin minäkin!"
     },
     {
-      "src": "anche",
-      "dst": "myös"
-    },
-    {
-      "src": "andare",
-      "dst": "menevät"
-    },
-    {
-      "src": "arriva",
-      "dst": "saapuu, tulee"
-    },
-    {
-      "src": "arrivare",
-      "dst": "saapuu, tulee"
-    },
-    {
-      "src": "arrivare",
-      "dst": "saapua"
-    },
-    {
-      "src": "avere",
-      "dst": "heillä on"
-    },
-    {
-      "src": "con",
-      "dst": "kanssa (prep.)"
-    },
-    {
-      "src": "di",
-      "dst": "(jstak) kaupungista"
-    },
-    {
+      "id": "di-dove-sei",
       "src": "Di dove sei?",
       "dst": "Mistä olet kotoisin?"
     },
     {
-      "src": "di dove?",
-      "dst": "Mistä kotoisin?"
-    },
-    {
-      "src": "di Lecce",
-      "dst": "Leccestä kotoisin"
-    },
-    {
-      "src": "dove?",
-      "dst": "Missä? Minne?"
-    },
-    {
-      "src": "e",
-      "dst": "ja"
-    },
-    {
-      "src": "essere",
-      "dst": "olen"
-    },
-    {
-      "src": "essere",
-      "dst": "olet"
-    },
-    {
-      "src": "essere",
-      "dst": "on; Te olette"
-    },
-    {
-      "src": "essere*",
-      "dst": "olla"
-    },
-    {
-      "src": "finlandese",
-      "dst": "suomalainen"
-    },
-    {
-      "src": "hanno",
-      "dst": "heillä on"
-    },
-    {
-      "src": "i ragazzi",
-      "dst": "nuoret"
-    },
-    {
-      "src": "il bar",
-      "dst": "kahvila"
-    },
-    {
-      "src": "il centro",
-      "dst": "keskusta"
-    },
-    {
-      "src": "il motivo",
-      "dst": "syy"
-    },
-    {
-      "src": "in",
-      "dst": "jossakin (prep.)"
-    },
-    {
-      "src": "in centro",
-      "dst": "keskustassa"
-    },
-    {
-      "src": "in Italia",
-      "dst": "Italiassa"
-    },
-    {
-      "src": "in vacanza",
-      "dst": "lomalla, lomalle"
-    },
-    {
-      "src": "interessante",
-      "dst": "mielenkiintoinen"
-    },
-    {
-      "src": "io",
-      "dst": "minä"
-    },
-    {
-      "src": "italiano, italiana",
-      "dst": "italialainen (mies, nainen)"
-    },
-    {
-      "src": "l'amico",
-      "dst": "ystävä"
-    },
-    {
-      "src": "l'appuntamento",
-      "dst": "tapaaminen"
-    },
-    {
-      "src": "la studentessa universitaria",
-      "dst": "yliopisto-opiskelija (nainen)"
-    },
-    {
-      "src": "la vacanza",
-      "dst": "loma"
-    },
-    {
-      "src": "la via",
-      "dst": "katu"
-    },
-    {
-      "src": "lo studio",
-      "dst": "opiskelu"
-    },
-    {
-      "src": "ma",
-      "dst": "mutta"
-    },
-    {
-      "src": "no",
-      "dst": "ei"
-    },
-    {
-      "src": "non",
-      "dst": "ei (verbin edessä)"
-    },
-    {
-      "src": "non sono",
-      "dst": "en ole"
-    },
-    {
-      "src": "per",
-      "dst": "jonkin vuoksi (prep.)"
-    },
-    {
-      "src": "per motivi di studio",
-      "dst": "opiskelun vuoksi"
-    },
-    {
-      "src": "questo, questa",
-      "dst": "tämä (mies, nainen)"
-    },
-    {
-      "src": "qui",
-      "dst": "täällä, tässä"
-    },
-    {
-      "src": "sei",
-      "dst": "olet"
-    },
-    {
-      "src": "si",
-      "dst": "kyllä"
-    },
-    {
-      "src": "sono",
-      "dst": "olen"
-    },
-    {
+      "id": "tutto-bene",
       "src": "Tutto bene.",
       "dst": "Kaikki hyvin."
     },
     {
+      "id": "a",
+      "src": "a",
+      "dst": "jossakin (prep.)"
+    },
+    {
+      "id": "a-roma",
+      "src": "a Roma",
+      "dst": "Roomassa"
+    },
+    {
+      "id": "abitare-2",
+      "src": "abitare",
+      "dst": "asua"
+    },
+    {
+      "id": "abitare",
+      "src": "abitare",
+      "dst": "asun"
+    },
+    {
+      "id": "abitare-3",
+      "src": "abitare",
+      "dst": "asut"
+    },
+    {
+      "id": "abiti",
+      "src": "abiti",
+      "dst": "asut"
+    },
+    {
+      "id": "abito",
+      "src": "abito",
+      "dst": "asun"
+    },
+    {
+      "id": "al-bar",
+      "src": "al bar",
+      "dst": "kahvilaan, kahvilassa"
+    },
+    {
+      "id": "anche",
+      "src": "anche",
+      "dst": "myös"
+    },
+    {
+      "id": "andare",
+      "src": "andare",
+      "dst": "menevät"
+    },
+    {
+      "id": "arriva",
+      "src": "arriva",
+      "dst": "saapuu, tulee"
+    },
+    {
+      "id": "arrivare-2",
+      "src": "arrivare",
+      "dst": "saapua"
+    },
+    {
+      "id": "arrivare",
+      "src": "arrivare",
+      "dst": "saapuu, tulee"
+    },
+    {
+      "id": "avere",
+      "src": "avere",
+      "dst": "heillä on"
+    },
+    {
+      "id": "con",
+      "src": "con",
+      "dst": "kanssa (prep.)"
+    },
+    {
+      "id": "di",
+      "src": "di",
+      "dst": "(jstak) kaupungista"
+    },
+    {
+      "id": "di-lecce",
+      "src": "di Lecce",
+      "dst": "Leccestä kotoisin"
+    },
+    {
+      "id": "di-dove",
+      "src": "di dove?",
+      "dst": "Mistä kotoisin?"
+    },
+    {
+      "id": "dove",
+      "src": "dove?",
+      "dst": "Missä? Minne?"
+    },
+    {
+      "id": "e",
+      "src": "e",
+      "dst": "ja"
+    },
+    {
+      "id": "essere",
+      "src": "essere",
+      "dst": "olen"
+    },
+    {
+      "id": "essere-3",
+      "src": "essere",
+      "dst": "olet"
+    },
+    {
+      "id": "essere-4",
+      "src": "essere",
+      "dst": "on; Te olette"
+    },
+    {
+      "id": "essere-2",
+      "src": "essere*",
+      "dst": "olla"
+    },
+    {
+      "id": "finlandese",
+      "src": "finlandese",
+      "dst": "suomalainen"
+    },
+    {
+      "id": "hanno",
+      "src": "hanno",
+      "dst": "heillä on"
+    },
+    {
+      "id": "i-ragazzi",
+      "src": "i ragazzi",
+      "dst": "nuoret"
+    },
+    {
+      "id": "il-bar",
+      "src": "il bar",
+      "dst": "kahvila"
+    },
+    {
+      "id": "il-centro",
+      "src": "il centro",
+      "dst": "keskusta"
+    },
+    {
+      "id": "il-motivo",
+      "src": "il motivo",
+      "dst": "syy"
+    },
+    {
+      "id": "in",
+      "src": "in",
+      "dst": "jossakin (prep.)"
+    },
+    {
+      "id": "in-italia",
+      "src": "in Italia",
+      "dst": "Italiassa"
+    },
+    {
+      "id": "in-centro",
+      "src": "in centro",
+      "dst": "keskustassa"
+    },
+    {
+      "id": "in-vacanza",
+      "src": "in vacanza",
+      "dst": "lomalla, lomalle"
+    },
+    {
+      "id": "interessante",
+      "src": "interessante",
+      "dst": "mielenkiintoinen"
+    },
+    {
+      "id": "io",
+      "src": "io",
+      "dst": "minä"
+    },
+    {
+      "id": "italiano-italiana",
+      "src": "italiano, italiana",
+      "dst": "italialainen (mies, nainen)"
+    },
+    {
+      "id": "lamico",
+      "src": "l'amico",
+      "dst": "ystävä"
+    },
+    {
+      "id": "lappuntamento",
+      "src": "l'appuntamento",
+      "dst": "tapaaminen"
+    },
+    {
+      "id": "la-studentessa-universitaria",
+      "src": "la studentessa universitaria",
+      "dst": "yliopisto-opiskelija (nainen)"
+    },
+    {
+      "id": "la-vacanza",
+      "src": "la vacanza",
+      "dst": "loma"
+    },
+    {
+      "id": "la-via",
+      "src": "la via",
+      "dst": "katu"
+    },
+    {
+      "id": "lo-studio",
+      "src": "lo studio",
+      "dst": "opiskelu"
+    },
+    {
+      "id": "ma",
+      "src": "ma",
+      "dst": "mutta"
+    },
+    {
+      "id": "no",
+      "src": "no",
+      "dst": "ei"
+    },
+    {
+      "id": "non",
+      "src": "non",
+      "dst": "ei (verbin edessä)"
+    },
+    {
+      "id": "non-sono",
+      "src": "non sono",
+      "dst": "en ole"
+    },
+    {
+      "id": "per",
+      "src": "per",
+      "dst": "jonkin vuoksi (prep.)"
+    },
+    {
+      "id": "per-motivi-di-studio",
+      "src": "per motivi di studio",
+      "dst": "opiskelun vuoksi"
+    },
+    {
+      "id": "questo-questa",
+      "src": "questo, questa",
+      "dst": "tämä (mies, nainen)"
+    },
+    {
+      "id": "qui",
+      "src": "qui",
+      "dst": "täällä, tässä"
+    },
+    {
+      "id": "sei",
+      "src": "sei",
+      "dst": "olet"
+    },
+    {
+      "id": "si",
+      "src": "si",
+      "dst": "kyllä"
+    },
+    {
+      "id": "sono",
+      "src": "sono",
+      "dst": "olen"
+    },
+    {
+      "id": "vanno",
       "src": "vanno",
       "dst": "menevät"
     },
     {
+      "id": "vivere",
       "src": "vivere",
       "dst": "asun, elän"
     },
     {
+      "id": "vivo",
       "src": "vivo",
       "dst": "asun, elän"
     },
     {
+      "id": "e-2",
       "src": "è",
       "dst": "on; Te olette"
     }
