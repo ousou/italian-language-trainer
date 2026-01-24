@@ -16,7 +16,8 @@ from phrasepack_importer.schema import assert_non_empty
     reason="Set RUN_LLM_TESTS=1 to run live Gemini integration test.",
 )
 def test_extracts_known_terms_from_ch1_image():
-    image_path = Path("../../pictures/bella_vista_1_ch_1.jpg")
+    repo_root = Path(__file__).resolve().parents[3]
+    image_path = repo_root / "pictures/bella_vista_1_ch_1.jpg"
     prompt = build_extraction_prompt("it", "fi")
     model = os.environ.get("LLM_MODEL", "gemini-2.0-flash-001")
     location = os.environ.get("LLM_LOCATION", "us-central1")
@@ -32,7 +33,7 @@ def test_extracts_known_terms_from_ch1_image():
     items = assert_non_empty(extracted.items)
     extracted_src = {normalize_text(item.src).lower() for item in items}
 
-    pack_path = Path("../../public/phrasepacks/bella-vista-1-ch-1.json")
+    pack_path = repo_root / "public/phrasepacks/bella-vista-1-ch-1.json"
     pack = json.loads(pack_path.read_text())
     expected_src = {normalize_text(item["src"]).lower() for item in pack["items"]}
 

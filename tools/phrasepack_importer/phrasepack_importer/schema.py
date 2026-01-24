@@ -39,10 +39,23 @@ class ValidationReport(BaseModel):
     items: list[ExtractedItem]
 
 
+def _strip_code_fences(raw: str) -> str:
+    text = raw.strip()
+    if not text.startswith("```"):
+        return text
+
+    lines = text.splitlines()
+    if lines and lines[0].startswith("```"):
+        lines = lines[1:]
+    if lines and lines[-1].startswith("```"):
+        lines = lines[:-1]
+    return "\n".join(lines).strip()
+
+
 def parse_extracted_json(raw: str) -> ExtractedPayload:
     """Parse and validate raw JSON from the LLM."""
     try:
-        data = json.loads(raw)
+        data = json.loads(_strip_code_fences(raw))
     except json.JSONDecodeError as exc:
         raise ParseError(f"Invalid JSON: {exc}") from exc
 

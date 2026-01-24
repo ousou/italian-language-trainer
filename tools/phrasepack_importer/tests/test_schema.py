@@ -9,6 +9,12 @@ def test_parse_extracted_json_valid():
     assert payload.items[0].src == "ciao"
 
 
+def test_parse_extracted_json_code_fenced():
+    raw = '```json\n{"items": [{"src": "ciao", "dst": "moi"}]}\n```'
+    payload = parse_extracted_json(raw)
+    assert payload.items[0].dst == "moi"
+
+
 def test_parse_extracted_json_invalid():
     with pytest.raises(ParseError):
         parse_extracted_json("not-json")
