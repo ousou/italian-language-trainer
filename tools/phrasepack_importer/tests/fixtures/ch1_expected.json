@@ -173,12 +173,12 @@
     {
       "id": "italiano",
       "src": "italiano",
-      "dst": "italialainen (mies, nainen)"
+      "dst": "italialainen (mies)"
     },
     {
       "id": "italiana",
       "src": "italiana",
-      "dst": "italialainen (mies, nainen)"
+      "dst": "italialainen (nainen)"
     },
     {
       "id": "lamico",
@@ -243,12 +243,12 @@
     {
       "id": "questo",
       "src": "questo",
-      "dst": "tämä (mies, nainen)"
+      "dst": "tämä (mies)"
     },
     {
       "id": "questa",
       "src": "questa",
-      "dst": "tämä (mies, nainen)"
+      "dst": "tämä (nainen)"
     },
     {
       "id": "qui",

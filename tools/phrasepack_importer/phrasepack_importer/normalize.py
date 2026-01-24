@@ -28,6 +28,11 @@ _LEADING_SRC_JUNK_RE = re.compile(r'^[\".]+\s*(?=[^\W\d_])')
 _ALT_SPLIT_RE = re.compile(r"[,/;]\s*")
 _ALT_TOKEN_RE = re.compile(r"^[^\W\d_]+(?:['-][^\W\d_]+)*$", re.UNICODE)
 
+_GENDER_TOKENS = {
+    "fi": ("mies", "nainen"),
+    "sv": ("man", "kvinna"),
+}
+
 
 def normalize_text(value: str) -> str:
     """Normalize whitespace and punctuation without changing meaning."""
@@ -63,6 +68,42 @@ def split_surface_and_lemmas(surface: str, lemma: str | None) -> list[str]:
             return parts
 
     return [base]
+
+
+def split_gendered_dst(dst: str, dst_lang: str, count: int) -> list[str] | None:
+    """Split gender-combined dst notes to match split src alternatives.
+
+    Example: "italialainen (mies, nainen)" -> ["italialainen (mies)", "italialainen (nainen)"]
+    """
+    if count != 2:
+        return None
+    tokens = _GENDER_TOKENS.get(dst_lang)
+    if not tokens:
+        return None
+    male, female = tokens[0], tokens[1]
+
+    text = normalize_text(dst)
+    l = text.rfind("(")
+    r = text.rfind(")")
+    if l == -1 or r == -1 or r < l:
+        return None
+    inside = text[l + 1 : r].casefold()
+    if male not in inside or female not in inside:
+        return None
+
+    # Determine order based on appearance within the parenthesized note.
+    order = [male, female] if inside.find(male) < inside.find(female) else [female, male]
+
+    prefix = text[:l].rstrip()
+    suffix = text[r + 1 :].lstrip()
+    if suffix and suffix[0] in ".,;:!?":
+        joiner = ""
+    elif suffix:
+        joiner = " "
+    else:
+        joiner = ""
+
+    return [f"{prefix} ({gender}){joiner}{suffix}".strip() for gender in order]
 
 
 def normalize_dst_text(value: str) -> str:

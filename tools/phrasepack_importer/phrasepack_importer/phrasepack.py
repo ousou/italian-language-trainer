@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from .normalize import (
     ensure_unique_id,
+    split_gendered_dst,
     normalize_dst_text,
     normalize_src_text,
     slugify,
@@ -37,14 +38,22 @@ def build_phrasepack(
         lemma = normalize_src_text(item.lemma) if item.lemma else None
         variants = split_surface_and_lemmas(surface, lemma)
 
-        for src in variants:
-            pair_key = (src.casefold(), dst.casefold())
+        dst_variants: list[str] | None = None
+        if len(variants) > 1:
+            dst_variants = split_gendered_dst(dst, dst_lang, len(variants))
+            if not dst_variants:
+                # If we can't make the split unambiguous, drop the entry entirely.
+                continue
+
+        for idx, src in enumerate(variants):
+            resolved_dst = dst_variants[idx] if dst_variants else dst
+            pair_key = (src.casefold(), resolved_dst.casefold())
             if pair_key in seen_pairs:
                 continue
             seen_pairs.add(pair_key)
             base_id = slugify(src)
             item_id = ensure_unique_id(base_id, seen_ids)
-            items.append(PhrasepackItem(id=item_id, src=src, dst=dst))
+            items.append(PhrasepackItem(id=item_id, src=src, dst=resolved_dst))
 
         if item.lemma and item.lemma_dst and lemma:
             if lemma.lower() not in {v.lower() for v in variants}:

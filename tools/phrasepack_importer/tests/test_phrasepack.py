@@ -94,3 +94,23 @@ def test_build_phrasepack_dedupes_identical_pairs():
 
     # Only one essere->olla card should exist even if lemma repeats across items.
     assert len([item for item in pack.items if item.src == "essere" and item.dst == "olla"]) == 1
+
+
+def test_build_phrasepack_splits_gendered_dst_when_splitting_src_alternatives():
+    extracted = [
+        ExtractedItem(surface="italiano, italiana", dst="italialainen (mies, nainen)"),
+        ExtractedItem(surface="questo/questa", dst="tämä (mies, nainen)"),
+    ]
+    pack = build_phrasepack(
+        pack_id="test-pack",
+        title="Test",
+        src_lang="it",
+        dst_lang="fi",
+        extracted_items=extracted,
+    )
+
+    pairs = {(item.src, item.dst) for item in pack.items}
+    assert ("italiano", "italialainen (mies)") in pairs
+    assert ("italiana", "italialainen (nainen)") in pairs
+    assert ("questo", "tämä (mies)") in pairs
+    assert ("questa", "tämä (nainen)") in pairs

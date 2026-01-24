@@ -48,6 +48,14 @@ Important:
 - The importer must NOT translate with an LLM or any external dictionary.
   - The LLM is only used for extraction and cleanup (formatting, splitting alternatives, removing annotations).
 
+## Splitting Alternatives (Must)
+
+- If you split one source entry into multiple items, each resulting item must still have a single-answer translation.
+- If the translation is a combined note like `italialainen (mies, nainen)`, split it to match:
+  - `italiano` -> `italialainen (mies)`
+  - `italiana` -> `italialainen (nainen)`
+- If you cannot split the translation unambiguously, omit the entry (do not keep a multi-answer dst that would make reverse drills ambiguous).
+
 ## Non-vocabulary Text (Must Ignore)
 
 - Ignore headings, instructions, examples, page numbers, and other non-vocabulary content.
