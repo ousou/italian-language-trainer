@@ -65,3 +65,8 @@ Live Gemini integration test (requires network + billing):
 ```bash
 RUN_LLM_TESTS=1 pytest tests/test_integration_llm.py
 ```
+
+## Import rules
+
+See `tools/phrasepack_importer/IMPORT_RULES.md` for the constraints the importer
+must follow (single-answer Italian src, split alternatives, remove annotations).
