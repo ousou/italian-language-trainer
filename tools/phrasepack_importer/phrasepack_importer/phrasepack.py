@@ -1,7 +1,13 @@
 """Phrasepack assembly helpers."""
 from __future__ import annotations
 
-from .normalize import ensure_unique_id, normalize_dst_text, normalize_src_text, slugify
+from .normalize import (
+    ensure_unique_id,
+    normalize_dst_text,
+    normalize_src_text,
+    slugify,
+    split_surface_and_lemmas,
+)
 from .schema import ExtractedItem, Phrasepack, PhrasepackItem
 
 
@@ -19,15 +25,14 @@ def build_phrasepack(
 
     for item in extracted_items:
         surface = normalize_src_text(item.resolved_surface())
+        if not item.dst:
+            continue
         dst = normalize_dst_text(item.dst)
         if not surface or not dst:
             continue
 
-        variants = [surface]
-        if item.lemma:
-            lemma = normalize_src_text(item.lemma)
-            if lemma and lemma.lower() != surface.lower():
-                variants.append(lemma)
+        lemma = normalize_src_text(item.lemma) if item.lemma else None
+        variants = split_surface_and_lemmas(surface, lemma)
 
         for src in variants:
             base_id = slugify(src)

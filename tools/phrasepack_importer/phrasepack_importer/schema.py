@@ -11,7 +11,7 @@ class ExtractedItem(BaseModel):
     surface: str | None = None
     lemma: str | None = None
     src: str | None = None
-    dst: str
+    dst: str | None = None
 
     @model_validator(mode="after")
     def _require_surface(self) -> "ExtractedItem":
@@ -78,7 +78,11 @@ def parse_extracted_json(raw: str) -> ExtractedPayload:
 
 def assert_non_empty(items: Iterable[ExtractedItem]) -> list[ExtractedItem]:
     """Ensure the extraction returned at least one item."""
-    items_list = list(items)
+    items_list = [
+        item
+        for item in items
+        if item.dst and item.resolved_surface().strip()
+    ]
     if not items_list:
         raise ParseError("No items were extracted from the image.")
     return items_list

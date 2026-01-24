@@ -47,6 +47,8 @@ Prompts instruct the model to ignore headings or instructions and only capture
 paired vocabulary entries.
 If a lemma/base form is present in the image, the model should place it in a
 separate `lemma` field so the surface form stays clean for quizzes.
+If the model ignores this and includes lemmas in parentheses, the importer
+splits them into separate entries during post-processing.
 
 ## Tests
 

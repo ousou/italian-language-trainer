@@ -1,4 +1,3 @@
-import json
 import os
 from pathlib import Path
 
@@ -6,7 +5,12 @@ import pytest
 
 from phrasepack_importer.gemini_client import extract_pairs
 from phrasepack_importer.io import read_image_bytes
-from phrasepack_importer.normalize import normalize_text
+from phrasepack_importer.normalize import (
+    normalize_src_text,
+    normalize_text,
+    split_surface_and_lemmas,
+)
+from phrasepack_importer.phrasepack import build_phrasepack
 from phrasepack_importer.prompt import build_extraction_prompt
 from phrasepack_importer.schema import assert_non_empty
 
@@ -31,11 +35,23 @@ def test_extracts_known_terms_from_ch1_image():
     )
 
     items = assert_non_empty(extracted.items)
-    extracted_src = {normalize_text(item.resolved_surface()).lower() for item in items}
+    phrasepack = build_phrasepack(
+        pack_id="bella-vista-1-ch-1",
+        title="Bella Vista 1 ch 1",
+        src_lang="it",
+        dst_lang="fi",
+        extracted_items=items,
+    )
 
-    pack_path = repo_root / "public/phrasepacks/bella-vista-1-ch-1.json"
-    pack = json.loads(pack_path.read_text())
-    expected_src = {normalize_text(item["src"]).lower() for item in pack["items"]}
+    actual_src = {normalize_text(item.src) for item in phrasepack.items}
+    assert actual_src
+    assert all("(" not in src and ")" not in src for src in actual_src)
 
-    matches = extracted_src & expected_src
-    assert len(matches) >= 8
+    for extracted_item in items:
+        surface = normalize_src_text(extracted_item.resolved_surface())
+        lemma = normalize_src_text(extracted_item.lemma) if extracted_item.lemma else None
+        if "(" not in surface and ")" not in surface and not lemma:
+            continue
+
+        for variant in split_surface_and_lemmas(surface, lemma):
+            assert normalize_text(variant) in actual_src

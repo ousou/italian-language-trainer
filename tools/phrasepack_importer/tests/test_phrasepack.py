@@ -36,3 +36,16 @@ def test_build_phrasepack_splits_lemma_variant():
     )
 
     assert [item.src for item in pack.items] == ["vanno", "andare"]
+
+
+def test_build_phrasepack_splits_fallback_parentheses():
+    extracted = [ExtractedItem(surface="abiti (abitare*)", dst="asut")]
+    pack = build_phrasepack(
+        pack_id="test-pack",
+        title="Test",
+        src_lang="it",
+        dst_lang="fi",
+        extracted_items=extracted,
+    )
+
+    assert [item.src for item in pack.items] == ["abiti", "abitare"]

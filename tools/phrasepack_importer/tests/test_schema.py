@@ -1,6 +1,6 @@
 import pytest
 
-from phrasepack_importer.schema import ParseError, parse_extracted_json
+from phrasepack_importer.schema import ParseError, assert_non_empty, parse_extracted_json
 
 
 def test_parse_extracted_json_valid():
@@ -19,6 +19,12 @@ def test_parse_extracted_json_requires_surface_or_src():
     raw = '{"items": [{"dst": "moi"}]}'
     with pytest.raises(ParseError):
         parse_extracted_json(raw)
+
+
+def test_assert_non_empty_filters_missing_dst():
+    payload = parse_extracted_json('{"items": [{"surface": "ciao", "dst": null}]}')
+    with pytest.raises(ParseError):
+        assert_non_empty(payload.items)
 
 
 def test_parse_extracted_json_invalid():

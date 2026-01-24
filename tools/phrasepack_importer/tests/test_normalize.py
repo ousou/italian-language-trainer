@@ -4,6 +4,7 @@ from phrasepack_importer.normalize import (
     normalize_src_text,
     normalize_text,
     slugify,
+    split_surface_and_lemmas,
 )
 
 
@@ -31,6 +32,12 @@ def test_normalize_dst_text_sentence_cases_questions():
 
     value = "kanssa (prep.)"
     assert normalize_dst_text(value) == "kanssa (prep.)"
+
+
+def test_split_surface_and_lemmas_fallback_parens():
+    assert split_surface_and_lemmas("vanno (andare*)", None) == ["vanno", "andare"]
+    assert split_surface_and_lemmas("abiti (abitare)", None) == ["abiti", "abitare"]
+    assert split_surface_and_lemmas("essere", None) == ["essere"]
 
 
 def test_ensure_unique_id_appends_suffixes():

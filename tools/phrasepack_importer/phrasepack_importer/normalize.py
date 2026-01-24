@@ -23,6 +23,8 @@ _PUNCT_TRANSLATION = str.maketrans(
 _SENTENCE_START_RE = re.compile(r"(^|[!?]\s+|\.\s+)([a-zåäö])")
 _OCR_APOSTROPHE_RE = re.compile(r"\b[iI][’'](?=[a-z])")
 _SENTENCE_PERIOD_RE = re.compile(r"\.(\s|$)")
+_SRC_LEMMA_RE = re.compile(r"^(?P<surface>[^()]+?)\s*\((?P<lemma>[^)]+)\)\s*$")
+_LEMMA_SPLIT_RE = re.compile(r"[,/;]\s*")
 
 
 def normalize_text(value: str) -> str:
@@ -37,6 +39,27 @@ def normalize_src_text(value: str) -> str:
     normalized = normalize_text(value)
     normalized = _OCR_APOSTROPHE_RE.sub("l'", normalized)
     return normalized
+
+
+def split_surface_and_lemmas(surface: str, lemma: str | None) -> list[str]:
+    """Split parenthesized lemmas when the model ignored the schema."""
+    if lemma:
+        return [surface, lemma]
+
+    match = _SRC_LEMMA_RE.match(surface)
+    if not match:
+        return [surface]
+
+    base = match.group("surface").strip()
+    lemma_block = match.group("lemma").replace("*", "").strip()
+    lemmas = [p.strip() for p in _LEMMA_SPLIT_RE.split(lemma_block) if p.strip()]
+
+    variants = [base]
+    for candidate in lemmas:
+        if candidate.lower() == base.lower():
+            continue
+        variants.append(candidate)
+    return variants
 
 
 def normalize_dst_text(value: str) -> str:

@@ -57,7 +57,39 @@ def extract_pairs(
     client = genai.Client(vertexai=True, project=project_id, location=location)
 
     image_part = types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg")
-    response = client.models.generate_content(model=model, contents=[prompt, image_part])
+    response_schema = {
+        "type": "OBJECT",
+        "properties": {
+            "items": {
+                "type": "ARRAY",
+                "items": {
+                    "type": "OBJECT",
+                    "properties": {
+                        "surface": {"type": "STRING"},
+                        "lemma": {"type": "STRING"},
+                        "src": {"type": "STRING"},
+                        "dst": {"type": "STRING"},
+                    },
+                },
+            }
+        },
+        "required": ["items"],
+    }
+
+    config = types.GenerateContentConfig(
+        temperature=0,
+        topP=1,
+        topK=1,
+        candidateCount=1,
+        seed=1,
+        responseMimeType="application/json",
+        responseSchema=response_schema,
+    )
+    response = client.models.generate_content(
+        model=model,
+        contents=[prompt, image_part],
+        config=config,
+    )
     raw_text = _extract_text(response)
 
     try:
@@ -72,6 +104,10 @@ def extract_pairs(
         f"Schema: {{\"items\": [{{\"src\": \"...\", \"dst\": \"...\"}}]}}\n\n"
         f"Text to fix:\n{raw_text}"
     )
-    repair_response = client.models.generate_content(model=model, contents=repair_prompt)
+    repair_response = client.models.generate_content(
+        model=model,
+        contents=repair_prompt,
+        config=config,
+    )
     repaired_text = _extract_text(repair_response)
     return parse_extracted_json(repaired_text)

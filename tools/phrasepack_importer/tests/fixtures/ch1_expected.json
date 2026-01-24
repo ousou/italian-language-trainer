@@ -1,0 +1,257 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-1",
+  "title": "Bella Vista 1 ch 1",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "src": "a",
+      "dst": "jossakin (prep.)"
+    },
+    {
+      "src": "a Roma",
+      "dst": "Roomassa"
+    },
+    {
+      "src": "abitare",
+      "dst": "asun"
+    },
+    {
+      "src": "abitare",
+      "dst": "asua"
+    },
+    {
+      "src": "abitare",
+      "dst": "asut"
+    },
+    {
+      "src": "abiti",
+      "dst": "asut"
+    },
+    {
+      "src": "abito",
+      "dst": "asun"
+    },
+    {
+      "src": "Ah sì, che bello!",
+      "dst": "Ai niinkö, sepä mukavaa!"
+    },
+    {
+      "src": "al bar",
+      "dst": "kahvilaan, kahvilassa"
+    },
+    {
+      "src": "Anch'io!",
+      "dst": "Niin minäkin!"
+    },
+    {
+      "src": "anche",
+      "dst": "myös"
+    },
+    {
+      "src": "andare",
+      "dst": "menevät"
+    },
+    {
+      "src": "arriva",
+      "dst": "saapuu, tulee"
+    },
+    {
+      "src": "arrivare",
+      "dst": "saapuu, tulee"
+    },
+    {
+      "src": "arrivare",
+      "dst": "saapua"
+    },
+    {
+      "src": "avere",
+      "dst": "heillä on"
+    },
+    {
+      "src": "con",
+      "dst": "kanssa (prep.)"
+    },
+    {
+      "src": "di",
+      "dst": "(jstak) kaupungista"
+    },
+    {
+      "src": "Di dove sei?",
+      "dst": "Mistä olet kotoisin?"
+    },
+    {
+      "src": "di dove?",
+      "dst": "Mistä kotoisin?"
+    },
+    {
+      "src": "di Lecce",
+      "dst": "Leccestä kotoisin"
+    },
+    {
+      "src": "dove?",
+      "dst": "Missä? Minne?"
+    },
+    {
+      "src": "e",
+      "dst": "ja"
+    },
+    {
+      "src": "essere",
+      "dst": "olen"
+    },
+    {
+      "src": "essere",
+      "dst": "olet"
+    },
+    {
+      "src": "essere",
+      "dst": "on; Te olette"
+    },
+    {
+      "src": "essere*",
+      "dst": "olla"
+    },
+    {
+      "src": "finlandese",
+      "dst": "suomalainen"
+    },
+    {
+      "src": "hanno",
+      "dst": "heillä on"
+    },
+    {
+      "src": "i ragazzi",
+      "dst": "nuoret"
+    },
+    {
+      "src": "il bar",
+      "dst": "kahvila"
+    },
+    {
+      "src": "il centro",
+      "dst": "keskusta"
+    },
+    {
+      "src": "il motivo",
+      "dst": "syy"
+    },
+    {
+      "src": "in",
+      "dst": "jossakin (prep.)"
+    },
+    {
+      "src": "in centro",
+      "dst": "keskustassa"
+    },
+    {
+      "src": "in Italia",
+      "dst": "Italiassa"
+    },
+    {
+      "src": "in vacanza",
+      "dst": "lomalla, lomalle"
+    },
+    {
+      "src": "interessante",
+      "dst": "mielenkiintoinen"
+    },
+    {
+      "src": "io",
+      "dst": "minä"
+    },
+    {
+      "src": "italiano, italiana",
+      "dst": "italialainen (mies, nainen)"
+    },
+    {
+      "src": "l'amico",
+      "dst": "ystävä"
+    },
+    {
+      "src": "l'appuntamento",
+      "dst": "tapaaminen"
+    },
+    {
+      "src": "la studentessa universitaria",
+      "dst": "yliopisto-opiskelija (nainen)"
+    },
+    {
+      "src": "la vacanza",
+      "dst": "loma"
+    },
+    {
+      "src": "la via",
+      "dst": "katu"
+    },
+    {
+      "src": "lo studio",
+      "dst": "opiskelu"
+    },
+    {
+      "src": "ma",
+      "dst": "mutta"
+    },
+    {
+      "src": "no",
+      "dst": "ei"
+    },
+    {
+      "src": "non",
+      "dst": "ei (verbin edessä)"
+    },
+    {
+      "src": "non sono",
+      "dst": "en ole"
+    },
+    {
+      "src": "per",
+      "dst": "jonkin vuoksi (prep.)"
+    },
+    {
+      "src": "per motivi di studio",
+      "dst": "opiskelun vuoksi"
+    },
+    {
+      "src": "questo, questa",
+      "dst": "tämä (mies, nainen)"
+    },
+    {
+      "src": "qui",
+      "dst": "täällä, tässä"
+    },
+    {
+      "src": "sei",
+      "dst": "olet"
+    },
+    {
+      "src": "si",
+      "dst": "kyllä"
+    },
+    {
+      "src": "sono",
+      "dst": "olen"
+    },
+    {
+      "src": "Tutto bene.",
+      "dst": "Kaikki hyvin."
+    },
+    {
+      "src": "vanno",
+      "dst": "menevät"
+    },
+    {
+      "src": "vivere",
+      "dst": "asun, elän"
+    },
+    {
+      "src": "vivo",
+      "dst": "asun, elän"
+    },
+    {
+      "src": "è",
+      "dst": "on; Te olette"
+    }
+  ]
+}
