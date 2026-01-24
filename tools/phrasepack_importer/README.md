@@ -45,11 +45,12 @@ Sentence casing is only applied for questions/exclamations or sentence-ending
 periods (not abbreviations like `(prep.)`).
 Prompts instruct the model to ignore headings or instructions and only capture
 paired vocabulary entries.
-If a lemma/base form is present in the image, the model should place it in
-`lemma` and provide `lemma_dst` so the surface form stays clean for quizzes.
-If the model ignores this and includes lemmas in parentheses, the importer
-keeps only the surface form to avoid pairing the wrong translation.
-Lemma entries are skipped when `lemma_dst` matches the surface translation.
+Extraction is done in two LLM calls:
+1) Vision: transcribe raw `src`/`dst` pairs from the image.
+2) Text-only: clean those pairs into quiz-friendly items (split alternatives, remove `*` and parenthesized annotations).
+
+Per `IMPORT_RULES.md`, translations come only from the image wordlist.
+The importer does not translate with an LLM or dictionaries.
 
 ## Tests
 

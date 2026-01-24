@@ -28,6 +28,12 @@ def test_normalize_src_text_fixes_ocr_apostrophe():
     value = "si"
     assert normalize_src_text(value) == "s\u00ec"
 
+    value = 'essere*'
+    assert normalize_src_text(value) == "essere"
+
+    value = '"".\tè'
+    assert normalize_src_text(value) == "è"
+
 
 def test_normalize_dst_text_sentence_cases_questions():
     value = "missä? minne?"
@@ -36,11 +42,20 @@ def test_normalize_dst_text_sentence_cases_questions():
     value = "kanssa (prep.)"
     assert normalize_dst_text(value) == "kanssa (prep.)"
 
+    value = "saapuu; tulee"
+    assert normalize_dst_text(value) == "saapuu, tulee"
+
+    value = "Missä?; minne?"
+    assert normalize_dst_text(value) == "Missä? Minne?"
+
 
 def test_split_surface_and_lemmas_fallback_parens():
     assert split_surface_and_lemmas("vanno (andare*)", None) == ["vanno"]
     assert split_surface_and_lemmas("abiti (abitare)", None) == ["abiti"]
     assert split_surface_and_lemmas("essere", None) == ["essere"]
+    assert split_surface_and_lemmas("italiano, italiana", None) == ["italiano", "italiana"]
+    assert split_surface_and_lemmas("questo/questa", None) == ["questo", "questa"]
+    assert split_surface_and_lemmas("Ah sì, che bello!", None) == ["Ah sì, che bello!"]
 
 
 def test_ensure_unique_id_appends_suffixes():

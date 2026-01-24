@@ -34,15 +34,21 @@ Examples (bad):
 Example:
 - Image shows: `vanno (andare)`
   - Item 1: `src = vanno`
-  - Item 2: `src = andare`
+  - Item 2: `src = andare` (only if the image also provides a translation for `andare`)
 
 Important:
 - Never attach the lemma to the surface form in the same `src` string.
-- Only add a lemma entry if you can also provide the correct translation for the lemma.
-  - Do not reuse the surface translation for the lemma if it changes meaning (e.g. "asun" != "asua").
+- Only add a lemma entry if the image provides a translation for the lemma.
+  - Do not invent lemma translations, and do not reuse the surface translation for the lemma
+    if it changes meaning (e.g. "asun" != "asua").
+
+## Translation Source (Must)
+
+- Always use the translations from the image vocabulary list.
+- The importer must NOT translate with an LLM or any external dictionary.
+  - The LLM is only used for extraction and cleanup (formatting, splitting alternatives, removing annotations).
 
 ## Non-vocabulary Text (Must Ignore)
 
 - Ignore headings, instructions, examples, page numbers, and other non-vocabulary content.
 - Only include entries that are clearly a bilingual pair: Italian term + translation.
-

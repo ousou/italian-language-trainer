@@ -21,6 +21,9 @@ def build_phrasepack(
 ) -> Phrasepack:
     """Build a phrasepack from extracted items with normalized ids."""
     seen_ids: set[str] = set()
+    # Avoid duplicate cards when the same term appears multiple times in extraction
+    # (e.g. lemma duplication across several conjugations).
+    seen_pairs: set[tuple[str, str]] = set()
     items: list[PhrasepackItem] = []
 
     for item in extracted_items:
@@ -35,6 +38,10 @@ def build_phrasepack(
         variants = split_surface_and_lemmas(surface, lemma)
 
         for src in variants:
+            pair_key = (src.casefold(), dst.casefold())
+            if pair_key in seen_pairs:
+                continue
+            seen_pairs.add(pair_key)
             base_id = slugify(src)
             item_id = ensure_unique_id(base_id, seen_ids)
             items.append(PhrasepackItem(id=item_id, src=src, dst=dst))
@@ -43,6 +50,10 @@ def build_phrasepack(
             if lemma.lower() not in {v.lower() for v in variants}:
                 lemma_dst = normalize_dst_text(item.lemma_dst)
                 if lemma_dst and lemma_dst != dst:
+                    lemma_key = (lemma.casefold(), lemma_dst.casefold())
+                    if lemma_key in seen_pairs:
+                        continue
+                    seen_pairs.add(lemma_key)
                     lemma_id = ensure_unique_id(slugify(lemma), seen_ids)
                     items.append(PhrasepackItem(id=lemma_id, src=lemma, dst=lemma_dst))
 

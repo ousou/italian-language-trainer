@@ -8,7 +8,7 @@ from phrasepack_importer.gemini_client import extract_pairs
 from phrasepack_importer.io import read_image_bytes
 from phrasepack_importer.normalize import normalize_text
 from phrasepack_importer.phrasepack import build_phrasepack
-from phrasepack_importer.prompt import build_extraction_prompt
+from phrasepack_importer.prompt import build_image_pairs_prompt, build_pairs_to_items_prompt
 from phrasepack_importer.schema import assert_non_empty
 
 
@@ -19,13 +19,15 @@ from phrasepack_importer.schema import assert_non_empty
 def test_extracts_known_terms_from_ch1_image():
     repo_root = Path(__file__).resolve().parents[3]
     image_path = repo_root / "pictures/bella_vista_1_ch_1.jpg"
-    prompt = build_extraction_prompt("it", "fi")
+    image_prompt = build_image_pairs_prompt("it", "fi")
+    transform_prompt = build_pairs_to_items_prompt("it", "fi")
     model = os.environ.get("LLM_MODEL", "gemini-2.0-flash-001")
     location = os.environ.get("LLM_LOCATION", "us-central1")
 
     extracted = extract_pairs(
         image_bytes=read_image_bytes(image_path),
-        prompt=prompt,
+        image_prompt=image_prompt,
+        transform_prompt=transform_prompt,
         model=model,
         project=os.environ.get("GOOGLE_CLOUD_PROJECT"),
         location=location,

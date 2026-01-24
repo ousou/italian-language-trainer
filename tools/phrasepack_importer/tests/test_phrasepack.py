@@ -76,3 +76,21 @@ def test_build_phrasepack_splits_fallback_parentheses():
     )
 
     assert [item.src for item in pack.items] == ["abiti"]
+
+
+def test_build_phrasepack_dedupes_identical_pairs():
+    extracted = [
+        ExtractedItem(surface="essere", dst="olla"),
+        ExtractedItem(surface="sono", lemma="essere", lemma_dst="olla", dst="olen"),
+        ExtractedItem(surface="sei", lemma="essere", lemma_dst="olla", dst="olet"),
+    ]
+    pack = build_phrasepack(
+        pack_id="test-pack",
+        title="Test",
+        src_lang="it",
+        dst_lang="fi",
+        extracted_items=extracted,
+    )
+
+    # Only one essere->olla card should exist even if lemma repeats across items.
+    assert len([item for item in pack.items if item.src == "essere" and item.dst == "olla"]) == 1

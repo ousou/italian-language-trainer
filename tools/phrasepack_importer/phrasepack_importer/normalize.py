@@ -24,7 +24,9 @@ _SENTENCE_START_RE = re.compile(r"(^|[!?]\s+|\.\s+)([a-zåäö])")
 _OCR_APOSTROPHE_RE = re.compile(r"\b[iI][’'](?=[a-z])")
 _SENTENCE_PERIOD_RE = re.compile(r"\.(\s|$)")
 _SRC_LEMMA_RE = re.compile(r"^(?P<surface>[^()]+?)\s*\((?P<lemma>[^)]+)\)\s*$")
-_LEMMA_SPLIT_RE = re.compile(r"[,/;]\s*")
+_LEADING_SRC_JUNK_RE = re.compile(r'^[\".]+\s*(?=[^\W\d_])')
+_ALT_SPLIT_RE = re.compile(r"[,/;]\s*")
+_ALT_TOKEN_RE = re.compile(r"^[^\W\d_]+(?:['-][^\W\d_]+)*$", re.UNICODE)
 
 
 def normalize_text(value: str) -> str:
@@ -37,21 +39,28 @@ def normalize_text(value: str) -> str:
 def normalize_src_text(value: str) -> str:
     """Normalize source text and fix obvious OCR errors."""
     normalized = normalize_text(value)
+    normalized = normalized.replace("*", "")
     normalized = _OCR_APOSTROPHE_RE.sub("l'", normalized)
+    normalized = _LEADING_SRC_JUNK_RE.sub("", normalized)
     if normalized.lower() == "si":
         normalized = "s\u00ec"
     return normalized
 
 
 def split_surface_and_lemmas(surface: str, lemma: str | None) -> list[str]:
-    """Split parenthesized lemmas when the model ignored the schema."""
+    """Split parenthesized lemmas and obvious alternative lists."""
     match = _SRC_LEMMA_RE.match(surface)
     if not match:
-        return [surface]
+        base = surface
+    else:
+        base = match.group("surface").strip()
 
-    base = match.group("surface").strip()
-    lemma_block = match.group("lemma").replace("*", "").strip()
-    lemmas = [p.strip() for p in _LEMMA_SPLIT_RE.split(lemma_block) if p.strip()]
+    # Split obvious single-token alternatives like "italiano, italiana" into
+    # separate quiz answers. Avoid splitting multi-word phrases with commas.
+    if any(sep in base for sep in [",", "/", ";"]):
+        parts = [p.strip() for p in _ALT_SPLIT_RE.split(base) if p.strip()]
+        if len(parts) >= 2 and all(_ALT_TOKEN_RE.match(p) for p in parts):
+            return parts
 
     return [base]
 
@@ -59,6 +68,10 @@ def split_surface_and_lemmas(surface: str, lemma: str | None) -> list[str]:
 def normalize_dst_text(value: str) -> str:
     """Normalize target text and enforce sentence casing when punctuated."""
     normalized = normalize_text(value)
+    # The model sometimes uses semicolons as list separators; prefer commas for
+    # synonym lists while keeping semicolons for clearly separate clauses.
+    normalized = normalized.replace("?; ", "? ").replace("!; ", "! ").replace(".; ", ". ")
+    normalized = re.sub(r";\s+(?=[a-zåäö])", ", ", normalized)
     should_case = False
     if "?" in normalized or "!" in normalized:
         should_case = True

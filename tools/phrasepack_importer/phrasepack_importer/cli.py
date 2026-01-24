@@ -8,7 +8,7 @@ from pathlib import Path
 from .gemini_client import extract_pairs
 from .io import read_image_bytes, write_json
 from .phrasepack import build_phrasepack
-from .prompt import build_extraction_prompt
+from .prompt import build_image_pairs_prompt, build_pairs_to_items_prompt
 from .schema import ParseError, assert_non_empty, serialize_phrasepack
 
 
@@ -55,11 +55,13 @@ def run(argv: list[str]) -> int:
 
     output_path = Path(args.out) if args.out else Path("public/phrasepacks") / f"{args.id}.json"
 
-    prompt = build_extraction_prompt(args.src, args.dst)
     try:
+        image_prompt = build_image_pairs_prompt(args.src, args.dst)
+        transform_prompt = build_pairs_to_items_prompt(args.src, args.dst)
         extracted = extract_pairs(
             image_bytes=read_image_bytes(image_path),
-            prompt=prompt,
+            image_prompt=image_prompt,
+            transform_prompt=transform_prompt,
             model=args.model,
             project=args.project,
             location=args.location,

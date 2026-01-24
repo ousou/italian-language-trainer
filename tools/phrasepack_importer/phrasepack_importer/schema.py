@@ -28,6 +28,15 @@ class ExtractedPayload(BaseModel):
     items: list[ExtractedItem]
 
 
+class RawPair(BaseModel):
+    src: str
+    dst: str
+
+
+class RawPairsPayload(BaseModel):
+    pairs: list[RawPair]
+
+
 class PhrasepackItem(BaseModel):
     id: str
     src: str
@@ -90,6 +99,23 @@ def parse_extracted_json(raw: str) -> ExtractedPayload:
         raise ParseError(f"JSON schema mismatch: {exc}") from exc
 
 
+def parse_raw_pairs_json(raw: str) -> RawPairsPayload:
+    """Parse and validate raw JSON containing simple src/dst pairs."""
+    try:
+        cleaned = _strip_code_fences(raw)
+        data = json.loads(cleaned)
+    except json.JSONDecodeError as exc:
+        try:
+            data = json.loads(_extract_json_object(_strip_code_fences(raw)))
+        except json.JSONDecodeError as inner_exc:
+            raise ParseError(f"Invalid JSON: {exc}") from inner_exc
+
+    try:
+        return RawPairsPayload.model_validate(data)
+    except ValidationError as exc:
+        raise ParseError(f"JSON schema mismatch: {exc}") from exc
+
+
 def assert_non_empty(items: Iterable[ExtractedItem]) -> list[ExtractedItem]:
     """Ensure the extraction returned at least one item."""
     items_list = [
@@ -100,6 +126,16 @@ def assert_non_empty(items: Iterable[ExtractedItem]) -> list[ExtractedItem]:
     if not items_list:
         raise ParseError("No items were extracted from the image.")
     return items_list
+
+
+def assert_non_empty_pairs(pairs: Iterable[RawPair]) -> list[RawPair]:
+    """Ensure the raw extraction returned at least one usable pair."""
+    pairs_list = [
+        pair for pair in pairs if pair.src.strip() and pair.dst.strip()
+    ]
+    if not pairs_list:
+        raise ParseError("No pairs were extracted from the image.")
+    return pairs_list
 
 
 def serialize_phrasepack(phrasepack: Phrasepack) -> dict[str, Any]:
