@@ -208,6 +208,8 @@ python -m phrasepack_importer \
   --dst fi
 ```
 
+Generated JSON preserves Unicode characters to match existing phrasepacks.
+
 Tool tests:
 
 ```bash
