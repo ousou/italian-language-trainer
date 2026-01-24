@@ -107,7 +107,7 @@
     },
     {
       "id": "essere",
-      "src": "essere*",
+      "src": "essere",
       "dst": "olla"
     },
     {
@@ -166,9 +166,14 @@
       "dst": "minä"
     },
     {
-      "id": "italiano-italiana",
-      "src": "italiano, italiana",
-      "dst": "italialainen (mies, nainen)"
+      "id": "italiano",
+      "src": "italiano",
+      "dst": "italialainen (mies)"
+    },
+    {
+      "id": "italiana",
+      "src": "italiana",
+      "dst": "italialainen (nainen)"
     },
     {
       "id": "lamico",
@@ -231,9 +236,14 @@
       "dst": "opiskelun vuoksi"
     },
     {
-      "id": "questo-questa",
-      "src": "questo, questa",
-      "dst": "tämä (mies, nainen)"
+      "id": "questo",
+      "src": "questo",
+      "dst": "tämä (mies)"
+    },
+    {
+      "id": "questa",
+      "src": "questa",
+      "dst": "tämä (nainen)"
     },
     {
       "id": "qui",
