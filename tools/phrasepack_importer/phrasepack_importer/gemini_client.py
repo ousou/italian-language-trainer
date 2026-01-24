@@ -1,0 +1,77 @@
+"""Gemini (Vertex AI) client wrapper."""
+from __future__ import annotations
+
+import os
+import subprocess
+
+from google import genai
+from google.genai import types
+
+from .schema import ExtractedPayload, ParseError, parse_extracted_json
+
+
+class GeminiConfigError(RuntimeError):
+    """Raised when project configuration is missing."""
+
+
+def detect_project() -> str:
+    """Resolve a GCP project id from env or gcloud config."""
+    env_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
+    if env_project:
+        return env_project
+
+    try:
+        output = subprocess.check_output(
+            ["gcloud", "config", "get-value", "project"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+    except (subprocess.SubprocessError, FileNotFoundError):
+        output = ""
+
+    if not output:
+        raise GeminiConfigError(
+            "No GCP project configured. Set GOOGLE_CLOUD_PROJECT or pass --project."
+        )
+    return output
+
+
+def _extract_text(response: types.GenerateContentResponse) -> str:
+    text = response.text
+    if not text:
+        raise ParseError("Model response was empty.")
+    return text
+
+
+def extract_pairs(
+    *,
+    image_bytes: bytes,
+    prompt: str,
+    model: str,
+    project: str | None,
+    location: str,
+    allow_repair: bool = True,
+) -> ExtractedPayload:
+    """Call Gemini with an image and prompt, returning validated JSON."""
+    project_id = project or detect_project()
+    client = genai.Client(vertexai=True, project=project_id, location=location)
+
+    image_part = types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg")
+    response = client.models.generate_content(model=model, contents=[prompt, image_part])
+    raw_text = _extract_text(response)
+
+    try:
+        return parse_extracted_json(raw_text)
+    except ParseError:
+        if not allow_repair:
+            raise
+
+    repair_prompt = (
+        "Fix the following text into valid JSON that matches the schema shown. "
+        "Return ONLY JSON, no extra text.\n\n"
+        f"Schema: {{\"items\": [{{\"src\": \"...\", \"dst\": \"...\"}}]}}\n\n"
+        f"Text to fix:\n{raw_text}"
+    )
+    repair_response = client.models.generate_content(model=model, contents=repair_prompt)
+    repaired_text = _extract_text(repair_response)
+    return parse_extracted_json(repaired_text)

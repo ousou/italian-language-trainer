@@ -26,3 +26,29 @@ You can override the model if needed:
 ```bash
 python vertex_ai_sdk_smoke.py --model gemini-2.0-flash-001 --image ../../pictures/bella_vista_1_ch_1.jpg
 ```
+
+## Phrasepack extraction (CLI)
+
+```bash
+python -m phrasepack_importer \
+  --image ../../pictures/bella_vista_1_ch_1.jpg \
+  --id bella-vista-1-ch-1 \
+  --title "Bella Vista 1 ch 1" \
+  --src it \
+  --dst fi
+```
+
+## Tests
+
+Unit tests:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+Live Gemini integration test (requires network + billing):
+
+```bash
+RUN_LLM_TESTS=1 pytest tests/test_integration_llm.py
+```
