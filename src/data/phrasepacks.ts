@@ -86,6 +86,11 @@ export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
     id: 'core-it-sv-a1',
     title: 'Vanliga ord — Italienska⇄Svenska',
     path: 'phrasepacks/core-it-sv-a1.json'
+  },
+  {
+    id: 'nastan-samma-it-sv',
+    title: '(Nästan) samma på italienska',
+    path: 'phrasepacks/nastan-samma-it-sv.json'
   }
 ];
 
