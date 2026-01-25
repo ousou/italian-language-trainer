@@ -46,6 +46,28 @@ Repository: **italian-language-trainer**
   - Present-tense conjugation for io/tu/lui|lei/noi/voi/loro.
   - Two attempts per form, with partial-credit scoring.
 
+## 📱 Responsive Support
+
+The app is designed to work on both desktop and mobile (portrait and landscape):
+
+- Verb conjugation rows keep the person label and input on the same line on mobile portrait to support fast typing.
+- Feedback and the revealed correct answer are shown below the row to keep the main line compact.
+
+## ✅ Visual Regression Checks
+
+In addition to unit tests and functional e2e tests, the repo uses Playwright screenshot snapshots to catch layout
+regressions on both desktop and mobile viewports. Run:
+
+```bash
+pnpm test:e2e
+```
+
+When intentionally updating UI visuals, update baselines with:
+
+```bash
+pnpm test:e2e -- --update-snapshots
+```
+
 - **Spaced Repetition**
 
   - **Algorithms**: SM-2 (Anki-style) by default with a simple Leitner fallback.
