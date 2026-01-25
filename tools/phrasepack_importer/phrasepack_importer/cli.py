@@ -56,10 +56,14 @@ def run(argv: list[str]) -> int:
     output_path = Path(args.out) if args.out else default_phrasepack_output_path(args.id)
 
     try:
+        print("Building prompts...")
         image_prompt = build_image_pairs_prompt(args.src, args.dst)
         transform_prompt = build_pairs_to_items_prompt(args.src, args.dst)
+        print("Reading image...")
+        image_bytes = read_image_bytes(image_path)
+        print("Extracting pairs with Gemini...")
         extracted = extract_pairs(
-            image_bytes=read_image_bytes(image_path),
+            image_bytes=image_bytes,
             image_prompt=image_prompt,
             transform_prompt=transform_prompt,
             model=args.model,
@@ -67,11 +71,13 @@ def run(argv: list[str]) -> int:
             location=args.location,
             allow_repair=not args.no_repair,
         )
+        print("Validating extracted items...")
         items = assert_non_empty(extracted.items)
     except ParseError as exc:
         print(f"Extraction failed: {exc}", file=sys.stderr)
         return 1
 
+    print("Building phrasepack...")
     phrasepack = build_phrasepack(
         pack_id=args.id,
         title=args.title,
@@ -79,6 +85,7 @@ def run(argv: list[str]) -> int:
         dst_lang=args.dst,
         extracted_items=items,
     )
+    print("Writing output...")
     write_json(output_path, serialize_phrasepack(phrasepack))
     print(f"Wrote phrasepack: {output_path}")
     return 0
