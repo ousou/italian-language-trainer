@@ -745,6 +745,10 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   prompt.append(promptBadge, promptTextNode);
 
+  const stepIndicator = document.createElement('p');
+  stepIndicator.className = 'session-summary';
+  stepIndicator.textContent = stepLabel;
+
   const infinitive = document.createElement('div');
   const showInfinitive = session.phase !== 'infinitive' && Boolean(session.infinitive.result);
   infinitive.className = showInfinitive ? 'drill-answer revealed' : 'drill-answer hidden';
@@ -874,7 +878,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   controls.append(attempt, nextButton);
 
-  card.append(meta, prompt);
+  card.append(meta, prompt, stepIndicator);
   if (phase !== 'infinitive') {
     card.append(infinitive);
   }
