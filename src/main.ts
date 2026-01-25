@@ -738,6 +738,23 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     const currentSession = state.verbSession;
     const nextSession = submitInfinitiveAnswer(pack, currentSession, currentSession.infinitiveInput);
     setState({ verbSession: nextSession });
+
+    if (isInfinitiveResolved(nextSession)) {
+      queueMicrotask(() => {
+        const selector = `.verb-row input[data-verb-person="${VERB_PERSONS[0]}"]`;
+        const input = root.querySelector<HTMLInputElement>(selector);
+        if (input && !input.readOnly) {
+          input.focus();
+        }
+      });
+    } else {
+      queueMicrotask(() => {
+        const input = root.querySelector<HTMLInputElement>('.answer-input');
+        if (input && !input.readOnly) {
+          input.focus();
+        }
+      });
+    }
   });
 
   infinitiveForm.append(infinitiveInput, infinitiveButton);
@@ -766,6 +783,42 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   tableHeading.textContent = 'Present tense';
   conjugationPanel.append(tableHeading);
 
+  function queueFocusVerbRow(nextIndex: number): void {
+    const nextPerson = VERB_PERSONS[nextIndex];
+    queueMicrotask(() => {
+      const selector = `.verb-row input[data-verb-person="${nextPerson}"]`;
+      const input = root.querySelector<HTMLInputElement>(selector);
+      if (input && !input.readOnly) {
+        input.focus();
+      }
+    });
+  }
+
+  function queueFocusNextUnresolvedRow(fromIndex: number, nextSession: VerbSessionState): void {
+    const scan = (start: number, end: number): number | undefined => {
+      for (let i = start; i < end; i += 1) {
+        if (!nextSession.persons[i]?.result) {
+          return i;
+        }
+      }
+      return undefined;
+    };
+
+    const forward = scan(fromIndex + 1, VERB_PERSONS.length);
+    const wrapped = forward ?? scan(0, fromIndex + 1);
+    if (wrapped !== undefined) {
+      queueFocusVerbRow(wrapped);
+      return;
+    }
+
+    queueMicrotask(() => {
+      const button = root.querySelector<HTMLButtonElement>('#verb-next-button');
+      if (button && !button.disabled) {
+        button.focus();
+      }
+    });
+  }
+
   VERB_PERSONS.forEach((person, index) => {
     const row = document.createElement('form');
     row.className = 'verb-row';
@@ -777,6 +830,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'verb-cell verb-input panel-control';
+    input.dataset.verbPerson = person;
     input.placeholder = 'Type form';
     input.value = session.personInputs[index] ?? '';
     input.autocomplete = 'off';
@@ -861,6 +915,13 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
           });
       }
       setState({ verbSession: nextSession });
+
+      const result = nextSession.persons[index]?.result;
+      if (result) {
+        queueFocusNextUnresolvedRow(index, nextSession);
+      } else {
+        queueFocusVerbRow(index);
+      }
     });
 
     row.append(label, input, feedback, expected, checkButton);
@@ -871,6 +932,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   controls.className = 'drill-controls';
 
   const nextButton = document.createElement('button');
+  nextButton.id = 'verb-next-button';
   nextButton.type = 'button';
   nextButton.textContent = 'Next verb';
   nextButton.disabled = !isConjugationComplete(session) || sessionComplete;
