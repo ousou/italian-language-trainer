@@ -1,3 +1,5 @@
+import type { AnswerSpec } from '../types.ts';
+
 export function normalizeAnswer(value: string): string {
   return value
     .normalize('NFD')
@@ -11,4 +13,11 @@ export function normalizeAnswer(value: string): string {
 
 export function isAnswerCorrect(expected: string, actual: string): boolean {
   return normalizeAnswer(expected) === normalizeAnswer(actual);
+}
+
+export function isAnswerCorrectSpec(expected: AnswerSpec, actual: string): boolean {
+  if (Array.isArray(expected)) {
+    return expected.some((option) => isAnswerCorrect(option, actual));
+  }
+  return isAnswerCorrect(expected, actual);
 }

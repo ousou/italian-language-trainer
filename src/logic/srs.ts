@@ -1,5 +1,9 @@
-import type { DrillDirection, VocabItem } from '../types.ts';
+import type { DrillDirection } from '../types.ts';
 import type { ReviewCard } from './review.ts';
+
+export interface SrsItem {
+  id: string;
+}
 
 export interface SrsQueueOptions {
   now: number;
@@ -10,7 +14,7 @@ export interface SrsQueueOptions {
 }
 
 export function buildSrsOrder(
-  items: VocabItem[],
+  items: SrsItem[],
   direction: DrillDirection,
   cards: ReviewCard[],
   options: SrsQueueOptions
