@@ -14,24 +14,31 @@ test('runs a verb conjugation drill with a second-try correction', async ({ page
   await page.getByText('olla', { exact: true }).waitFor();
 
   await page.locator('.answer-input').fill('essere');
-  await page.getByRole('button', { name: 'Check answer' }).click();
+  await page.getByRole('button', { name: 'Check infinitive' }).click();
   await expect(page.getByText('Correct!')).toBeVisible();
-  await page.getByRole('button', { name: 'Next form' }).click();
 
-  await page.locator('.answer-input').fill('x');
-  await page.getByRole('button', { name: 'Check answer' }).click();
-  await expect(page.getByText('Not quite. Try again.')).toBeVisible();
+  const ioRow = page.locator('.verb-row', { hasText: 'io' });
+  await ioRow.locator('input').fill('x');
+  await ioRow.getByRole('button', { name: 'Check' }).click();
+  await expect(ioRow.getByText('Try again')).toBeVisible();
 
-  await page.locator('.answer-input').fill('sono');
-  await page.getByRole('button', { name: 'Check answer' }).click();
-  await expect(page.getByText('Correct (second try).')).toBeVisible();
-  await page.getByRole('button', { name: 'Next form' }).click();
+  await ioRow.locator('input').fill('sono');
+  await ioRow.getByRole('button', { name: 'Check' }).click();
+  await expect(ioRow.getByText('Correct (2nd try)')).toBeVisible();
 
-  for (const form of ['sei', 'è', 'siamo', 'siete', 'sono']) {
-    await page.locator('.answer-input').fill(form);
-    await page.getByRole('button', { name: 'Check answer' }).click();
-    await expect(page.getByText('Correct!')).toBeVisible();
-    await page.getByRole('button', { name: 'Next form' }).click();
+  const rows = [
+    { person: 'tu', form: 'sei' },
+    { person: 'lui/lei', form: 'è' },
+    { person: 'noi', form: 'siamo' },
+    { person: 'voi', form: 'siete' },
+    { person: 'loro', form: 'sono' }
+  ];
+
+  for (const { person, form } of rows) {
+    const row = page.locator('.verb-row', { hasText: person });
+    await row.locator('input').fill(form);
+    await row.getByRole('button', { name: 'Check' }).click();
+    await expect(row.getByText('Correct')).toBeVisible();
   }
 
   await expect(page.locator('.panel-label', { hasText: 'Recap' })).toBeVisible();

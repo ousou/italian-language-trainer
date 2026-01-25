@@ -114,14 +114,12 @@ function attachGlobalKeyListener(): void {
     if (event.key !== 'Enter') {
       return;
     }
+    if (state.mode !== 'vocab') {
+      return;
+    }
     const vocabReady =
-      state.mode === 'vocab' && state.session && state.session.lastResult !== undefined && !state.session.sessionComplete;
-    const verbReady =
-      state.mode === 'verbs' &&
-      state.verbSession &&
-      isVerbStepResolved(state.verbSession) &&
-      !state.verbSession.sessionComplete;
-    if (!vocabReady && !verbReady) {
+      state.session && state.session.lastResult !== undefined && !state.session.sessionComplete;
+    if (!vocabReady) {
       return;
     }
     event.preventDefault();
@@ -165,36 +163,6 @@ function formatAnswerSpec(value: AnswerSpec): string {
   return value;
 }
 
-function isVerbStepResolved(session: VerbSessionState): boolean {
-  if (session.phase === 'infinitive') {
-    return Boolean(session.infinitive.result);
-  }
-  if (session.phase === 'conjugation') {
-    return Boolean(session.persons[session.currentPersonIndex]?.result);
-  }
-  return true;
-}
-
-function getVerbStepResult(session: VerbSessionState): VerbStepResult | undefined {
-  if (session.phase === 'infinitive') {
-    return session.infinitive.result;
-  }
-  if (session.phase === 'conjugation') {
-    return session.persons[session.currentPersonIndex]?.result;
-  }
-  return undefined;
-}
-
-function getVerbStepAttempts(session: VerbSessionState): string[] {
-  if (session.phase === 'infinitive') {
-    return session.infinitive.attempts;
-  }
-  if (session.phase === 'conjugation') {
-    return session.persons[session.currentPersonIndex]?.attempts ?? [];
-  }
-  return [];
-}
-
 function formatVerbStepResult(result?: VerbStepResult): string {
   if (result === 'correct-first') {
     return 'correct (1st try)';
@@ -206,6 +174,14 @@ function formatVerbStepResult(result?: VerbStepResult): string {
     return 'revealed';
   }
   return 'unanswered';
+}
+
+function isInfinitiveResolved(session: VerbSessionState): boolean {
+  return Boolean(session.infinitive.result);
+}
+
+function isConjugationComplete(session: VerbSessionState): boolean {
+  return session.persons.every((step) => Boolean(step.result));
 }
 
 function startNewSession(): void {
@@ -375,36 +351,13 @@ function goToNext(): void {
   }
 
   const previous = state.verbSession;
+  if (previous.phase !== 'recap') {
+    return;
+  }
+
   const nextSession = nextVerbStep(state.verbPack, previous);
   if (nextSession !== previous) {
-    if (previous.phase !== 'recap' && nextSession.phase === 'recap' && nextSession.lastScore) {
-      const itemIndex = previous.order[previous.currentIndex];
-      const item = state.verbPack.items[itemIndex];
-      void recordReviewResult(
-        {
-          packId: state.verbPack.id,
-          itemId: item.id,
-          direction: 'dst-to-src'
-        },
-        {
-          correct: nextSession.lastScore.correct,
-          quality: nextSession.lastScore.quality,
-          now: Date.now()
-        }
-      )
-        .then(() => refreshReviewStats(state.verbPack))
-        .catch((error) => {
-          console.warn('Failed to record verb review result', error);
-        });
-    }
-
     setState({ verbSession: nextSession });
-    queueMicrotask(() => {
-      const input = root.querySelector<HTMLInputElement>('.answer-input');
-      if (input && !input.readOnly) {
-        input.focus();
-      }
-    });
   }
 }
 
@@ -699,7 +652,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     return;
   }
 
-  const { order, currentIndex, phase, answerInput, sessionComplete } = session;
+  const { order, currentIndex, phase, sessionComplete } = session;
 
   if (order.length === 0) {
     const emptyNotice = document.createElement('p');
@@ -711,19 +664,8 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   const itemIndex = order[currentIndex];
   const item = pack.items[itemIndex];
-  const stepResolved = isVerbStepResolved(session);
-  const stepResult = getVerbStepResult(session);
-  const attempts = getVerbStepAttempts(session);
-  const attemptNumber = Math.min(attempts.length + 1, 2);
-
-  const person = phase === 'conjugation' ? VERB_PERSONS[session.currentPersonIndex] : undefined;
-  const stepLabel = phase === 'infinitive' ? 'Infinitive' : person ? `Present • ${VERB_PERSON_LABELS[person]}` : 'Recap';
-  const currentExpected =
-    phase === 'infinitive'
-      ? formatAnswerSpec(item.src)
-      : person
-        ? formatAnswerSpec(item.conjugations.present[person])
-        : '';
+  const infinitiveResolved = isInfinitiveResolved(session);
+  const conjugationReady = phase === 'conjugation' || phase === 'recap';
 
   const card = document.createElement('section');
   card.className = sessionComplete ? 'drill-card session-complete-card' : 'drill-card';
@@ -745,13 +687,8 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   prompt.append(promptBadge, promptTextNode);
 
-  const stepIndicator = document.createElement('p');
-  stepIndicator.className = 'session-summary';
-  stepIndicator.textContent = stepLabel;
-
   const infinitive = document.createElement('div');
-  const showInfinitive = session.phase !== 'infinitive' && Boolean(session.infinitive.result);
-  infinitive.className = showInfinitive ? 'drill-answer revealed' : 'drill-answer hidden';
+  infinitive.className = infinitiveResolved ? 'drill-answer revealed' : 'drill-answer hidden';
 
   const infinitiveBadge = document.createElement('span');
   infinitiveBadge.className = 'badge';
@@ -759,133 +696,194 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   const infinitiveText = document.createElement('span');
   infinitiveText.className = 'answer-text';
-  infinitiveText.textContent = showInfinitive ? formatAnswerSpec(item.src) : 'Infinitive hidden';
+  infinitiveText.textContent = infinitiveResolved ? formatAnswerSpec(item.src) : 'Infinitive hidden';
 
   infinitive.append(infinitiveBadge, infinitiveText);
 
-  const expected = document.createElement('div');
-  expected.className = stepResolved ? 'drill-answer revealed' : 'drill-answer hidden';
+  const infinitiveForm = document.createElement('form');
+  infinitiveForm.className = 'answer-form';
 
-  const expectedBadge = document.createElement('span');
-  expectedBadge.className = 'badge';
-  expectedBadge.textContent = stepLabel;
+  const infinitiveInput = document.createElement('input');
+  infinitiveInput.type = 'text';
+  infinitiveInput.className = 'answer-input panel-control';
+  infinitiveInput.placeholder = 'Type the Italian infinitive';
+  infinitiveInput.value = session.infinitiveInput;
+  infinitiveInput.autocomplete = 'off';
+  infinitiveInput.spellcheck = false;
+  infinitiveInput.readOnly = infinitiveResolved || sessionComplete;
 
-  const expectedText = document.createElement('span');
-  expectedText.className = 'answer-text';
-  expectedText.textContent = stepResolved ? currentExpected : 'Answer hidden';
+  const infinitiveButton = document.createElement('button');
+  infinitiveButton.type = 'submit';
+  infinitiveButton.className = 'primary';
+  infinitiveButton.textContent = 'Check infinitive';
+  infinitiveButton.disabled = infinitiveResolved || sessionComplete || session.infinitiveInput.trim() === '';
 
-  expected.append(expectedBadge, expectedText);
-
-  const form = document.createElement('form');
-  form.className = 'answer-form';
-
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.className = 'answer-input panel-control';
-  input.placeholder =
-    phase === 'infinitive'
-      ? 'Type the Italian infinitive'
-      : phase === 'conjugation'
-        ? `Type the ${VERB_PERSON_LABELS[person ?? 'io']} form`
-        : 'Review the recap';
-  input.value = answerInput;
-  input.autocomplete = 'off';
-  input.spellcheck = false;
-  input.readOnly = stepResolved || sessionComplete || phase === 'recap';
-
-  const checkButton = document.createElement('button');
-  checkButton.type = 'submit';
-  checkButton.className = 'primary';
-  checkButton.textContent = 'Check answer';
-  checkButton.disabled = stepResolved || sessionComplete || phase === 'recap' || answerInput.trim() === '';
-
-  input.addEventListener('input', (event) => {
+  infinitiveInput.addEventListener('input', (event) => {
     const target = event.target as HTMLInputElement;
     if (!state.verbSession) {
       return;
     }
-    state.verbSession.answerInput = target.value;
-    const answered = isVerbStepResolved(state.verbSession) || state.verbSession.sessionComplete;
-    checkButton.disabled = answered || state.verbSession.phase === 'recap' || target.value.trim() === '';
+    state.verbSession.infinitiveInput = target.value;
+    infinitiveButton.disabled = isInfinitiveResolved(state.verbSession) || target.value.trim() === '';
   });
 
-  form.addEventListener('submit', (event) => {
+  infinitiveForm.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!state.verbSession) {
       return;
     }
-    if (isVerbStepResolved(state.verbSession)) {
-      goToNext();
+    if (isInfinitiveResolved(state.verbSession)) {
       return;
     }
     const currentSession = state.verbSession;
-    let nextSession = currentSession;
-    if (currentSession.phase === 'infinitive') {
-      nextSession = submitInfinitiveAnswer(pack, currentSession, currentSession.answerInput);
-    } else if (currentSession.phase === 'conjugation') {
-      nextSession = submitConjugationAnswer(pack, currentSession, currentSession.answerInput);
-    } else {
-      goToNext();
-      return;
-    }
+    const nextSession = submitInfinitiveAnswer(pack, currentSession, currentSession.infinitiveInput);
     setState({ verbSession: nextSession });
   });
 
-  form.append(input, checkButton);
+  infinitiveForm.append(infinitiveInput, infinitiveButton);
 
-  const feedback = document.createElement('p');
-  feedback.className = 'answer-feedback';
-  if (phase === 'recap') {
-    feedback.textContent = ' ';
-  } else if (session.lastFeedback === 'correct') {
-    if (stepResult === 'correct-second') {
-      feedback.textContent = 'Correct (second try).';
-    } else {
-      feedback.textContent = 'Correct!';
-    }
-    feedback.classList.add('correct');
-  } else if (session.lastFeedback === 'retry') {
-    feedback.textContent = 'Not quite. Try again.';
-    feedback.classList.add('incorrect');
-  } else if (session.lastFeedback === 'revealed') {
-    feedback.textContent = 'Correct answer shown above.';
-    feedback.classList.add('incorrect');
+  const infinitiveFeedback = document.createElement('p');
+  infinitiveFeedback.className = 'answer-feedback';
+  if (session.infinitiveFeedback === 'correct') {
+    infinitiveFeedback.textContent =
+      session.infinitive.result === 'correct-second' ? 'Correct (second try).' : 'Correct!';
+    infinitiveFeedback.classList.add('correct');
+  } else if (session.infinitiveFeedback === 'retry') {
+    infinitiveFeedback.textContent = 'Not quite. Try again.';
+    infinitiveFeedback.classList.add('incorrect');
+  } else if (session.infinitiveFeedback === 'revealed') {
+    infinitiveFeedback.textContent = 'Correct answer shown above.';
+    infinitiveFeedback.classList.add('incorrect');
   } else {
-    feedback.textContent = ' ';
+    infinitiveFeedback.textContent = ' ';
   }
+
+  const conjugationPanel = document.createElement('div');
+  conjugationPanel.className = 'verb-table';
+
+  const tableHeading = document.createElement('span');
+  tableHeading.className = 'panel-label';
+  tableHeading.textContent = 'Present tense';
+  conjugationPanel.append(tableHeading);
+
+  VERB_PERSONS.forEach((person, index) => {
+    const row = document.createElement('form');
+    row.className = 'verb-row';
+
+    const label = document.createElement('span');
+    label.className = 'verb-cell verb-person';
+    label.textContent = VERB_PERSON_LABELS[person];
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'verb-cell verb-input panel-control';
+    input.placeholder = 'Type form';
+    input.value = session.personInputs[index] ?? '';
+    input.autocomplete = 'off';
+    input.spellcheck = false;
+    input.readOnly = sessionComplete || !conjugationReady || Boolean(session.persons[index].result);
+
+    const expected = document.createElement('span');
+    expected.className = 'verb-cell verb-expected';
+    expected.textContent = session.persons[index].result ? formatAnswerSpec(item.conjugations.present[person]) : '—';
+
+    const feedback = document.createElement('span');
+    feedback.className = 'verb-cell verb-feedback';
+    const rowFeedback = session.personFeedback[index];
+    if (rowFeedback === 'correct') {
+      feedback.textContent =
+        session.persons[index].result === 'correct-second' ? 'Correct (2nd try)' : 'Correct';
+      feedback.classList.add('correct');
+    } else if (rowFeedback === 'retry') {
+      feedback.textContent = 'Try again';
+      feedback.classList.add('incorrect');
+    } else if (rowFeedback === 'revealed') {
+      feedback.textContent = 'Answer shown';
+      feedback.classList.add('incorrect');
+    } else {
+      feedback.textContent = '';
+    }
+
+    const checkButton = document.createElement('button');
+    checkButton.type = 'submit';
+    checkButton.className = 'verb-cell';
+    checkButton.textContent = 'Check';
+    checkButton.disabled =
+      sessionComplete ||
+      !conjugationReady ||
+      Boolean(session.persons[index].result) ||
+      (session.personInputs[index] ?? '').trim() === '';
+
+    input.addEventListener('input', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (!state.verbSession) {
+        return;
+      }
+      state.verbSession.personInputs[index] = target.value;
+      checkButton.disabled =
+        sessionComplete ||
+        !conjugationReady ||
+        Boolean(state.verbSession.persons[index].result) ||
+        target.value.trim() === '';
+    });
+
+    row.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!state.verbSession) {
+        return;
+      }
+      if (sessionComplete || !conjugationReady || state.verbSession.persons[index].result) {
+        return;
+      }
+      const currentSession = state.verbSession;
+      const nextSession = submitConjugationAnswer(
+        pack,
+        currentSession,
+        person,
+        currentSession.personInputs[index] ?? ''
+      );
+      if (currentSession.phase !== 'recap' && nextSession.phase === 'recap' && nextSession.lastScore) {
+        void recordReviewResult(
+          {
+            packId: pack.id,
+            itemId: item.id,
+            direction: 'dst-to-src'
+          },
+          {
+            correct: nextSession.lastScore.correct,
+            quality: nextSession.lastScore.quality,
+            now: Date.now()
+          }
+        )
+          .then(() => refreshReviewStats(pack))
+          .catch((error) => {
+            console.warn('Failed to record verb review result', error);
+          });
+      }
+      setState({ verbSession: nextSession });
+    });
+
+    row.append(label, input, feedback, expected, checkButton);
+    conjugationPanel.append(row);
+  });
 
   const controls = document.createElement('div');
   controls.className = 'drill-controls';
 
-  const attempt = document.createElement('span');
-  attempt.className = 'session-summary';
-  if (!stepResolved && phase !== 'recap') {
-    attempt.textContent = `Attempt ${attemptNumber} of 2`;
-  } else {
-    attempt.textContent = '';
-  }
-
   const nextButton = document.createElement('button');
   nextButton.type = 'button';
-  nextButton.textContent = phase === 'recap' ? 'Next verb' : 'Next form';
-  nextButton.disabled = !stepResolved || sessionComplete;
+  nextButton.textContent = 'Next verb';
+  nextButton.disabled = !isConjugationComplete(session) || sessionComplete;
   nextButton.addEventListener('click', () => {
-    if (!state.verbSession || !isVerbStepResolved(state.verbSession)) {
+    if (!state.verbSession || !isConjugationComplete(state.verbSession)) {
       return;
     }
     goToNext();
   });
 
-  controls.append(attempt, nextButton);
+  controls.append(nextButton);
 
-  card.append(meta, prompt, stepIndicator);
-  if (phase !== 'infinitive') {
-    card.append(infinitive);
-  }
-  if (phase !== 'recap') {
-    card.append(expected);
-  }
-  card.append(form, feedback, controls);
+  card.append(meta, prompt, infinitive, infinitiveForm, infinitiveFeedback, conjugationPanel, controls);
 
   if (phase === 'recap') {
     const recap = document.createElement('div');
@@ -944,9 +942,8 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   }
 
   container.append(card);
-
-  if (!sessionComplete && state.verbSession && !isVerbStepResolved(state.verbSession)) {
-    input.focus();
+  if (!sessionComplete && state.verbSession && !isInfinitiveResolved(state.verbSession)) {
+    infinitiveInput.focus();
   }
 }
 

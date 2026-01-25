@@ -204,6 +204,52 @@ main.app {
   align-items: center;
 }
 
+.verb-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.verb-row {
+  display: grid;
+  grid-template-columns: 0.6fr minmax(0, 1.4fr) 1fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.verb-cell {
+  font-size: 0.95rem;
+}
+
+.verb-person {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4b5563;
+}
+
+.verb-input {
+  min-height: 2.6rem;
+}
+
+.verb-feedback {
+  font-weight: 600;
+  min-height: 1.2rem;
+}
+
+.verb-feedback.correct {
+  color: #16a34a;
+}
+
+.verb-feedback.incorrect {
+  color: #b91c1c;
+}
+
+.verb-expected {
+  font-weight: 600;
+  color: #111827;
+}
+
 .answer-input {
   min-height: 3rem;
 }
@@ -368,6 +414,21 @@ button.primary[disabled] {
 
 .stats-line-point {
   fill: rgba(14, 165, 233, 0.9);
+}
+
+.verb-row button {
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .verb-row {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .verb-person {
+    font-size: 0.8rem;
+  }
 }
 
 .stats-x-axis {
