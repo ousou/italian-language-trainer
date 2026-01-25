@@ -188,7 +188,7 @@ export function submitConjugationAnswer(
   return next;
 }
 
-export function nextVerbStep(pack: VerbPack, state: VerbSessionState): VerbSessionState {
+export function nextVerbStep(state: VerbSessionState): VerbSessionState {
   if (state.sessionComplete) {
     return state;
   }

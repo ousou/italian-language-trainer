@@ -355,7 +355,7 @@ function goToNext(): void {
     return;
   }
 
-  const nextSession = nextVerbStep(state.verbPack, previous);
+  const nextSession = nextVerbStep(previous);
   if (nextSession !== previous) {
     setState({ verbSession: nextSession });
   }
