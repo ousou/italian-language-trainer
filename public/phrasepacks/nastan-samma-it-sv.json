@@ -1,0 +1,123 @@
+{
+  "type": "vocab",
+  "id": "nastan-samma-it-sv",
+  "title": "(Nästan) samma på italienska",
+  "src": "it",
+  "dst": "sv",
+  "items": [
+    { "id": "giacca", "src": "la giacca", "dst": "jacka" },
+    { "id": "penna", "src": "la penna", "dst": "penna" },
+    { "id": "zuppa", "src": "la zuppa", "dst": "soppa" },
+
+    { "id": "pizza", "src": "la pizza", "dst": "pizza" },
+    { "id": "pasta", "src": "la pasta", "dst": "pasta" },
+    { "id": "pesto", "src": "il pesto", "dst": "pesto" },
+    { "id": "salsa", "src": "la salsa", "dst": "salsa" },
+
+    { "id": "spaghetti", "src": "gli spaghetti", "dst": "spaghetti" },
+    { "id": "lasagne", "src": "le lasagne", "dst": "lasagne" },
+    { "id": "risotto", "src": "il risotto", "dst": "risotto" },
+    { "id": "ravioli", "src": "i ravioli", "dst": "ravioli" },
+    { "id": "tortellini", "src": "i tortellini", "dst": "tortellini" },
+    { "id": "gnocchi", "src": "gli gnocchi", "dst": "gnocchi" },
+    { "id": "focaccia", "src": "la focaccia", "dst": "focaccia" },
+    { "id": "bruschetta", "src": "la bruschetta", "dst": "bruschetta" },
+
+    { "id": "mozzarella", "src": "la mozzarella", "dst": "mozzarella" },
+    { "id": "prosciutto", "src": "il prosciutto", "dst": "prosciutto" },
+    { "id": "salame", "src": "il salame", "dst": "salami" },
+
+    { "id": "broccoli", "src": "i broccoli", "dst": "broccoli" },
+    { "id": "banana", "src": "la banana", "dst": "banan" },
+    { "id": "ananas", "src": "l'ananas", "dst": "ananas" },
+    { "id": "kiwi", "src": "il kiwi", "dst": "kiwi" },
+
+    { "id": "cacao", "src": "il cacao", "dst": "kakao" },
+    { "id": "caffe", "src": "il caffè", "dst": "kaffe" },
+    { "id": "te", "src": "il tè", "dst": "te" },
+
+    { "id": "cappuccino", "src": "il cappuccino", "dst": "cappuccino" },
+    { "id": "espresso", "src": "l'espresso", "dst": "espresso" },
+    { "id": "gelato", "src": "il gelato", "dst": "gelato" },
+    { "id": "tiramisu", "src": "il tiramisù", "dst": "tiramisu" },
+    { "id": "panettone", "src": "il panettone", "dst": "panettone" },
+
+    { "id": "pizzeria", "src": "la pizzeria", "dst": "pizzeria" },
+    { "id": "bar", "src": "il bar", "dst": "bar" },
+
+    { "id": "mamma", "src": "la mamma", "dst": "mamma" },
+    { "id": "papa", "src": "il papà", "dst": "pappa" },
+    { "id": "famiglia", "src": "la famiglia", "dst": "familj" },
+    { "id": "persona", "src": "la persona", "dst": "person" },
+    { "id": "artista", "src": "l'artista", "dst": "artist" },
+    { "id": "turista", "src": "il turista", "dst": "turist" },
+
+    { "id": "idea", "src": "l'idea", "dst": "idé" },
+    { "id": "tema", "src": "il tema", "dst": "tema" },
+    { "id": "teoria", "src": "la teoria", "dst": "teori" },
+    { "id": "pratica", "src": "la pratica", "dst": "praktik" },
+    { "id": "panico", "src": "il panico", "dst": "panik" },
+
+    { "id": "problema", "src": "il problema", "dst": "problem" },
+    { "id": "sistema", "src": "il sistema", "dst": "system" },
+    { "id": "programma", "src": "il programma", "dst": "program" },
+    { "id": "progetto", "src": "il progetto", "dst": "projekt" },
+    { "id": "energia", "src": "l'energia", "dst": "energi" },
+    { "id": "musica", "src": "la musica", "dst": "musik" },
+    { "id": "cultura", "src": "la cultura", "dst": "kultur" },
+    { "id": "politica", "src": "la politica", "dst": "politik" },
+    { "id": "economia", "src": "l'economia", "dst": "ekonomi" },
+
+    { "id": "telefono", "src": "il telefono", "dst": "telefon" },
+    { "id": "radio", "src": "la radio", "dst": "radio" },
+    { "id": "video", "src": "il video", "dst": "video" },
+    { "id": "internet", "src": "l'internet", "dst": "internet" },
+    { "id": "computer", "src": "il computer", "dst": "computer" },
+
+    { "id": "taxi", "src": "il taxi", "dst": "taxi" },
+    { "id": "metro", "src": "la metro", "dst": "metro" },
+    { "id": "tram", "src": "il tram", "dst": "tram" },
+    { "id": "tunnel", "src": "il tunnel", "dst": "tunnel" },
+    { "id": "stazione", "src": "la stazione", "dst": "station" },
+
+    { "id": "museo", "src": "il museo", "dst": "museum" },
+    { "id": "teatro", "src": "il teatro", "dst": "teater" },
+    { "id": "orchestra", "src": "l'orchestra", "dst": "orkester" },
+    { "id": "opera", "src": "l'opera", "dst": "opera" },
+    { "id": "film", "src": "il film", "dst": "film" },
+    { "id": "foto", "src": "la foto", "dst": "foto" },
+    { "id": "album", "src": "l'album", "dst": "album" },
+
+    { "id": "universita", "src": "l'università", "dst": "universitet" },
+    { "id": "professore", "src": "il professore", "dst": "professor" },
+    { "id": "studente", "src": "lo studente", "dst": "student" },
+
+    { "id": "banca", "src": "la banca", "dst": "bank" },
+    { "id": "conto", "src": "il conto", "dst": "konto" },
+    { "id": "somma", "src": "la somma", "dst": "summa" },
+    { "id": "numero", "src": "il numero", "dst": "nummer" },
+    { "id": "minuto", "src": "il minuto", "dst": "minut" },
+    { "id": "motore", "src": "il motore", "dst": "motor" },
+    { "id": "benzina", "src": "la benzina", "dst": "bensin" },
+
+    { "id": "robot", "src": "il robot", "dst": "robot" },
+    { "id": "virus", "src": "il virus", "dst": "virus" },
+    { "id": "bomba", "src": "la bomba", "dst": "bomb" },
+
+    { "id": "generale", "src": "il generale", "dst": "general" },
+    { "id": "soldato", "src": "il soldato", "dst": "soldat" },
+    { "id": "speciale", "src": "speciale", "dst": "special" },
+    { "id": "normale", "src": "normale", "dst": "normal" },
+    { "id": "digitale", "src": "digitale", "dst": "digital" },
+    { "id": "originale", "src": "originale", "dst": "original" },
+
+    { "id": "casino", "src": "il casino", "dst": "casino" },
+    { "id": "maratona", "src": "la maratona", "dst": "maraton" },
+    { "id": "tennis", "src": "il tennis", "dst": "tennis" },
+    { "id": "golf", "src": "il golf", "dst": "golf" },
+    { "id": "atleta", "src": "l'atleta", "dst": "atlet" },
+    { "id": "capitano", "src": "il capitano", "dst": "kapten" },
+    { "id": "pilota", "src": "il pilota", "dst": "pilot" },
+    { "id": "modello", "src": "il modello", "dst": "modell" }
+  ]
+}
