@@ -15,7 +15,7 @@
 - No network calls in app runtime; any `fetch` is build-time or test-only.
 - Prefer deterministic time/randomness: inject `now()`/RNG into logic for tests.
 - Write unit tests for new features, and run tests after every change.
-- If app code changes (`src`, `public`, `tests`), run `pnpm test`.
+- If app code changes (`src`, `public`, `tests`), run `pnpm test` and `pnpm build` (to catch typecheck/build-only failures).
 - If phrasepack importer code changes (`tools/phrasepack_importer`), run `pytest` from `tools/phrasepack_importer`.
 - If both areas change, run both test suites.
 - Run end-to-end tests with `pnpm test:e2e` when a feature is complete.
