@@ -34,7 +34,7 @@ test('runs a verb conjugation drill with a second-try correction', async ({ page
     await page.getByRole('button', { name: 'Next form' }).click();
   }
 
-  await expect(page.getByText('Recap', { exact: true })).toBeVisible();
+  await expect(page.locator('.panel-label', { hasText: 'Recap' })).toBeVisible();
   await expect(page.getByText(/Conjugation: 6\/6 correct/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Next verb' })).toBeVisible();
 });

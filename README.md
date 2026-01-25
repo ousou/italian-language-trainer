@@ -11,7 +11,7 @@ Repository: **italian-language-trainer**
 - **Zero backend**: static hosting only; data stored locally via IndexedDB.
 - **No login**: private by default; your data never leaves your device unless you export it.
 - **Offline-first**: installable PWA, fully usable on planes, metros, or abroad with spotty connections.
-- **Two study modes**: 1) Words (IT⇄FI/SE) and 2) Phrasebooks by scenario (restaurant, hotel, directions, etc.).
+- **Three study modes**: 1) Words (IT⇄FI/SE) 2) Phrasebooks by scenario (restaurant, hotel, directions, etc.) and 3) Verb conjugation drills.
 - **Smart review**: spaced-repetition scheduling (SM-2/Leitner) with gentle, human-friendly defaults.
 - **Multidevice friendly**: optional import/export files to move progress between devices.
 - **UI localization**: app interface available in **Finnish or Swedish**, selectable by the user. The chosen UI language also determines which translation pair (IT⇄FI or IT⇄SE) is used by default.
@@ -39,6 +39,12 @@ Repository: **italian-language-trainer**
 
   - Curated packs: *At the Restaurant*, *Hotel Check-in*, *Getting Around*, *Emergencies*, etc.
   - Tap-to-play audio, slow playback, and phonetic helper (IPA or syllable stress).
+
+- **Verb Conjugation**
+
+  - Prompt the meaning in the user language, then type the Italian infinitive.
+  - Present-tense conjugation for io/tu/lui|lei/noi/voi/loro.
+  - Two attempts per form, with partial-credit scoring.
 
 - **Spaced Repetition**
 
@@ -84,7 +90,8 @@ italian-language-trainer/
 ├─ public/
 │  ├─ icons/               # PWA icons
 │  ├─ manifest.webmanifest
-│  └─ phrasepacks/         # Built-in content (JSON)
+│  ├─ phrasepacks/         # Built-in content (JSON)
+│  └─ verbpacks/           # Built-in verb conjugations (JSON)
 ├─ src/
 │  ├─ app/                 # App shell, routes
 │  ├─ components/          # Small reusable UI functions
@@ -171,6 +178,35 @@ italian-language-trainer/
           "ipa": "ˈpɔs.so aˈvɛ.re il meˈny per faˈvo.re"
         }
       ]
+    }
+  ]
+}
+```
+
+### Verb Pack (IT⇄FI example)
+
+```json
+{
+  "type": "verbs",
+  "id": "core-it-fi-verbs-a1",
+  "title": "Core Verbs A1 — Italian⇄Finnish",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "essere",
+      "src": ["essere", "esser"],
+      "dst": "olla",
+      "conjugations": {
+        "present": {
+          "io": ["sono", "io sono"],
+          "tu": "sei",
+          "luiLei": "è",
+          "noi": "siamo",
+          "voi": "siete",
+          "loro": "sono"
+        }
+      }
     }
   ]
 }
