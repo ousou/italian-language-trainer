@@ -40,14 +40,15 @@ export interface VerbSessionState {
   order: number[];
   currentIndex: number;
   phase: 'infinitive' | 'conjugation' | 'recap';
-  currentPersonIndex: number;
   infinitive: VerbAnswerStep;
   persons: VerbAnswerStep[];
+  infinitiveInput: string;
+  personInputs: string[];
+  infinitiveFeedback?: VerbStepFeedback;
+  personFeedback: Array<VerbStepFeedback | undefined>;
   sessionCorrect: number;
   sessionIncorrect: number;
   incorrectItems: VerbIncorrectEntry[];
-  lastFeedback?: VerbStepFeedback;
-  answerInput: string;
   sessionComplete: boolean;
   lastScore?: VerbScoreSummary;
 }
@@ -60,14 +61,15 @@ export function createVerbSession(pack: VerbPack, order: number[]): VerbSessionS
     order,
     currentIndex: 0,
     phase: 'infinitive',
-    currentPersonIndex: 0,
     infinitive: { attempts: [] },
     persons: VERB_PERSONS.map(() => ({ attempts: [] })),
+    infinitiveInput: '',
+    personInputs: VERB_PERSONS.map(() => ''),
+    infinitiveFeedback: undefined,
+    personFeedback: VERB_PERSONS.map(() => undefined),
     sessionCorrect: 0,
     sessionIncorrect: 0,
     incorrectItems: [],
-    lastFeedback: undefined,
-    answerInput: '',
     sessionComplete: false,
     lastScore: undefined
   };
@@ -98,31 +100,44 @@ export function submitInfinitiveAnswer(pack: VerbPack, state: VerbSessionState, 
       attempts,
       result: state.infinitive.result
     },
-    answerInput: answer
+    infinitiveInput: answer,
+    infinitiveFeedback: state.infinitiveFeedback
   };
 
   if (correct) {
     next.infinitive.result = attempts.length === 1 ? 'correct-first' : 'correct-second';
-    next.lastFeedback = 'correct';
+    next.infinitiveFeedback = 'correct';
+    next.phase = 'conjugation';
     return next;
   }
 
   if (attempts.length >= 2) {
     next.infinitive.result = 'revealed';
-    next.lastFeedback = 'revealed';
+    next.infinitiveFeedback = 'revealed';
+    next.phase = 'conjugation';
     return next;
   }
 
-  next.lastFeedback = 'retry';
+  next.infinitiveFeedback = 'retry';
   return next;
 }
 
-export function submitConjugationAnswer(pack: VerbPack, state: VerbSessionState, answer: string): VerbSessionState {
+export function submitConjugationAnswer(
+  pack: VerbPack,
+  state: VerbSessionState,
+  person: VerbPerson,
+  answer: string
+): VerbSessionState {
   if (state.sessionComplete || state.phase !== 'conjugation') {
     return state;
   }
 
-  const step = state.persons[state.currentPersonIndex];
+  const personIndex = VERB_PERSONS.indexOf(person);
+  if (personIndex < 0) {
+    return state;
+  }
+
+  const step = state.persons[personIndex];
   if (!step || step.result) {
     return state;
   }
@@ -132,7 +147,6 @@ export function submitConjugationAnswer(pack: VerbPack, state: VerbSessionState,
     return state;
   }
 
-  const person = VERB_PERSONS[state.currentPersonIndex];
   const expected = item.conjugations.present[person];
   const attempts = [...step.attempts, answer];
   const correct = isAnswerCorrectSpec(expected, answer);
@@ -143,64 +157,40 @@ export function submitConjugationAnswer(pack: VerbPack, state: VerbSessionState,
     result: step.result
   };
 
+  const nextPersonInputs = [...state.personInputs];
+  nextPersonInputs[personIndex] = answer;
+
+  const nextPersonFeedback = [...state.personFeedback];
+
   const next: VerbSessionState = {
     ...state,
     persons: nextPersons,
-    answerInput: answer
+    personInputs: nextPersonInputs,
+    personFeedback: nextPersonFeedback
   };
 
   if (correct) {
     updatedStep.result = attempts.length === 1 ? 'correct-first' : 'correct-second';
-    next.lastFeedback = 'correct';
-    nextPersons[state.currentPersonIndex] = updatedStep;
-    return next;
+    nextPersonFeedback[personIndex] = 'correct';
+    nextPersons[personIndex] = updatedStep;
+    return finalizeIfComplete(pack, next);
   }
 
   if (attempts.length >= 2) {
     updatedStep.result = 'revealed';
-    next.lastFeedback = 'revealed';
-    nextPersons[state.currentPersonIndex] = updatedStep;
-    return next;
+    nextPersonFeedback[personIndex] = 'revealed';
+    nextPersons[personIndex] = updatedStep;
+    return finalizeIfComplete(pack, next);
   }
 
-  next.lastFeedback = 'retry';
-  nextPersons[state.currentPersonIndex] = updatedStep;
+  nextPersonFeedback[personIndex] = 'retry';
+  nextPersons[personIndex] = updatedStep;
   return next;
 }
 
 export function nextVerbStep(pack: VerbPack, state: VerbSessionState): VerbSessionState {
   if (state.sessionComplete) {
     return state;
-  }
-
-  if (state.phase === 'infinitive') {
-    if (!state.infinitive.result) {
-      return state;
-    }
-    return {
-      ...state,
-      phase: 'conjugation',
-      currentPersonIndex: 0,
-      lastFeedback: undefined,
-      answerInput: '',
-      lastScore: undefined
-    };
-  }
-
-  if (state.phase === 'conjugation') {
-    const step = state.persons[state.currentPersonIndex];
-    if (!step || !step.result) {
-      return state;
-    }
-    if (state.currentPersonIndex < VERB_PERSONS.length - 1) {
-      return {
-        ...state,
-        currentPersonIndex: state.currentPersonIndex + 1,
-        lastFeedback: undefined,
-        answerInput: ''
-      };
-    }
-    return finalizeVerb(pack, state);
   }
 
   if (state.phase === 'recap') {
@@ -229,13 +219,22 @@ function startNextVerb(state: VerbSessionState): VerbSessionState {
     ...state,
     currentIndex: state.currentIndex + 1,
     phase: 'infinitive',
-    currentPersonIndex: 0,
     infinitive: { attempts: [] },
     persons: VERB_PERSONS.map(() => ({ attempts: [] })),
-    lastFeedback: undefined,
-    answerInput: '',
-    lastScore: undefined
+    infinitiveInput: '',
+    personInputs: VERB_PERSONS.map(() => ''),
+    infinitiveFeedback: undefined,
+    personFeedback: VERB_PERSONS.map(() => undefined),
+    lastScore: undefined,
+    sessionComplete: false
   };
+}
+
+function finalizeIfComplete(pack: VerbPack, state: VerbSessionState): VerbSessionState {
+  if (state.persons.every((step) => step.result)) {
+    return finalizeVerb(pack, state);
+  }
+  return state;
 }
 
 function finalizeVerb(pack: VerbPack, state: VerbSessionState): VerbSessionState {
@@ -248,8 +247,7 @@ function finalizeVerb(pack: VerbPack, state: VerbSessionState): VerbSessionState
   const updated: VerbSessionState = {
     ...state,
     phase: 'recap',
-    lastFeedback: undefined,
-    answerInput: '',
+    infinitiveFeedback: undefined,
     lastScore: summary,
     sessionCorrect: state.sessionCorrect + (summary.correct ? 1 : 0),
     sessionIncorrect: state.sessionIncorrect + (summary.correct ? 0 : 1)

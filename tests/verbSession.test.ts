@@ -39,39 +39,36 @@ describe('verb session flow', () => {
     const session = createVerbSession(SAMPLE_PACK, [0]);
     const first = submitInfinitiveAnswer(SAMPLE_PACK, session, 'fare');
     expect(first.infinitive.result).toBeUndefined();
-    expect(first.lastFeedback).toBe('retry');
+    expect(first.infinitiveFeedback).toBe('retry');
 
     const second = submitInfinitiveAnswer(SAMPLE_PACK, first, 'avere');
     expect(second.infinitive.result).toBe('revealed');
-    expect(second.lastFeedback).toBe('revealed');
-
-    const moved = nextVerbStep(SAMPLE_PACK, second);
-    expect(moved.phase).toBe('conjugation');
+    expect(second.infinitiveFeedback).toBe('revealed');
+    expect(second.phase).toBe('conjugation');
   });
 
   it('accepts answer variants for infinitive and conjugations', () => {
     let session = createVerbSession(SAMPLE_PACK, [0]);
     session = submitInfinitiveAnswer(SAMPLE_PACK, session, 'esser');
     expect(session.infinitive.result).toBe('correct-first');
+    expect(session.phase).toBe('conjugation');
 
-    session = nextVerbStep(SAMPLE_PACK, session);
-    session = submitConjugationAnswer(SAMPLE_PACK, session, 'io sono');
+    session = submitConjugationAnswer(SAMPLE_PACK, session, 'io', 'io sono');
     expect(session.persons[0].result).toBe('correct-first');
   });
 
   it('computes partial credit, marks incorrect verbs, and supports redo', () => {
     let session = createVerbSession(SAMPLE_PACK, [0]);
     session = submitInfinitiveAnswer(SAMPLE_PACK, session, 'essere');
-    session = nextVerbStep(SAMPLE_PACK, session);
+    expect(session.phase).toBe('conjugation');
 
-    session = submitConjugationAnswer(SAMPLE_PACK, session, 'x');
-    session = submitConjugationAnswer(SAMPLE_PACK, session, 'sono');
-    session = nextVerbStep(SAMPLE_PACK, session);
+    session = submitConjugationAnswer(SAMPLE_PACK, session, 'io', 'x');
+    session = submitConjugationAnswer(SAMPLE_PACK, session, 'io', 'sono');
 
     for (let index = 1; index < VERB_PERSONS.length; index += 1) {
-      session = submitConjugationAnswer(SAMPLE_PACK, session, 'x');
-      session = submitConjugationAnswer(SAMPLE_PACK, session, 'y');
-      session = nextVerbStep(SAMPLE_PACK, session);
+      const person = VERB_PERSONS[index];
+      session = submitConjugationAnswer(SAMPLE_PACK, session, person, 'x');
+      session = submitConjugationAnswer(SAMPLE_PACK, session, person, 'y');
     }
 
     expect(session.phase).toBe('recap');
