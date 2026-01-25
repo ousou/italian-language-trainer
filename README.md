@@ -4,6 +4,8 @@ A 100% browser-based Progressive Web App (PWA) for practicing Italian vocabulary
 
 Repository: **italian-language-trainer**
 
+Served at: https://ousou.github.io/italian-language-trainer/
+
 ---
 
 ## ✨ Goals
@@ -405,17 +407,6 @@ serve from that branch. If you plan to host from a subpath, set Vite's
 
 ---
 
-## 🤝 Contributing
-
-Private project (for you + spouse). Optionally accept phrasepack PRs.
-
----
-
-## 📜 License
-
-MIT (or private).
-
----
 
 ## Appendix A — Interfaces
 
@@ -446,6 +437,3 @@ export interface ReviewCard {
 **Sync across devices?** Use export/import.\
 **Which language pair?** Determined by chosen UI (Finnish → IT⇄FI, Swedish → IT⇄SV).\
 **Will TTS work everywhere?** Depends on OS voices; falls back gracefully.
-
-
-## Testing
