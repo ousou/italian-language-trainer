@@ -439,7 +439,7 @@ button.primary[disabled] {
 
 @media (max-width: 720px) {
   .verb-row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: 4.75rem minmax(0, 1fr) 4.6rem;
     grid-template-areas:
       "person input check"
       "feedback feedback feedback"
@@ -449,14 +449,16 @@ button.primary[disabled] {
 
   .verb-person {
     font-size: 0.8rem;
+    justify-self: end;
+    white-space: nowrap;
   }
 
   .verb-row button {
-    width: auto;
+    width: 100%;
     padding: 0.5rem 0.75rem;
     font-size: 0.85rem;
     border-radius: 12px;
-    justify-self: end;
+    justify-self: stretch;
   }
 }
 
