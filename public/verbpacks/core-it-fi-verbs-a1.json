@@ -754,6 +754,276 @@
           "loro": "raccolgono"
         }
       }
+    },
+    {
+      "id": "trovare",
+      "src": "trovare",
+      "dst": "löytää",
+      "conjugations": {
+        "present": {
+          "io": "trovo",
+          "tu": "trovi",
+          "luiLei": "trova",
+          "noi": "troviamo",
+          "voi": "trovate",
+          "loro": "trovano"
+        }
+      }
+    },
+    {
+      "id": "condurre",
+      "src": "condurre",
+      "dst": "johtaa; kuljettaa",
+      "conjugations": {
+        "present": {
+          "io": "conduco",
+          "tu": "conduci",
+          "luiLei": "conduce",
+          "noi": "conduciamo",
+          "voi": "conducete",
+          "loro": "conducono"
+        }
+      }
+    },
+    {
+      "id": "spegnere",
+      "src": "spegnere",
+      "dst": "sammuttaa",
+      "conjugations": {
+        "present": {
+          "io": "spengo",
+          "tu": "spegni",
+          "luiLei": "spegne",
+          "noi": "spegniamo",
+          "voi": "spegnete",
+          "loro": "spengono"
+        }
+      }
+    },
+    {
+      "id": "accendere",
+      "src": "accendere",
+      "dst": "sytyttää",
+      "conjugations": {
+        "present": {
+          "io": "accendo",
+          "tu": "accendi",
+          "luiLei": "accende",
+          "noi": "accendiamo",
+          "voi": "accendete",
+          "loro": "accendono"
+        }
+      }
+    },
+    {
+      "id": "cogliere",
+      "src": "cogliere",
+      "dst": "poimia",
+      "conjugations": {
+        "present": {
+          "io": "colgo",
+          "tu": "cogli",
+          "luiLei": "coglie",
+          "noi": "cogliamo",
+          "voi": "cogliete",
+          "loro": "colgono"
+        }
+      }
+    },
+    {
+      "id": "mantenere",
+      "src": "mantenere",
+      "dst": "ylläpitää",
+      "conjugations": {
+        "present": {
+          "io": "mantengo",
+          "tu": "mantieni",
+          "luiLei": "mantiene",
+          "noi": "manteniamo",
+          "voi": "mantenete",
+          "loro": "mantengono"
+        }
+      }
+    },
+    {
+      "id": "ritenere",
+      "src": "ritenere",
+      "dst": "pitää; katsoa (mieltä)",
+      "conjugations": {
+        "present": {
+          "io": "ritengo",
+          "tu": "ritieni",
+          "luiLei": "ritiene",
+          "noi": "riteniamo",
+          "voi": "ritenete",
+          "loro": "ritengono"
+        }
+      }
+    },
+    {
+      "id": "ottenere",
+      "src": "ottenere",
+      "dst": "saada",
+      "conjugations": {
+        "present": {
+          "io": "ottengo",
+          "tu": "ottieni",
+          "luiLei": "ottiene",
+          "noi": "otteniamo",
+          "voi": "ottenete",
+          "loro": "ottengono"
+        }
+      }
+    },
+    {
+      "id": "crescere",
+      "src": "crescere",
+      "dst": "kasvaa",
+      "conjugations": {
+        "present": {
+          "io": "cresco",
+          "tu": "cresci",
+          "luiLei": "cresce",
+          "noi": "cresciamo",
+          "voi": "crescete",
+          "loro": "crescono"
+        }
+      }
+    },
+    {
+      "id": "decidere",
+      "src": "decidere",
+      "dst": "päättää",
+      "conjugations": {
+        "present": {
+          "io": "decido",
+          "tu": "decidi",
+          "luiLei": "decide",
+          "noi": "decidiamo",
+          "voi": "decidete",
+          "loro": "decidono"
+        }
+      }
+    },
+    {
+      "id": "chiedere",
+      "src": "chiedere",
+      "dst": "kysyä; pyytää",
+      "conjugations": {
+        "present": {
+          "io": "chiedo",
+          "tu": "chiedi",
+          "luiLei": "chiede",
+          "noi": "chiediamo",
+          "voi": "chiedete",
+          "loro": "chiedono"
+        }
+      }
+    },
+    {
+      "id": "aprire",
+      "src": "aprire",
+      "dst": "avata",
+      "conjugations": {
+        "present": {
+          "io": "apro",
+          "tu": "apri",
+          "luiLei": "apre",
+          "noi": "apriamo",
+          "voi": "aprite",
+          "loro": "aprono"
+        }
+      }
+    },
+    {
+      "id": "chiudere",
+      "src": "chiudere",
+      "dst": "sulkea",
+      "conjugations": {
+        "present": {
+          "io": "chiudo",
+          "tu": "chiudi",
+          "luiLei": "chiude",
+          "noi": "chiudiamo",
+          "voi": "chiudete",
+          "loro": "chiudono"
+        }
+      }
+    },
+    {
+      "id": "rompere",
+      "src": "rompere",
+      "dst": "rikkoa",
+      "conjugations": {
+        "present": {
+          "io": "rompo",
+          "tu": "rompi",
+          "luiLei": "rompe",
+          "noi": "rompiamo",
+          "voi": "rompete",
+          "loro": "rompono"
+        }
+      }
+    },
+    {
+      "id": "correre",
+      "src": "correre",
+      "dst": "juosta",
+      "conjugations": {
+        "present": {
+          "io": "corro",
+          "tu": "corri",
+          "luiLei": "corre",
+          "noi": "corriamo",
+          "voi": "correte",
+          "loro": "corrono"
+        }
+      }
+    },
+    {
+      "id": "scendere",
+      "src": "scendere",
+      "dst": "laskeutua; mennä alas",
+      "conjugations": {
+        "present": {
+          "io": "scendo",
+          "tu": "scendi",
+          "luiLei": "scende",
+          "noi": "scendiamo",
+          "voi": "scendete",
+          "loro": "scendono"
+        }
+      }
+    },
+    {
+      "id": "sedere",
+      "src": "sedere",
+      "dst": "istua",
+      "conjugations": {
+        "present": {
+          "io": "siedo",
+          "tu": "siedi",
+          "luiLei": "siede",
+          "noi": "sediamo",
+          "voi": "sedete",
+          "loro": "siedono"
+        }
+      }
+    },
+    {
+      "id": "tacere",
+      "src": "tacere",
+      "dst": "vaieta",
+      "conjugations": {
+        "present": {
+          "io": "taccio",
+          "tu": "taci",
+          "luiLei": "tace",
+          "noi": "tacciamo",
+          "voi": "tacete",
+          "loro": "tacciono"
+        }
+      }
     }
   ]
 }
