@@ -501,6 +501,36 @@
       }
     },
     {
+      "id": "imparare",
+      "src": "imparare",
+      "dst": "oppia",
+      "conjugations": {
+        "present": {
+          "io": "imparo",
+          "tu": "impari",
+          "luiLei": "impara",
+          "noi": "impariamo",
+          "voi": "imparate",
+          "loro": "imparano"
+        }
+      }
+    },
+    {
+      "id": "insegnare",
+      "src": "insegnare",
+      "dst": "opettaa",
+      "conjugations": {
+        "present": {
+          "io": "insegno",
+          "tu": "insegni",
+          "luiLei": "insegna",
+          "noi": "insegniamo",
+          "voi": "insegnate",
+          "loro": "insegnano"
+        }
+      }
+    },
+    {
       "id": "studiare",
       "src": "studiare",
       "dst": "opiskella",
