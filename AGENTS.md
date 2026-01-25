@@ -14,8 +14,10 @@
 - Every new logic module gets unit tests first; e2e only for happy-path flows.
 - No network calls in app runtime; any `fetch` is build-time or test-only.
 - Prefer deterministic time/randomness: inject `now()`/RNG into logic for tests.
-- Write unit tests for new features, and run unit tests after every change.
-- Run unit tests with `pnpm test`.
+- Write unit tests for new features, and run tests after every change.
+- If app code changes (`src`, `public`, `tests`), run `pnpm test`.
+- If phrasepack importer code changes (`tools/phrasepack_importer`), run `pytest` from `tools/phrasepack_importer`.
+- If both areas change, run both test suites.
 - Run end-to-end tests with `pnpm test:e2e` when a feature is complete.
 - Automatically fix any issues uncovered by unit tests before reporting back.
 - Keep README documentation in sync when behavior or data storage changes.
