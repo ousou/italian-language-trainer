@@ -62,11 +62,20 @@ regressions on both desktop and mobile viewports. Run:
 pnpm test:e2e
 ```
 
+Baseline snapshots should only be updated when a visual change is intentional (e.g. layout, spacing, typography, copy,
+colors). If snapshots fail unexpectedly, treat it as a regression and fix the UI instead of updating baselines.
+
 When intentionally updating UI visuals, update baselines with:
 
 ```bash
 pnpm test:e2e -- --update-snapshots
 ```
+
+Notes:
+
+- Snapshots are committed under `tests/e2e/*.snapshots/` and are OS-specific (e.g. `*-linux.png` in CI). Prefer
+  updating snapshots on the same OS/browser environment used by CI to avoid mismatches.
+- Always review the updated PNG diffs before committing snapshot updates.
 
 - **Spaced Repetition**
 

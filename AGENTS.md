@@ -19,6 +19,7 @@
 - If phrasepack importer code changes (`tools/phrasepack_importer`), run `pytest` from `tools/phrasepack_importer`.
 - If both areas change, run both test suites.
 - Run end-to-end tests with `pnpm test:e2e` when a feature is complete.
+- If UI/styling changes might affect screenshots, run `pnpm test:e2e`; update snapshots with `pnpm test:e2e --update-snapshots` only for intentional visual changes and commit the PNGs.
 - Automatically fix any issues uncovered by unit tests before reporting back.
 - Keep README documentation in sync when behavior or data storage changes.
 - After tests pass, create a git commit for each change set.
