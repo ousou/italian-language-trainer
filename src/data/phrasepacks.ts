@@ -38,6 +38,46 @@ export const AVAILABLE_PHRASEPACKS: PhrasePackMeta[] = [
     path: 'phrasepacks/bella-vista-1-ch-6.json'
   },
   {
+    id: 'bella-vista-1-7',
+    title: 'Bella Vista 1, kappale 7',
+    path: 'phrasepacks/bella-vista-1-ch-7.json'
+  },
+  {
+    id: 'bella-vista-1-8',
+    title: 'Bella Vista 1, kappale 8',
+    path: 'phrasepacks/bella-vista-1-ch-8.json'
+  },
+  {
+    id: 'bella-vista-1-9',
+    title: 'Bella Vista 1, kappale 9',
+    path: 'phrasepacks/bella-vista-1-ch-9.json'
+  },
+  {
+    id: 'bella-vista-1-10',
+    title: 'Bella Vista 1, kappale 10',
+    path: 'phrasepacks/bella-vista-1-ch-10.json'
+  },
+  {
+    id: 'bella-vista-1-11',
+    title: 'Bella Vista 1, kappale 11',
+    path: 'phrasepacks/bella-vista-1-ch-11.json'
+  },
+  {
+    id: 'bella-vista-1-12',
+    title: 'Bella Vista 1, kappale 12',
+    path: 'phrasepacks/bella-vista-1-ch-12.json'
+  },
+  {
+    id: 'bella-vista-1-13',
+    title: 'Bella Vista 1, kappale 13',
+    path: 'phrasepacks/bella-vista-1-ch-13.json'
+  },
+  {
+    id: 'bella-vista-1-14',
+    title: 'Bella Vista 1, kappale 14',
+    path: 'phrasepacks/bella-vista-1-ch-14.json'
+  },
+  {
     id: 'core-it-fi-a1',
     title: 'Perussanastoa — Italia⇄Suomi',
     path: 'phrasepacks/core-it-fi-a1.json'

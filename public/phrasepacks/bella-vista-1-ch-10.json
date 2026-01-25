@@ -1,0 +1,344 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-10",
+  "title": "Bella Vista 1 ch 10",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "serve-altro",
+      "src": "Serve altro?",
+      "dst": "Tarvitsetteko muuta?"
+    },
+    {
+      "id": "la-spesa",
+      "src": "la spesa",
+      "dst": "ostokset"
+    },
+    {
+      "id": "il-salumiere",
+      "src": "il salumiere",
+      "dst": "leikkelekaupan pitäjä"
+    },
+    {
+      "id": "desidera",
+      "src": "Desidera?",
+      "dst": "Mitä saisi olla? (kirj. Haluatte)"
+    },
+    {
+      "id": "del-formaggio",
+      "src": "del formaggio",
+      "dst": "juustoa"
+    },
+    {
+      "id": "di-che-tipo",
+      "src": "Di che tipo?",
+      "dst": "Minkä tyyppistä?"
+    },
+    {
+      "id": "quanto-ne-vuole",
+      "src": "Quanto ne vuole?",
+      "dst": "Paljonko haluatte sitä?"
+    },
+    {
+      "id": "quanto",
+      "src": "quanto?",
+      "dst": "Paljonko?"
+    },
+    {
+      "id": "quanta",
+      "src": "quanta?",
+      "dst": "Paljonko?"
+    },
+    {
+      "id": "ne",
+      "src": "ne",
+      "dst": "sitä, niitä"
+    },
+    {
+      "id": "facciamo-due-etti-e-mezzo",
+      "src": "Facciamo due etti e mezzo.",
+      "dst": "Laitetaan 250 grammaa."
+    },
+    {
+      "id": "un-etto",
+      "src": "un etto",
+      "dst": "100 grammaa"
+    },
+    {
+      "id": "il-pecorino",
+      "src": "il pecorino",
+      "dst": "lampaanmaitojuusto"
+    },
+    {
+      "id": "delle-olive",
+      "src": "delle olive",
+      "dst": "oliiveja"
+    },
+    {
+      "id": "quante-ne-vuole",
+      "src": "Quante ne vuole?",
+      "dst": "Paljonko haluatte niitä?"
+    },
+    {
+      "id": "quanti",
+      "src": "quanti?",
+      "dst": "Paljonko? Kuinka monta?"
+    },
+    {
+      "id": "quante",
+      "src": "quante?",
+      "dst": "Paljonko? Kuinka monta?"
+    },
+    {
+      "id": "purtroppo",
+      "src": "purtroppo",
+      "dst": "valitettavasti"
+    },
+    {
+      "id": "ora",
+      "src": "ora",
+      "dst": "nyt"
+    },
+    {
+      "id": "ne-abbiamo-poche",
+      "src": "ne abbiamo poche",
+      "dst": "meillä on niitä vain"
+    },
+    {
+      "id": "lultimo",
+      "src": "l'ultimo",
+      "dst": "muutamia"
+    },
+    {
+      "id": "te-prendo-tutte",
+      "src": "Te prendo tutte",
+      "dst": "otan ne kaikki"
+    },
+    {
+      "id": "anzi",
+      "src": "anzi",
+      "dst": "sittenkin, tarkemmin"
+    },
+    {
+      "id": "la-confezione",
+      "src": "la confezione",
+      "dst": "pakkaus"
+    },
+    {
+      "id": "aiutare",
+      "src": "aiutare",
+      "dst": "auttaa"
+    },
+    {
+      "id": "portare",
+      "src": "portare",
+      "dst": "viedä, kantaa"
+    },
+    {
+      "id": "la-ringrazio-non-serve",
+      "src": "La ringrazio, non serve.",
+      "dst": "Kiitos, se ei ole tarpeen. (kirj. Kiitän Teitä.)"
+    },
+    {
+      "id": "ringraziare",
+      "src": "ringraziare",
+      "dst": "kiittää"
+    },
+    {
+      "id": "mi",
+      "src": "mi",
+      "dst": "minua, minut"
+    },
+    {
+      "id": "sicuro",
+      "src": "sicuro",
+      "dst": "varma"
+    },
+    {
+      "id": "non-ce-bisogno",
+      "src": "Non c'è bisogno.",
+      "dst": "Se ei ole tarpeen."
+    },
+    {
+      "id": "veramente",
+      "src": "veramente",
+      "dst": "todella, ihan totta"
+    },
+    {
+      "id": "comunque",
+      "src": "comunque",
+      "dst": "kuitenkin, joka"
+    },
+    {
+      "id": "tanto",
+      "src": "tanto",
+      "dst": "niin paljon, niin kovin"
+    },
+    {
+      "id": "qualcosa-di-leggero",
+      "src": "qualcosa di leggero",
+      "dst": "jotakin kevyttä"
+    },
+    {
+      "id": "leggero",
+      "src": "leggero",
+      "dst": "kevyt"
+    },
+    {
+      "id": "cioe",
+      "src": "Cioè?",
+      "dst": "Eli?"
+    },
+    {
+      "id": "magari",
+      "src": "magari",
+      "dst": "ehkä(pä)"
+    },
+    {
+      "id": "magro",
+      "src": "magro",
+      "dst": "vähärasvainen"
+    },
+    {
+      "id": "la-dieta",
+      "src": "la dieta",
+      "dst": "dieetti, laihdutuskuuri"
+    },
+    {
+      "id": "di-nuovo",
+      "src": "di nuovo",
+      "dst": "taas, uudelleen"
+    },
+    {
+      "id": "ti",
+      "src": "ti",
+      "dst": "sinua, sinut"
+    },
+    {
+      "id": "e-dai-mamma",
+      "src": "E dai, mamma.",
+      "dst": "No älä viitsi, äiti."
+    },
+    {
+      "id": "e-va-be-bene",
+      "src": "E va be' (= bene).",
+      "dst": "No, selvä."
+    },
+    {
+      "id": "basta-cosi-grazie",
+      "src": "Basta così, grazie.",
+      "dst": "Näin riittää, kiitos."
+    },
+    {
+      "id": "bastare",
+      "src": "bastare",
+      "dst": "riittää, olla tarpeeksi"
+    },
+    {
+      "id": "quante-in-tutto",
+      "src": "Quant'è in tutto?",
+      "dst": "Paljonko se tekee yhteensä?"
+    },
+    {
+      "id": "la-cassa",
+      "src": "la cassa",
+      "dst": "kassa"
+    },
+    {
+      "id": "ascolta",
+      "src": "Ascolta...",
+      "dst": "Kuules..."
+    },
+    {
+      "id": "siccome",
+      "src": "siccome",
+      "dst": "koska"
+    },
+    {
+      "id": "il-nonno",
+      "src": "il nonno",
+      "dst": "isoisä"
+    },
+    {
+      "id": "dopo",
+      "src": "dopo",
+      "dst": "(jonkin) jälkeen"
+    },
+    {
+      "id": "cosa-ne-dici-di",
+      "src": "Cosa ne dici di...?",
+      "dst": "Mitäs sanot, jos...?"
+    },
+    {
+      "id": "la-pasticceria",
+      "src": "la pasticceria",
+      "dst": "konditoria"
+    },
+    {
+      "id": "la-pasta",
+      "src": "la pasta",
+      "dst": "leivos"
+    },
+    {
+      "id": "andiamo-pure",
+      "src": "Andiamo pure.",
+      "dst": "Mennään vain."
+    },
+    {
+      "id": "pure",
+      "src": "pure",
+      "dst": "toki"
+    },
+    {
+      "id": "lo-pero-non-ne-mangio-nemmeno-una-eh",
+      "src": "lo, però, non ne mangio nemmeno una, eh!",
+      "dst": "Mutta minä en syö niitä edes yhtä, onko selvä!"
+    },
+    {
+      "id": "nemmeno",
+      "src": "nemmeno",
+      "dst": "ei edes"
+    },
+    {
+      "id": "se",
+      "src": "se",
+      "dst": "jos"
+    },
+    {
+      "id": "riesci",
+      "src": "riesci",
+      "dst": "pystyt, onnistut"
+    },
+    {
+      "id": "resistere-a",
+      "src": "resistere a",
+      "dst": "vastustaa jotakin"
+    },
+    {
+      "id": "il-baba-con-la-crema",
+      "src": "il babà con la crema",
+      "dst": "baba-leivos"
+    },
+    {
+      "id": "su-facciamo-in-fretta",
+      "src": "Su, facciamo in fretta.",
+      "dst": "Hopi hopi, pidetäänpä kiirettä."
+    },
+    {
+      "id": "la-fretta",
+      "src": "la fretta",
+      "dst": "kiire"
+    },
+    {
+      "id": "gli-altri",
+      "src": "gli altri",
+      "dst": "muut"
+    },
+    {
+      "id": "ci",
+      "src": "ci",
+      "dst": "meitä, meidät"
+    }
+  ]
+}

@@ -1,0 +1,429 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-8",
+  "title": "Bella Vista 1 ch 8",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "nel-tempo-libero",
+      "src": "nel tempo libero",
+      "dst": "vapaa-ajalla"
+    },
+    {
+      "id": "il-tempo-libero",
+      "src": "il tempo libero",
+      "dst": "vapaa-aika"
+    },
+    {
+      "id": "leggere",
+      "src": "leggere",
+      "dst": "lukea"
+    },
+    {
+      "id": "il-libro",
+      "src": "il libro",
+      "dst": "kirja"
+    },
+    {
+      "id": "in-piscina",
+      "src": "in piscina",
+      "dst": "uimahallissa, uimahalliin"
+    },
+    {
+      "id": "la-piscina",
+      "src": "la piscina",
+      "dst": "uimahalli, uima-allas"
+    },
+    {
+      "id": "visitare",
+      "src": "visitare",
+      "dst": "käydä (jossakin paikassa)"
+    },
+    {
+      "id": "lo-yoga",
+      "src": "lo yoga",
+      "dst": "jooga"
+    },
+    {
+      "id": "il-calcio",
+      "src": "il calcio",
+      "dst": "jalkapallo (peli)"
+    },
+    {
+      "id": "il-tennis",
+      "src": "il tennis",
+      "dst": "tennis"
+    },
+    {
+      "id": "in-palestra",
+      "src": "in palestra",
+      "dst": "kuntosalilla, kuntosalille"
+    },
+    {
+      "id": "la-palestra",
+      "src": "la palestra",
+      "dst": "kuntosali"
+    },
+    {
+      "id": "il-tema",
+      "src": "il tema",
+      "dst": "teema, aihe"
+    },
+    {
+      "id": "oggi",
+      "src": "oggi",
+      "dst": "tänään"
+    },
+    {
+      "id": "cosa-ti-piace-fare",
+      "src": "Cosa ti piace fare...?",
+      "dst": "Mitä sinusta on mukava tehdä...?"
+    },
+    {
+      "id": "ti-piace",
+      "src": "ti piace",
+      "dst": "pidät (\"sinulle on mieluisaa\")"
+    },
+    {
+      "id": "spesso",
+      "src": "spesso",
+      "dst": "usein"
+    },
+    {
+      "id": "sportiva",
+      "src": "sportiva",
+      "dst": "säännöllisesti"
+    },
+    {
+      "id": "regolarmente",
+      "src": "regolarmente",
+      "dst": "Mitkä?"
+    },
+    {
+      "id": "quali",
+      "src": "quali?",
+      "dst": "sinun"
+    },
+    {
+      "id": "i-tuoi-hobby-preferiti",
+      "src": "i tuoi hobby preferiti",
+      "dst": "lempiharrastuksesi"
+    },
+    {
+      "id": "tuoi",
+      "src": "tuoi",
+      "dst": "harrastus"
+    },
+    {
+      "id": "come",
+      "src": "come",
+      "dst": "kuten"
+    },
+    {
+      "id": "stamattina",
+      "src": "stamattina",
+      "dst": "tänä aamuna"
+    },
+    {
+      "id": "curioso",
+      "src": "curioso",
+      "dst": "utelias"
+    },
+    {
+      "id": "voglio",
+      "src": "voglio",
+      "dst": "haluan"
+    },
+    {
+      "id": "proprio",
+      "src": "proprio",
+      "dst": "ihan, todella"
+    },
+    {
+      "id": "tutto-di-voi",
+      "src": "tutto di voi",
+      "dst": "kaiken teistä"
+    },
+    {
+      "id": "rispondere",
+      "src": "rispondere",
+      "dst": "vastata"
+    },
+    {
+      "id": "la-domanda",
+      "src": "la domanda",
+      "dst": "kysymys"
+    },
+    {
+      "id": "mandare-une-mail",
+      "src": "mandare un'e-mail",
+      "dst": "lähettää sähköposti"
+    },
+    {
+      "id": "i-indirizzo",
+      "src": "I' indirizzo",
+      "dst": "osoite"
+    },
+    {
+      "id": "la-chiocciola",
+      "src": "la chiocciola",
+      "dst": "@-merkki, ät-merkki"
+    },
+    {
+      "id": "il-punto",
+      "src": "il punto",
+      "dst": "piste"
+    },
+    {
+      "id": "inviare-un-sms",
+      "src": "inviare un Sms",
+      "dst": "lähettää tekstiviesti"
+    },
+    {
+      "id": "la-prima-telefonata",
+      "src": "la prima telefonata",
+      "dst": "ensimmäinen puhelu"
+    },
+    {
+      "id": "al-telefono",
+      "src": "al telefono",
+      "dst": "puhelimessa"
+    },
+    {
+      "id": "che",
+      "src": "che",
+      "dst": "joka"
+    },
+    {
+      "id": "chiamare",
+      "src": "chiamare",
+      "dst": "soittaa (puhelimella)"
+    },
+    {
+      "id": "la-provincia",
+      "src": "la provincia",
+      "dst": "laajahko hallinnollinen alue, regionea pienempi"
+    },
+    {
+      "id": "cosa-fai-di-bello",
+      "src": "Cosa fai di bello?",
+      "dst": "Mitäs kivaa puuhailet?"
+    },
+    {
+      "id": "siccome",
+      "src": "siccome",
+      "dst": "koska, kun (kerran)"
+    },
+    {
+      "id": "il-sole",
+      "src": "il sole",
+      "dst": "aurinko"
+    },
+    {
+      "id": "sul-balcone",
+      "src": "sul balcone",
+      "dst": "parvekkeella"
+    },
+    {
+      "id": "su",
+      "src": "su",
+      "dst": "jonkin päällä (prep.)"
+    },
+    {
+      "id": "il-balcone",
+      "src": "il balcone",
+      "dst": "parveke"
+    },
+    {
+      "id": "il-libro-sulleconomia-europea",
+      "src": "il libro sull'economia europea",
+      "dst": "Euroopan taloutta käsittelevä kirja"
+    },
+    {
+      "id": "i-economia",
+      "src": "I' economia",
+      "dst": "talous"
+    },
+    {
+      "id": "europeo",
+      "src": "europeo",
+      "dst": "eurooppalainen"
+    },
+    {
+      "id": "sul-serio",
+      "src": "Sul serio?!",
+      "dst": "Oletko tosissasi? Ihanko totta?"
+    },
+    {
+      "id": "che-argomento-interessante",
+      "src": "Che argomento interessante!",
+      "dst": "Onpa mielenkiintoinen aihe!"
+    },
+    {
+      "id": "i-argomento",
+      "src": "I' argomento",
+      "dst": "aihe"
+    },
+    {
+      "id": "nella-vita",
+      "src": "nella vita",
+      "dst": "elämässä"
+    },
+    {
+      "id": "la-vita",
+      "src": "la vita",
+      "dst": "elämä"
+    },
+    {
+      "id": "insegnare",
+      "src": "insegnare",
+      "dst": "opettaa"
+    },
+    {
+      "id": "dunque",
+      "src": "dunque",
+      "dst": "jaahas, no niin"
+    },
+    {
+      "id": "mi-piace",
+      "src": "mi piace",
+      "dst": "pidän"
+    },
+    {
+      "id": "percio",
+      "src": "perciò",
+      "dst": "siksi"
+    },
+    {
+      "id": "a-volte",
+      "src": "a volte",
+      "dst": "silloin tällöin, joskus"
+    },
+    {
+      "id": "al-ristorante",
+      "src": "al ristorante",
+      "dst": "ravintolassa, ravintolaan"
+    },
+    {
+      "id": "mi-piacciono",
+      "src": "mi piacciono",
+      "dst": "pidän (\"minulle ovat mieluisia\")"
+    },
+    {
+      "id": "le-attivita-culturali",
+      "src": "le attività culturali",
+      "dst": "kulttuuririennot"
+    },
+    {
+      "id": "infatti",
+      "src": "infatti",
+      "dst": "itse asiassa"
+    },
+    {
+      "id": "la-mostra-darte",
+      "src": "la mostra d'arte",
+      "dst": "taidenäyttely"
+    },
+    {
+      "id": "i-arte",
+      "src": "I' arte",
+      "dst": "taide"
+    },
+    {
+      "id": "anche-a-me-piace",
+      "src": "Anche a me piace...",
+      "dst": "Minäkin pidän..."
+    },
+    {
+      "id": "soprattutto",
+      "src": "soprattutto",
+      "dst": "erityisesti, ennen kaikkea"
+    },
+    {
+      "id": "rinascimentale",
+      "src": "rinascimentale",
+      "dst": "renessanssi-"
+    },
+    {
+      "id": "e-a-te",
+      "src": "E a te?",
+      "dst": "Entä sinä? (kirj. \"Entä sinulle?\")"
+    },
+    {
+      "id": "personalmente",
+      "src": "personalmente",
+      "dst": "henkilökohtaisesti"
+    },
+    {
+      "id": "moderno",
+      "src": "moderno",
+      "dst": "moderni"
+    },
+    {
+      "id": "anche-se",
+      "src": "anche se",
+      "dst": "vaikka"
+    },
+    {
+      "id": "non-piu",
+      "src": "non più",
+      "dst": "ei enää"
+    },
+    {
+      "id": "il-giovanotto",
+      "src": "il giovanotto",
+      "dst": "nuorukainen"
+    },
+    {
+      "id": "ma-dai",
+      "src": "Ma dai!",
+      "dst": "No mutta älähän nyt!"
+    },
+    {
+      "id": "ancora",
+      "src": "ancora",
+      "dst": "vielä"
+    },
+    {
+      "id": "giovane",
+      "src": "giovane",
+      "dst": "nuori"
+    },
+    {
+      "id": "qualcosa-di-speciale",
+      "src": "qualcosa di speciale",
+      "dst": "jotakin erityistä"
+    },
+    {
+      "id": "ci",
+      "src": "ci",
+      "dst": "siellä, sinne"
+    },
+    {
+      "id": "una-volta-alla-settimana",
+      "src": "una volta alla settimana",
+      "dst": "kerran viikossa"
+    },
+    {
+      "id": "la-volta",
+      "src": "la volta",
+      "dst": "kerta"
+    },
+    {
+      "id": "da-quanto-tempo",
+      "src": "Da quanto tempo?",
+      "dst": "Kuinka kauan? Mistä lähtien?"
+    },
+    {
+      "id": "buona-lettura",
+      "src": "Buona lettura!",
+      "dst": "Hauskoja lukuhetkiä!"
+    },
+    {
+      "id": "la-lettura",
+      "src": "la lettura",
+      "dst": "lukeminen"
+    }
+  ]
+}

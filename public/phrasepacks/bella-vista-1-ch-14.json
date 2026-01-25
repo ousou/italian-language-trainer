@@ -1,0 +1,334 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-14",
+  "title": "Bella Vista 1 ch 14",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "sposarsi",
+      "src": "sposarsi",
+      "dst": "mennä naimisiin"
+    },
+    {
+      "id": "invitare",
+      "src": "invitare",
+      "dst": "kutsua"
+    },
+    {
+      "id": "il-matrimonio",
+      "src": "Il matrimonio",
+      "dst": "häät"
+    },
+    {
+      "id": "la-piu-simpatica",
+      "src": "la più simpatica",
+      "dst": "mukavin"
+    },
+    {
+      "id": "simpatico",
+      "src": "simpatico",
+      "dst": "mukava, kiva (ihmisestä)"
+    },
+    {
+      "id": "servire",
+      "src": "servire",
+      "dst": "olla tarpeen (jklle)"
+    },
+    {
+      "id": "labito",
+      "src": "l'abito",
+      "dst": "mekko, puku"
+    },
+    {
+      "id": "elegante",
+      "src": "elegante",
+      "dst": "tyylikäs, elegantti"
+    },
+    {
+      "id": "la-svendita",
+      "src": "la svendita",
+      "dst": "alennusmyynti"
+    },
+    {
+      "id": "trovare",
+      "src": "trovare",
+      "dst": "löytää"
+    },
+    {
+      "id": "a-buon-prezzo",
+      "src": "a buon prezzo",
+      "dst": "hyvään hintaan, edullisesti"
+    },
+    {
+      "id": "il-prezzo",
+      "src": "il prezzo",
+      "dst": "hinta"
+    },
+    {
+      "id": "i-affare",
+      "src": "I' affare",
+      "dst": "kauppa"
+    },
+    {
+      "id": "il-consiglio",
+      "src": "il consiglio",
+      "dst": "neuvo"
+    },
+    {
+      "id": "girare",
+      "src": "girare",
+      "dst": "kierrellä"
+    },
+    {
+      "id": "il-negozio",
+      "src": "il negozio",
+      "dst": "kauppa"
+    },
+    {
+      "id": "lo-trovo-rilassante",
+      "src": "Lo trovo rilassante,",
+      "dst": "Minusta se on rentouttavaa."
+    },
+    {
+      "id": "rilassante",
+      "src": "rilassante",
+      "dst": "rentouttava"
+    },
+    {
+      "id": "il-giorno-seguente",
+      "src": "il giorno seguente",
+      "dst": "seuraavana päivänä"
+    },
+    {
+      "id": "seguente",
+      "src": "seguente",
+      "dst": "seuraava"
+    },
+    {
+      "id": "disperato",
+      "src": "disperato",
+      "dst": "epätoivoinen"
+    },
+    {
+      "id": "provare",
+      "src": "provare",
+      "dst": "kokeilla, sovittaa"
+    },
+    {
+      "id": "meglio",
+      "src": "meglio",
+      "dst": "paremmin (joskus suomeksi parempi)"
+    },
+    {
+      "id": "ci-pensi-su",
+      "src": "ci pensi su",
+      "dst": "harkitset asiaa"
+    },
+    {
+      "id": "nei-prossimi-giorni",
+      "src": "nei prossimi giorni",
+      "dst": "lähipäivinä"
+    },
+    {
+      "id": "toccare",
+      "src": "toccare",
+      "dst": "täytyä (\"olla pakollista jklle\")"
+    },
+    {
+      "id": "aspetta",
+      "src": "aspetta",
+      "dst": "odotas"
+    },
+    {
+      "id": "guarda",
+      "src": "guarda",
+      "dst": "katsos"
+    },
+    {
+      "id": "quegli-abiti-li",
+      "src": "quegli abiti li",
+      "dst": "nuo mekot tuolla"
+    },
+    {
+      "id": "carino",
+      "src": "carino",
+      "dst": "ihana, sievä"
+    },
+    {
+      "id": "soprattutto",
+      "src": "soprattutto",
+      "dst": "ennen kaikkea, erityisesti"
+    },
+    {
+      "id": "rosa",
+      "src": "rosa",
+      "dst": "vaaleanpunainen"
+    },
+    {
+      "id": "il-piu-bello-di-tutti",
+      "src": "il più bello di tutti",
+      "dst": "kaikkein kaunein"
+    },
+    {
+      "id": "il-negozio-di",
+      "src": "il negozio di",
+      "dst": "vaatekauppa"
+    },
+    {
+      "id": "abbigliamento",
+      "src": "abbigliamento",
+      "dst": "vaatteet, vaatetus"
+    },
+    {
+      "id": "i-abbigliamento",
+      "src": "I' abbigliamento",
+      "dst": "olla avuksi"
+    },
+    {
+      "id": "la-vetrina",
+      "src": "la vetrina",
+      "dst": "näyteikkuna"
+    },
+    {
+      "id": "che-taglia-porta",
+      "src": "Che taglia porta?",
+      "dst": "Mikä on teidän kokonne?"
+    },
+    {
+      "id": "la-taglia",
+      "src": "la taglia",
+      "dst": "(vaatteen) koko"
+    },
+    {
+      "id": "portare",
+      "src": "portare",
+      "dst": "pitää yllään, käyttää (vaatteesta)"
+    },
+    {
+      "id": "la-40",
+      "src": "la 40",
+      "dst": "koko 40"
+    },
+    {
+      "id": "senta",
+      "src": "senta",
+      "dst": "kuulkaas"
+    },
+    {
+      "id": "per-caso",
+      "src": "per caso",
+      "dst": "sattumalta"
+    },
+    {
+      "id": "stesso",
+      "src": "stesso",
+      "dst": "sama"
+    },
+    {
+      "id": "il-modello",
+      "src": "il modello",
+      "dst": "malli"
+    },
+    {
+      "id": "in-nero",
+      "src": "in nero",
+      "dst": "mustana"
+    },
+    {
+      "id": "di-lino",
+      "src": "di lino",
+      "dst": "pellava-"
+    },
+    {
+      "id": "cosa-ne-pensi-di-questo",
+      "src": "Cosa ne pensi di questo?",
+      "dst": "Mitä pidät tästä?"
+    },
+    {
+      "id": "come-bello",
+      "src": "Com'è bello!",
+      "dst": "Onpa se kaunis!"
+    },
+    {
+      "id": "sembrare",
+      "src": "sembrare",
+      "dst": "vaikuttaa (jksta)"
+    },
+    {
+      "id": "piu-bello-di",
+      "src": "più bello di",
+      "dst": "kauniimpi kuin"
+    },
+    {
+      "id": "il-camerino",
+      "src": "il camerino",
+      "dst": "sovituskoppi"
+    },
+    {
+      "id": "in-fondo",
+      "src": "in fondo",
+      "dst": "perällä"
+    },
+    {
+      "id": "occorrere",
+      "src": "occorrere",
+      "dst": "tarvita, olla tarpeen (jklle)"
+    },
+    {
+      "id": "dopo-aver-misurato",
+      "src": "dopo aver misurato",
+      "dst": "sovitettuaan"
+    },
+    {
+      "id": "misurare",
+      "src": "misurare",
+      "dst": "sovittaa, kokeilla"
+    },
+    {
+      "id": "ti-sta-benissimo",
+      "src": "Ti sta benissimo.",
+      "dst": "Se sopii sinulle tosi hyvin."
+    },
+    {
+      "id": "i-altro",
+      "src": "I' altro",
+      "dst": "toinen, muu"
+    },
+    {
+      "id": "onestamente",
+      "src": "onestamente",
+      "dst": "rehellisesti sanoen"
+    },
+    {
+      "id": "mah-dici",
+      "src": "Mah, dici?",
+      "dst": "Hmm, oletko sitä mieltä?"
+    },
+    {
+      "id": "piu-particolare",
+      "src": "più particolare",
+      "dst": "erikoisempi kuin se toinen"
+    },
+    {
+      "id": "particolare",
+      "src": "particolare",
+      "dst": "erikoinen, erityinen"
+    },
+    {
+      "id": "gia",
+      "src": "Già.",
+      "dst": "Se on totta."
+    },
+    {
+      "id": "il-problemino",
+      "src": "il problemino",
+      "dst": "pikkuongelma"
+    },
+    {
+      "id": "meno-male",
+      "src": "meno male",
+      "dst": "onneksi"
+    }
+  ]
+}

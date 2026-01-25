@@ -1,0 +1,364 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-9",
+  "title": "Bella Vista 1 ch 9",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "la-camera",
+      "src": "la camera",
+      "dst": "huone"
+    },
+    {
+      "id": "libero",
+      "src": "libero",
+      "dst": "vapaa"
+    },
+    {
+      "id": "lalbergo",
+      "src": "l'albergo",
+      "dst": "hotelli"
+    },
+    {
+      "id": "entrare",
+      "src": "entrare",
+      "dst": "mennä/tulla sisään"
+    },
+    {
+      "id": "la-coppia",
+      "src": "la coppia",
+      "dst": "pariskunta"
+    },
+    {
+      "id": "che-tipo-di",
+      "src": "che tipo di?",
+      "dst": "Minkälainen?"
+    },
+    {
+      "id": "la-camera-matrimoniale",
+      "src": "la camera matrimoniale",
+      "dst": "kahden hengen huone, jossa parisänky"
+    },
+    {
+      "id": "la-doccia",
+      "src": "la doccia",
+      "dst": "suihku"
+    },
+    {
+      "id": "la-vista",
+      "src": "la vista",
+      "dst": "näkymä (jonnekin päin)"
+    },
+    {
+      "id": "il-cortile-interno",
+      "src": "il cortile interno",
+      "dst": "sisäpiha"
+    },
+    {
+      "id": "la-prendiamo",
+      "src": "la prendiamo",
+      "dst": "otamme sen"
+    },
+    {
+      "id": "la",
+      "src": "la",
+      "dst": "Sen, sitä (obj. Pron.)"
+    },
+    {
+      "id": "caro",
+      "src": "caro",
+      "dst": "kulta, rakas"
+    },
+    {
+      "id": "per-me-e-lo-stesso",
+      "src": "Per me è lo stesso.",
+      "dst": "Minulle sillä ei ole väliä."
+    },
+    {
+      "id": "quanti",
+      "src": "quanti?",
+      "dst": "Kuinka monta?"
+    },
+    {
+      "id": "rimanere",
+      "src": "rimanere",
+      "dst": "jäädä, pysyä, viipyä"
+    },
+    {
+      "id": "quanto-viene-la-camera",
+      "src": "Quanto viene la camera?",
+      "dst": "Paljonko huone maksaa?"
+    },
+    {
+      "id": "viene",
+      "src": "viene",
+      "dst": "tulee"
+    },
+    {
+      "id": "venire",
+      "src": "venire",
+      "dst": "tulla"
+    },
+    {
+      "id": "la-notte",
+      "src": "la notte",
+      "dst": "yö"
+    },
+    {
+      "id": "la-mezza-pensione",
+      "src": "la mezza pensione",
+      "dst": "puolihoito"
+    },
+    {
+      "id": "mentre",
+      "src": "mentre",
+      "dst": "kun taas, sitä vastoin"
+    },
+    {
+      "id": "la-pensione-completa",
+      "src": "la pensione completa",
+      "dst": "täysihoito"
+    },
+    {
+      "id": "il-documento",
+      "src": "il documento",
+      "dst": "henkilötodistus (yleisnimitys)"
+    },
+    {
+      "id": "la-carta-didentita",
+      "src": "la carta d'identità",
+      "dst": "henkilötodistus"
+    },
+    {
+      "id": "solo",
+      "src": "solo",
+      "dst": "vain"
+    },
+    {
+      "id": "la-patente",
+      "src": "la patente",
+      "dst": "ajokortti"
+    },
+    {
+      "id": "va-bene-lo-stesso",
+      "src": "Va bene lo stesso?",
+      "dst": "Käykö se yhtä hyvin?"
+    },
+    {
+      "id": "lo-stesso",
+      "src": "lo stesso",
+      "dst": "kuitenkin, silti"
+    },
+    {
+      "id": "mio",
+      "src": "mio",
+      "dst": "minun"
+    },
+    {
+      "id": "il-passaporto",
+      "src": "il passaporto",
+      "dst": "passi"
+    },
+    {
+      "id": "mi-scusi",
+      "src": "Mi scusi.",
+      "dst": "Anteeksi. (teit.)"
+    },
+    {
+      "id": "la-colazione",
+      "src": "la colazione",
+      "dst": "aamiainen"
+    },
+    {
+      "id": "compreso",
+      "src": "compreso",
+      "dst": "hintaan sisältyvä"
+    },
+    {
+      "id": "la-serviamo",
+      "src": "la serviamo",
+      "dst": "tarjoilemme sen"
+    },
+    {
+      "id": "servire",
+      "src": "servire",
+      "dst": "tarjoilla"
+    },
+    {
+      "id": "cenare",
+      "src": "cenare",
+      "dst": "syödä illallista"
+    },
+    {
+      "id": "a-persona",
+      "src": "a persona",
+      "dst": "henkilöltä"
+    },
+    {
+      "id": "la-persona",
+      "src": "la persona",
+      "dst": "henkilö"
+    },
+    {
+      "id": "intanto-ci-pensiamo",
+      "src": "Intanto ci pensiamo.",
+      "dst": "Sillä välin harkitsemme asiaa."
+    },
+    {
+      "id": "come-preferite",
+      "src": "Come preferite.",
+      "dst": "Kuten haluatte."
+    },
+    {
+      "id": "la-chiave",
+      "src": "la chiave",
+      "dst": "avain"
+    },
+    {
+      "id": "vostro",
+      "src": "vostro",
+      "dst": "teidän"
+    },
+    {
+      "id": "al-terzo-piano",
+      "src": "al terzo piano",
+      "dst": "kolmannessa kerroksessa"
+    },
+    {
+      "id": "a",
+      "src": "a",
+      "dst": "jossakin kerroksessa (prep.)"
+    },
+    {
+      "id": "terzo",
+      "src": "terzo",
+      "dst": "kolmas"
+    },
+    {
+      "id": "il-piano",
+      "src": "il piano",
+      "dst": "kerros"
+    },
+    {
+      "id": "nostro",
+      "src": "nostro",
+      "dst": "meidän"
+    },
+    {
+      "id": "i-aria-condizionata",
+      "src": "I' aria condizionata",
+      "dst": "ilmastointi"
+    },
+    {
+      "id": "suo",
+      "src": "Suo",
+      "dst": "Teidän"
+    },
+    {
+      "id": "la-firma",
+      "src": "la firma",
+      "dst": "allekirjoitus"
+    },
+    {
+      "id": "buona-permanenza",
+      "src": "Buona permanenza!",
+      "dst": "Nauttikaa oleskelustanne!"
+    },
+    {
+      "id": "la-permanenza",
+      "src": "la permanenza",
+      "dst": "oleskelu, viipyminen"
+    },
+    {
+      "id": "senta",
+      "src": "senta",
+      "dst": "kuulkaas"
+    },
+    {
+      "id": "avrei-bisogno-di",
+      "src": "Avrei bisogno di...",
+      "dst": "Tarvitsisin ..."
+    },
+    {
+      "id": "i-asciugacapelli",
+      "src": "I' asciugacapelli",
+      "dst": "hiustenkuivaaja"
+    },
+    {
+      "id": "lo-trova",
+      "src": "lo trova",
+      "dst": "löydätte sen"
+    },
+    {
+      "id": "lo",
+      "src": "lo",
+      "dst": "Sen, sitä (obj. Pron.)"
+    },
+    {
+      "id": "il-bagno",
+      "src": "il bagno",
+      "dst": "kylpyhuone"
+    },
+    {
+      "id": "eventualmente",
+      "src": "eventualmente",
+      "dst": "mahdollisesti, sattumalta"
+    },
+    {
+      "id": "il-bagaglio",
+      "src": "il bagaglio",
+      "dst": "matkatavara"
+    },
+    {
+      "id": "aspettare",
+      "src": "aspettare",
+      "dst": "odottaa"
+    },
+    {
+      "id": "chiamare",
+      "src": "chiamare",
+      "dst": "kutsua (paikalle)"
+    },
+    {
+      "id": "cosi",
+      "src": "così",
+      "dst": "siten, niin"
+    },
+    {
+      "id": "li-porta-lui",
+      "src": "li porta lui",
+      "dst": "hän vie ne"
+    },
+    {
+      "id": "li",
+      "src": "li",
+      "dst": "Ne, niitä (obj. Pron.)"
+    },
+    {
+      "id": "portare",
+      "src": "portare",
+      "dst": "viedä, tuoda, kantaa"
+    },
+    {
+      "id": "no-grazie-non-ce-bisogno",
+      "src": "No, grazie, non c'è bisogno.",
+      "dst": "Ei, kiitos, se ei ole tarpeen."
+    },
+    {
+      "id": "la-valigia",
+      "src": "la valigia",
+      "dst": "matkalaukku"
+    },
+    {
+      "id": "le-portiamo-noi",
+      "src": "le portiamo noi",
+      "dst": "me kannamme/viemme"
+    },
+    {
+      "id": "le",
+      "src": "le",
+      "dst": "Ne, niitä (obj. Pron.)"
+    }
+  ]
+}

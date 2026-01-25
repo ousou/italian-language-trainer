@@ -1,0 +1,374 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-13",
+  "title": "Bella Vista 1 ch 13",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "raccontare",
+      "src": "raccontare",
+      "dst": "kertoa"
+    },
+    {
+      "id": "solitamente",
+      "src": "solitamente",
+      "dst": "tavallisesti"
+    },
+    {
+      "id": "mi-sveglio",
+      "src": "mi sveglio",
+      "dst": "herään"
+    },
+    {
+      "id": "quindi",
+      "src": "quindi",
+      "dst": "sitten"
+    },
+    {
+      "id": "mi-lavo",
+      "src": "mi lavo",
+      "dst": "peseydyn"
+    },
+    {
+      "id": "mi-vesto",
+      "src": "mi vesto",
+      "dst": "pukeudun"
+    },
+    {
+      "id": "preparare-la-colazione",
+      "src": "preparare la colazione",
+      "dst": "valmistaa aamupala"
+    },
+    {
+      "id": "infine",
+      "src": "infine",
+      "dst": "lopuksi"
+    },
+    {
+      "id": "svegliare",
+      "src": "svegliare",
+      "dst": "herättää"
+    },
+    {
+      "id": "si-preparano",
+      "src": "si preparano",
+      "dst": "valmistautuvat"
+    },
+    {
+      "id": "ci-occupiamo",
+      "src": "ci occupiamo",
+      "dst": "hoidamme työksemme"
+    },
+    {
+      "id": "squillare",
+      "src": "squillare",
+      "dst": "soida (puhelin)"
+    },
+    {
+      "id": "sicuramente",
+      "src": "sicuramente",
+      "dst": "varmasti"
+    },
+    {
+      "id": "ci-conosciamo",
+      "src": "ci conosciamo",
+      "dst": "tunnemme toisemme"
+    },
+    {
+      "id": "ci-incontriamo",
+      "src": "ci incontriamo",
+      "dst": "tapaamme toisemme"
+    },
+    {
+      "id": "a-casa-sua",
+      "src": "a casa sua",
+      "dst": "hänen luonaan"
+    },
+    {
+      "id": "chiacchierare",
+      "src": "chiacchierare",
+      "dst": "jutella, rupatella"
+    },
+    {
+      "id": "beh-insomma",
+      "src": "Beh, insomma.",
+      "dst": "No, siinähän se/joten kuten."
+    },
+    {
+      "id": "che-ce",
+      "src": "Che c'è?",
+      "dst": "Mikä hätänä?"
+    },
+    {
+      "id": "ti-sento-un-po-giu",
+      "src": "Ti sento un po' giù.",
+      "dst": "Kuulostat (kirj. Kuulen sinun) olevan hieman allapäin."
+    },
+    {
+      "id": "giu",
+      "src": "giù",
+      "dst": "alas, alhaalla"
+    },
+    {
+      "id": "a-causa-di",
+      "src": "a causa di",
+      "dst": "(jkn) vuoksi"
+    },
+    {
+      "id": "di-che-si-tratta",
+      "src": "Di che si tratta?",
+      "dst": "Mistä on kyse?"
+    },
+    {
+      "id": "trattarsi",
+      "src": "trattarsi",
+      "dst": "olle kyse (jstak)"
+    },
+    {
+      "id": "mica",
+      "src": "mica",
+      "dst": "ei suinkaan"
+    },
+    {
+      "id": "grave",
+      "src": "grave",
+      "dst": "vakava"
+    },
+    {
+      "id": "solo-che",
+      "src": "solo che",
+      "dst": "vain se että"
+    },
+    {
+      "id": "mi-sono-svegliata",
+      "src": "mi sono svegliata",
+      "dst": "heräsin, olen herännyt"
+    },
+    {
+      "id": "ultimamente",
+      "src": "ultimamente",
+      "dst": "viime aikoina"
+    },
+    {
+      "id": "cara-mia",
+      "src": "cara mia",
+      "dst": "kultaseni"
+    },
+    {
+      "id": "la-chiacchierata",
+      "src": "la chiacchierata",
+      "dst": "rupattelu, juttutuokio"
+    },
+    {
+      "id": "rilassante",
+      "src": "rilassante",
+      "dst": "rentouttava"
+    },
+    {
+      "id": "ne-ho-veramente-bisogno",
+      "src": "Ne ho veramente bisogno.",
+      "dst": "Tarvitsen sitä todellakin."
+    },
+    {
+      "id": "su-coraggio",
+      "src": "Su, coraggio!",
+      "dst": "Piristyhän nyt!"
+    },
+    {
+      "id": "ci-vediamo",
+      "src": "ci vediamo",
+      "dst": "näemme (toisemme)"
+    },
+    {
+      "id": "cosi",
+      "src": "così",
+      "dst": "siten, niin"
+    },
+    {
+      "id": "ti-rilassi",
+      "src": "ti rilassi",
+      "dst": "rentoudut"
+    },
+    {
+      "id": "ti-va",
+      "src": "Ti va?",
+      "dst": "Sopiiko se sinulle?"
+    },
+    {
+      "id": "naturalmente",
+      "src": "Naturalmente!",
+      "dst": "Tottakai! Luonnollisesti!"
+    },
+    {
+      "id": "con-grande-piacere",
+      "src": "con grande piacere",
+      "dst": "todella mielellään"
+    },
+    {
+      "id": "il-piacere",
+      "src": "il piacere",
+      "dst": "mielihyvä, ilo"
+    },
+    {
+      "id": "il-cambiamento",
+      "src": "il cambiamento",
+      "dst": "muutos"
+    },
+    {
+      "id": "ci-possiamo-vedere",
+      "src": "ci possiamo vedere",
+      "dst": "voimme nähdä (toisemme)"
+    },
+    {
+      "id": "sai",
+      "src": "sai",
+      "dst": "tiedäthän"
+    },
+    {
+      "id": "la-passione",
+      "src": "la passione",
+      "dst": "tässä: harrastus"
+    },
+    {
+      "id": "ne-sono-contenta",
+      "src": "ne sono contenta",
+      "dst": "olen tyytyväinen siitä"
+    },
+    {
+      "id": "contento",
+      "src": "contento",
+      "dst": "tyytyväinen (jhk)"
+    },
+    {
+      "id": "la-pittura",
+      "src": "la pittura",
+      "dst": "maalaaminen, maalaustaide"
+    },
+    {
+      "id": "infatti",
+      "src": "infatti",
+      "dst": "itse asiassa"
+    },
+    {
+      "id": "la-mattinata",
+      "src": "la mattinata",
+      "dst": "aamupäivä"
+    },
+    {
+      "id": "mi-vado-a-comprare",
+      "src": "mi vado a comprare",
+      "dst": "menen ostamaan itselleni"
+    },
+    {
+      "id": "il-pennello",
+      "src": "il pennello",
+      "dst": "sivellin, pensseli"
+    },
+    {
+      "id": "il-colore-ad-olio",
+      "src": "il colore ad olio",
+      "dst": "öljyväri"
+    },
+    {
+      "id": "mi-sono-iscritta",
+      "src": "mi sono iscritta",
+      "dst": "ilmoittauduin, olen ilmoittautunut"
+    },
+    {
+      "id": "eccezionale",
+      "src": "eccezionale",
+      "dst": "poikkeuksellinen"
+    },
+    {
+      "id": "assolutamente",
+      "src": "assolutamente",
+      "dst": "ehdottomasti"
+    },
+    {
+      "id": "non-ti-iscrivi",
+      "src": "non ti iscrivi",
+      "dst": "et ilmoittaudu"
+    },
+    {
+      "id": "la-pittrice",
+      "src": "la pittrice",
+      "dst": "taidemaalari (nainen)"
+    },
+    {
+      "id": "in-gamba",
+      "src": "in gamba",
+      "dst": "pätevä, kyvykäs, fiksu"
+    },
+    {
+      "id": "il-rimedio",
+      "src": "il rimedio",
+      "dst": "lääke, hoitokeino"
+    },
+    {
+      "id": "contro",
+      "src": "contro",
+      "dst": "jostakin vastaan"
+    },
+    {
+      "id": "lo-stress",
+      "src": "lo stress",
+      "dst": "stressi"
+    },
+    {
+      "id": "effettivamente",
+      "src": "effettivamente",
+      "dst": "oikeastaan, tosiaankin"
+    },
+    {
+      "id": "cattivo",
+      "src": "cattivo",
+      "dst": "huono"
+    },
+    {
+      "id": "l-idea",
+      "src": "l' idea",
+      "dst": "idea, ajatus"
+    },
+    {
+      "id": "intanto",
+      "src": "intanto",
+      "dst": "sillä välin"
+    },
+    {
+      "id": "ci-penso-su",
+      "src": "Ci penso su.",
+      "dst": "Harkitsen asiaa."
+    },
+    {
+      "id": "ne-riparliamo",
+      "src": "ne riparliamo",
+      "dst": "puhutaan siitä uudelleen, palataan asiaan"
+    },
+    {
+      "id": "riparlare",
+      "src": "riparlare",
+      "dst": "puhua uudelleen jostakin"
+    },
+    {
+      "id": "ascolta",
+      "src": "ascolta",
+      "dst": "kuules"
+    },
+    {
+      "id": "ci-raccontiamo",
+      "src": "ci raccontiamo",
+      "dst": "kerromme toisillemme"
+    },
+    {
+      "id": "avere-bisogno",
+      "src": "avere bisogno",
+      "dst": "tarvita"
+    },
+    {
+      "id": "avere-ragione",
+      "src": "avere ragione",
+      "dst": "olla oikeassa"
+    }
+  ]
+}

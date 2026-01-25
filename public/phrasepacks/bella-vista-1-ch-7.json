@@ -1,0 +1,284 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-7",
+  "title": "Bella Vista 1 ch 7",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "desiderare",
+      "src": "desiderare",
+      "dst": "tahtoa, haluta"
+    },
+    {
+      "id": "la-gita-turistica",
+      "src": "la gita turistica",
+      "dst": "turistikierros"
+    },
+    {
+      "id": "la-gita",
+      "src": "la gita",
+      "dst": "kierros, retki"
+    },
+    {
+      "id": "turistico",
+      "src": "turistico",
+      "dst": "turisti-"
+    },
+    {
+      "id": "benone",
+      "src": "benone",
+      "dst": "tosi hyvin"
+    },
+    {
+      "id": "e-a-te",
+      "src": "E a te?",
+      "dst": "Entä (mitä kuuluu) sinulle?"
+    },
+    {
+      "id": "la-cosa",
+      "src": "la cosa",
+      "dst": "asia, juttu"
+    },
+    {
+      "id": "da-vedere",
+      "src": "da vedere",
+      "dst": "nähtävää"
+    },
+    {
+      "id": "i-musei-vaticani",
+      "src": "i Musei Vaticani",
+      "dst": "Vatikaanin museot"
+    },
+    {
+      "id": "il-museo",
+      "src": "il museo",
+      "dst": "museo"
+    },
+    {
+      "id": "oppure",
+      "src": "oppure",
+      "dst": "tai, vai"
+    },
+    {
+      "id": "il-colosseo",
+      "src": "il Colosseo",
+      "dst": "Colosseum"
+    },
+    {
+      "id": "se",
+      "src": "se",
+      "dst": "tai, vai jos"
+    },
+    {
+      "id": "il-circo-massimo",
+      "src": "il Circo Massimo",
+      "dst": "Circus Maximus"
+    },
+    {
+      "id": "magnifico",
+      "src": "Magnifico!",
+      "dst": "Mahtavaa!"
+    },
+    {
+      "id": "bellissimo",
+      "src": "bellissimo",
+      "dst": "todella mahtava, todella kaunis"
+    },
+    {
+      "id": "inoltre",
+      "src": "inoltre",
+      "dst": "lisäksi"
+    },
+    {
+      "id": "li",
+      "src": "li",
+      "dst": "siellä"
+    },
+    {
+      "id": "vicino",
+      "src": "vicino",
+      "dst": "lähellä"
+    },
+    {
+      "id": "ce",
+      "src": "c'è",
+      "dst": "(jossakin) on"
+    },
+    {
+      "id": "la-domus-aurea",
+      "src": "la Domus Aurea",
+      "dst": "Domus Aurea (keisari Neron rakennuttama yksityispalatsi, kirj. \"kultainen talo\")"
+    },
+    {
+      "id": "che",
+      "src": "che",
+      "dst": "joka"
+    },
+    {
+      "id": "magari",
+      "src": "magari",
+      "dst": "ehkä"
+    },
+    {
+      "id": "da-via-andrea-doria",
+      "src": "da via Andrea Doria",
+      "dst": "jostakin (prep.)"
+    },
+    {
+      "id": "la-metropolitana",
+      "src": "la metropolitana",
+      "dst": "metro"
+    },
+    {
+      "id": "in-dieci-minuti",
+      "src": "in dieci minuti",
+      "dst": "kymmenessä minuutissa"
+    },
+    {
+      "id": "in",
+      "src": "in",
+      "dst": "jossakin ajassa (prep.)"
+    },
+    {
+      "id": "alla-fermata-cipro",
+      "src": "alla fermata Cipro",
+      "dst": "Cipron pysäkillä"
+    },
+    {
+      "id": "la-fermata",
+      "src": "la fermata",
+      "dst": "pysäkki"
+    },
+    {
+      "id": "beh",
+      "src": "beh...",
+      "dst": "No..."
+    },
+    {
+      "id": "sabato",
+      "src": "sabato",
+      "dst": "lauantaina"
+    },
+    {
+      "id": "il-sabato",
+      "src": "il sabato",
+      "dst": "lauantaisin"
+    },
+    {
+      "id": "la-domenica",
+      "src": "la domenica",
+      "dst": "sunnuntaisin"
+    },
+    {
+      "id": "con-calma",
+      "src": "con calma",
+      "dst": "kaikessa rauhassa, hitaasti ja rauhallisesti"
+    },
+    {
+      "id": "la-calma",
+      "src": "la calma",
+      "dst": "rauha, rauhallisuus"
+    },
+    {
+      "id": "non-ce-problema",
+      "src": "Non c'è problema.",
+      "dst": "Se on ihan ok. (kirj. \"Ei mitään ongelmaa.\")"
+    },
+    {
+      "id": "il-problema",
+      "src": "il problema",
+      "dst": "ongelma"
+    },
+    {
+      "id": "il-giorno-dopo",
+      "src": "il giorno dopo",
+      "dst": "seuraavana päivänä"
+    },
+    {
+      "id": "incontrare",
+      "src": "incontrare",
+      "dst": "tavata"
+    },
+    {
+      "id": "la-ragazza",
+      "src": "la ragazza",
+      "dst": "tyttö"
+    },
+    {
+      "id": "a-piedi",
+      "src": "a piedi",
+      "dst": "kävellen, jalkaisin"
+    },
+    {
+      "id": "da-qui",
+      "src": "da qui",
+      "dst": "täältä"
+    },
+    {
+      "id": "la-traversa",
+      "src": "la traversa",
+      "dst": "poikkikatu"
+    },
+    {
+      "id": "a-destra",
+      "src": "a destra",
+      "dst": "oikealle, oikealla"
+    },
+    {
+      "id": "sempre-diritto",
+      "src": "sempre diritto",
+      "dst": "suoraan eteenpäin"
+    },
+    {
+      "id": "sempre",
+      "src": "sempre",
+      "dst": "aina"
+    },
+    {
+      "id": "e-quindi",
+      "src": "e quindi",
+      "dst": "ja sitten"
+    },
+    {
+      "id": "trovare",
+      "src": "trovare",
+      "dst": "löytää"
+    },
+    {
+      "id": "l-aiuto",
+      "src": "l' aiuto",
+      "dst": "apu"
+    },
+    {
+      "id": "amare",
+      "src": "amare",
+      "dst": "rakastaa"
+    },
+    {
+      "id": "passeggiare",
+      "src": "passeggiare",
+      "dst": "kävellä, käveleskellä"
+    },
+    {
+      "id": "allaria-aperta",
+      "src": "all'aria aperta",
+      "dst": "ulkoilmassa"
+    },
+    {
+      "id": "a-proposito",
+      "src": "a proposito",
+      "dst": "(siitä) puheen ollen"
+    },
+    {
+      "id": "sapere",
+      "src": "sapere",
+      "dst": "tietää, osata"
+    },
+    {
+      "id": "chiedere",
+      "src": "chiedere",
+      "dst": "kysyä neuvoa"
+    }
+  ]
+}

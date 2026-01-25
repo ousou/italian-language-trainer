@@ -1,0 +1,344 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-12",
+  "title": "Bella Vista 1 ch 12",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "passare",
+      "src": "passare",
+      "dst": "viettää"
+    },
+    {
+      "id": "la-vacanza",
+      "src": "la vacanza",
+      "dst": "loma"
+    },
+    {
+      "id": "piovere",
+      "src": "piovere",
+      "dst": "sataa"
+    },
+    {
+      "id": "qualcosa-di-bello",
+      "src": "qualcosa di bello",
+      "dst": "jotakin ihanaa"
+    },
+    {
+      "id": "incontrare",
+      "src": "incontrare",
+      "dst": "tavata"
+    },
+    {
+      "id": "per-esempio",
+      "src": "per esempio",
+      "dst": "esimerkiksi"
+    },
+    {
+      "id": "qualcuno",
+      "src": "qualcuno",
+      "dst": "joku"
+    },
+    {
+      "id": "importante",
+      "src": "importante",
+      "dst": "tärkeä"
+    },
+    {
+      "id": "particolare",
+      "src": "particolare",
+      "dst": "erityinen"
+    },
+    {
+      "id": "la-telefonata",
+      "src": "la telefonata",
+      "dst": "puhelu"
+    },
+    {
+      "id": "da-dove",
+      "src": "da dove?",
+      "dst": "Mistä?"
+    },
+    {
+      "id": "chiamare",
+      "src": "chiamare",
+      "dst": "soittaa (puhelimella)"
+    },
+    {
+      "id": "fa-un-freddo-pazzesco",
+      "src": "fa un freddo pazzesco",
+      "dst": "on ihan hirveän kylmää"
+    },
+    {
+      "id": "pazzesco",
+      "src": "pazzesco",
+      "dst": "hirveän"
+    },
+    {
+      "id": "macche",
+      "src": "Macché!",
+      "dst": "Mitä vielä!"
+    },
+    {
+      "id": "e-andato-tutto-a-meraviglia",
+      "src": "È andato tutto a meraviglia.",
+      "dst": "Kaikki sujui loistavasti."
+    },
+    {
+      "id": "a-meraviglia",
+      "src": "a meraviglia",
+      "dst": "loistavasti, täydellisesti"
+    },
+    {
+      "id": "nemmeno",
+      "src": "nemmeno",
+      "dst": "ei edes"
+    },
+    {
+      "id": "anzi",
+      "src": "anzi",
+      "dst": "päinvastoin, tai oikeastaan"
+    },
+    {
+      "id": "ce-stato-il-sole",
+      "src": "c'è stato il sole",
+      "dst": "aurinko paistoi"
+    },
+    {
+      "id": "il-sole",
+      "src": "il sole",
+      "dst": "aurinko"
+    },
+    {
+      "id": "tutto-il-tempo",
+      "src": "tutto il tempo",
+      "dst": "koko ajan"
+    },
+    {
+      "id": "ci",
+      "src": "ci",
+      "dst": "siellä, sinne"
+    },
+    {
+      "id": "ne",
+      "src": "ne",
+      "dst": "sieltä"
+    },
+    {
+      "id": "fa",
+      "src": "fa",
+      "dst": "(kuinka kauan) sitten"
+    },
+    {
+      "id": "e-cosa-avete-fatto-di-bello",
+      "src": "E cosa avete fatto di bello?",
+      "dst": "Ja mitäs kivaa teitte?"
+    },
+    {
+      "id": "un-sacco-di",
+      "src": "un sacco di",
+      "dst": "Paljon (kirj. Säkillinen)"
+    },
+    {
+      "id": "la-capitale",
+      "src": "la capitale",
+      "dst": "pääkaupunki"
+    },
+    {
+      "id": "dopo",
+      "src": "dopo",
+      "dst": "sitten, sen jälkeen"
+    },
+    {
+      "id": "il-cottage",
+      "src": "il cottage",
+      "dst": "mökki"
+    },
+    {
+      "id": "il-nord-della-finlandia",
+      "src": "il nord della Finlandia",
+      "dst": "Pohjois-Suomi"
+    },
+    {
+      "id": "ovviamente",
+      "src": "ovviamente",
+      "dst": "ja tietenkin, kuten"
+    },
+    {
+      "id": "la-renna",
+      "src": "la renna",
+      "dst": "poro"
+    },
+    {
+      "id": "il-salmone",
+      "src": "il salmone",
+      "dst": "lohi"
+    },
+    {
+      "id": "a-volonta",
+      "src": "a volontà",
+      "dst": "mielin määrin"
+    },
+    {
+      "id": "che",
+      "src": "che",
+      "dst": "joka"
+    },
+    {
+      "id": "tanti-saluti",
+      "src": "tanti saluti",
+      "dst": "paljon terveisiä"
+    },
+    {
+      "id": "il-bacio",
+      "src": "il bacio",
+      "dst": "suukko"
+    },
+    {
+      "id": "alla-grande",
+      "src": "Alla grande!",
+      "dst": "Mahtavasti! Upeasti!"
+    },
+    {
+      "id": "i-estate-scorsa",
+      "src": "I' estate scorsa",
+      "dst": "viime kesänä"
+    },
+    {
+      "id": "il-parco-nazionale",
+      "src": "il parco nazionale",
+      "dst": "kansallispuisto"
+    },
+    {
+      "id": "niente",
+      "src": "niente",
+      "dst": "ei mitään"
+    },
+    {
+      "id": "speciale",
+      "src": "speciale",
+      "dst": "erityinen"
+    },
+    {
+      "id": "durante",
+      "src": "durante",
+      "dst": "jonkin aikana"
+    },
+    {
+      "id": "nessuno",
+      "src": "nessuno",
+      "dst": "ei kukaan"
+    },
+    {
+      "id": "a-dire-il-vero",
+      "src": "a dire il vero",
+      "dst": "totta puhuakseni"
+    },
+    {
+      "id": "convivere",
+      "src": "convivere",
+      "dst": "asua yhdessä"
+    },
+    {
+      "id": "ci-sposiamo",
+      "src": "ci sposiamo",
+      "dst": "menemme naimisiin"
+    },
+    {
+      "id": "grande",
+      "src": "Grande!",
+      "dst": "Mahtavaa!"
+    },
+    {
+      "id": "felicitazioni",
+      "src": "Felicitazioni!",
+      "dst": "Onnittelut!"
+    },
+    {
+      "id": "da-aggiungere",
+      "src": "da aggiungere",
+      "dst": "lisättävää"
+    },
+    {
+      "id": "mandare-dei-saluti",
+      "src": "mandare dei saluti",
+      "dst": "lähettää terveisiä"
+    },
+    {
+      "id": "fantastico",
+      "src": "Fantastico!",
+      "dst": "Mahtavaa!"
+    },
+    {
+      "id": "auguri-di-buon-compleanno",
+      "src": "Auguri di buon compleanno!",
+      "dst": "Hyvää syntymäpäivää!"
+    },
+    {
+      "id": "fatto",
+      "src": "fatto",
+      "dst": "tehdä"
+    },
+    {
+      "id": "stati",
+      "src": "stati",
+      "dst": "olla"
+    },
+    {
+      "id": "conosciuto",
+      "src": "conosciuto",
+      "dst": "tutustua"
+    },
+    {
+      "id": "successo",
+      "src": "successo",
+      "dst": "tapahtua"
+    },
+    {
+      "id": "fare-freddo",
+      "src": "fare freddo",
+      "dst": "olla kylmää"
+    },
+    {
+      "id": "qualche",
+      "src": "qualche",
+      "dst": "joitakin, muutama"
+    },
+    {
+      "id": "volere-dire",
+      "src": "volere dire",
+      "dst": "tarkoittaa"
+    },
+    {
+      "id": "venuta",
+      "src": "venuta",
+      "dst": "tulla"
+    },
+    {
+      "id": "aggiungere",
+      "src": "aggiungere",
+      "dst": "lisätä"
+    },
+    {
+      "id": "fare-tanti-auguri",
+      "src": "fare tanti auguri",
+      "dst": "onnitella paljon"
+    },
+    {
+      "id": "compiere",
+      "src": "compiere",
+      "dst": "täyttää vuosia"
+    },
+    {
+      "id": "diventare",
+      "src": "diventare",
+      "dst": "tulla/muuttua joksikin"
+    },
+    {
+      "id": "essere-in-gamba",
+      "src": "essere in gamba",
+      "dst": "olla kyvykäs ja pätevä, fiksu, olla hyvä tyyppi"
+    }
+  ]
+}

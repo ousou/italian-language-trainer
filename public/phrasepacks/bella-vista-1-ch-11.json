@@ -1,0 +1,199 @@
+{
+  "type": "vocab",
+  "id": "bella-vista-1-ch-11",
+  "title": "Bella Vista 1 ch 11",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "senti",
+      "src": "senti",
+      "dst": "kuules"
+    },
+    {
+      "id": "la-famiglia",
+      "src": "la famiglia",
+      "dst": "perhe"
+    },
+    {
+      "id": "o-meglio",
+      "src": "o meglio",
+      "dst": "tai paremminkin"
+    },
+    {
+      "id": "la-madre",
+      "src": "la madre",
+      "dst": "\"\" iti"
+    },
+    {
+      "id": "la-sorella",
+      "src": "la sorella",
+      "dst": "sisko"
+    },
+    {
+      "id": "il-padre",
+      "src": "il padre",
+      "dst": "isä"
+    },
+    {
+      "id": "caspita",
+      "src": "Caspita!",
+      "dst": "Hyvänen aika!"
+    },
+    {
+      "id": "beato-lui",
+      "src": "Beato lui!",
+      "dst": "Onnenpekka!"
+    },
+    {
+      "id": "in-effetti",
+      "src": "in effetti",
+      "dst": "itse asiassa"
+    },
+    {
+      "id": "i-onomastico",
+      "src": "I' onomastico",
+      "dst": "nimipäivä"
+    },
+    {
+      "id": "ora-ti-saluto",
+      "src": "Ora ti saluto.",
+      "dst": "Nyt sanon sinulle hei hei. (kirj. Hyvästelen sinut)"
+    },
+    {
+      "id": "salutare",
+      "src": "salutare",
+      "dst": "tervehtiä, hyvästellä, sanoa näkemiin"
+    },
+    {
+      "id": "ci-risentiamo",
+      "src": "Ci risentiamo.",
+      "dst": "Kuullaan taas."
+    },
+    {
+      "id": "mi",
+      "src": "mi",
+      "dst": "minulle"
+    },
+    {
+      "id": "dai",
+      "src": "dai",
+      "dst": "annat"
+    },
+    {
+      "id": "ti",
+      "src": "ti",
+      "dst": "sinulle"
+    },
+    {
+      "id": "buon-viaggio",
+      "src": "Buon viaggio!",
+      "dst": "Hyvää matkaa!"
+    },
+    {
+      "id": "la-biglietteria",
+      "src": "la biglietteria",
+      "dst": "lipputoimisto"
+    },
+    {
+      "id": "la-stazione",
+      "src": "la stazione",
+      "dst": "asema"
+    },
+    {
+      "id": "losciopero",
+      "src": "losciopero",
+      "dst": "lakko"
+    },
+    {
+      "id": "accidenti",
+      "src": "Accidenti!",
+      "dst": "Harmin paikka!"
+    },
+    {
+      "id": "il-treno",
+      "src": "il treno",
+      "dst": "juna"
+    },
+    {
+      "id": "pazienza",
+      "src": "Pazienza.",
+      "dst": "Ei mahda mitään. (kirj. Kärsivällisyys)"
+    },
+    {
+      "id": "quanto-tempo-ci-vuole",
+      "src": "Quanto tempo ci vuole...?",
+      "dst": "Paljonko menee aikaa...?"
+    },
+    {
+      "id": "ci-vogliono-circa-cinque-ore-e-mezza",
+      "src": "ci vogliono circa cinque ore e mezza",
+      "dst": "siihen menee noin viisi ja puoli tuntia"
+    },
+    {
+      "id": "la-classe",
+      "src": "la classe",
+      "dst": "luokka"
+    },
+    {
+      "id": "dica",
+      "src": "Dica.",
+      "dst": "Miten voin auttaa? (kirj. Sanokaa)"
+    },
+    {
+      "id": "il-posto",
+      "src": "il posto",
+      "dst": "(istuma)paikka"
+    },
+    {
+      "id": "il-finestrino",
+      "src": "il finestrino",
+      "dst": "(junan/auton) ikkuna"
+    },
+    {
+      "id": "il-vagone",
+      "src": "il vagone",
+      "dst": "vaunu"
+    },
+    {
+      "id": "da-quale-binario",
+      "src": "da quale binario?",
+      "dst": "Miltä raiteelta?"
+    },
+    {
+      "id": "il-binario",
+      "src": "il binario",
+      "dst": "raide"
+    },
+    {
+      "id": "in-ogni-caso",
+      "src": "in ogni caso",
+      "dst": "joka tapauksessa"
+    },
+    {
+      "id": "le-conviene",
+      "src": "Le conviene",
+      "dst": "Teidän kannattaa"
+    },
+    {
+      "id": "le",
+      "src": "Le",
+      "dst": "Teille"
+    },
+    {
+      "id": "convenire",
+      "src": "convenire",
+      "dst": "kannattaa, maksaa vaivan"
+    },
+    {
+      "id": "controllare",
+      "src": "controllare",
+      "dst": "tarkistaa"
+    },
+    {
+      "id": "il-tabellone",
+      "src": "il tabellone",
+      "dst": "(aseman) aikataulu"
+    }
+  ]
+}
