@@ -1,6 +1,7 @@
 import './style.css';
-import type { DrillDirection, LanguageCode, VocabPack } from './types.ts';
+import type { AnswerSpec, DrillDirection, LanguageCode, VocabPack, VerbPack } from './types.ts';
 import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
+import { AVAILABLE_VERBPACKS, fetchVerbPack } from './data/verbpacks.ts';
 import {
   listReviewCardsByPack,
   listReviewCardsByPackAndDirection,
@@ -11,6 +12,16 @@ import type { ReviewCard } from './logic/review.ts';
 import { buildDailyAttemptCounts, startOfLocalDay, type DailyAttemptCount } from './logic/reviewEvents.ts';
 import { buildSrsOrder } from './logic/srs.ts';
 import {
+  createVerbSession,
+  nextVerbStep,
+  redoIncorrect as redoIncorrectVerbs,
+  submitConjugationAnswer,
+  submitInfinitiveAnswer,
+  VERB_PERSONS,
+  type VerbStepResult,
+  type VerbSessionState
+} from './logic/verbSession.ts';
+import {
   DEFAULT_SESSION_SIZE,
   createSession,
   nextCard,
@@ -20,13 +31,17 @@ import {
 } from './logic/session.ts';
 
 interface AppState {
+  mode: 'vocab' | 'verbs';
   packId?: string;
   pack?: VocabPack;
+  verbPackId?: string;
+  verbPack?: VerbPack;
   loading: boolean;
   error?: string;
   showIncorrect: boolean;
   showStats: boolean;
   session?: SessionState;
+  verbSession?: VerbSessionState;
   direction: DrillDirection;
   reviewCards: ReviewCard[];
   dailyAttempts: DailyAttemptCount[];
@@ -41,14 +56,32 @@ const LANGUAGE_LABELS: Record<LanguageCode, string> = {
   sv: 'Swedish'
 };
 
+const MODE_LABELS: Record<AppState['mode'], string> = {
+  vocab: 'Vocabulary',
+  verbs: 'Verb conjugation'
+};
+
+const VERB_PERSON_LABELS: Record<typeof VERB_PERSONS[number], string> = {
+  io: 'io',
+  tu: 'tu',
+  luiLei: 'lui/lei',
+  noi: 'noi',
+  voi: 'voi',
+  loro: 'loro'
+};
+
 const state: AppState = {
+  mode: 'vocab',
   packId: undefined,
   pack: undefined,
+  verbPackId: undefined,
+  verbPack: undefined,
   loading: false,
   error: undefined,
   showIncorrect: false,
   showStats: false,
   session: undefined,
+  verbSession: undefined,
   direction: 'dst-to-src',
   reviewCards: [],
   dailyAttempts: [],
@@ -58,8 +91,10 @@ const state: AppState = {
 };
 
 let loadToken = 0;
+let verbLoadToken = 0;
 let statsToken = 0;
 let sessionToken = 0;
+let verbSessionToken = 0;
 let globalKeyListenerAttached = false;
 
 const rootElement = document.querySelector<HTMLDivElement>('#app');
@@ -79,7 +114,14 @@ function attachGlobalKeyListener(): void {
     if (event.key !== 'Enter') {
       return;
     }
-    if (!state.session || state.session.lastResult === undefined || state.session.sessionComplete) {
+    const vocabReady =
+      state.mode === 'vocab' && state.session && state.session.lastResult !== undefined && !state.session.sessionComplete;
+    const verbReady =
+      state.mode === 'verbs' &&
+      state.verbSession &&
+      isVerbStepResolved(state.verbSession) &&
+      !state.verbSession.sessionComplete;
+    if (!vocabReady && !verbReady) {
       return;
     }
     event.preventDefault();
@@ -92,23 +134,117 @@ function setState(partial: Partial<AppState>): void {
   render();
 }
 
-function startNewSession(): void {
-  if (!state.pack) {
+function setMode(mode: AppState['mode']): void {
+  if (state.mode === mode) {
     return;
   }
-  void startSrsSession(state.pack, state.direction);
+  setState({
+    mode,
+    packId: undefined,
+    pack: undefined,
+    verbPackId: undefined,
+    verbPack: undefined,
+    session: undefined,
+    verbSession: undefined,
+    loading: false,
+    error: undefined,
+    showIncorrect: false,
+    showStats: false,
+    reviewCards: [],
+    dailyAttempts: [],
+    statsDays: 7,
+    showItemStats: false,
+    reviewStatsLoading: false
+  });
+}
+
+function formatAnswerSpec(value: AnswerSpec): string {
+  if (Array.isArray(value)) {
+    return value[0] ?? '';
+  }
+  return value;
+}
+
+function isVerbStepResolved(session: VerbSessionState): boolean {
+  if (session.phase === 'infinitive') {
+    return Boolean(session.infinitive.result);
+  }
+  if (session.phase === 'conjugation') {
+    return Boolean(session.persons[session.currentPersonIndex]?.result);
+  }
+  return true;
+}
+
+function getVerbStepResult(session: VerbSessionState): VerbStepResult | undefined {
+  if (session.phase === 'infinitive') {
+    return session.infinitive.result;
+  }
+  if (session.phase === 'conjugation') {
+    return session.persons[session.currentPersonIndex]?.result;
+  }
+  return undefined;
+}
+
+function getVerbStepAttempts(session: VerbSessionState): string[] {
+  if (session.phase === 'infinitive') {
+    return session.infinitive.attempts;
+  }
+  if (session.phase === 'conjugation') {
+    return session.persons[session.currentPersonIndex]?.attempts ?? [];
+  }
+  return [];
+}
+
+function formatVerbStepResult(result?: VerbStepResult): string {
+  if (result === 'correct-first') {
+    return 'correct (1st try)';
+  }
+  if (result === 'correct-second') {
+    return 'correct (2nd try)';
+  }
+  if (result === 'revealed') {
+    return 'revealed';
+  }
+  return 'unanswered';
+}
+
+function startNewSession(): void {
+  if (state.mode === 'vocab') {
+    if (!state.pack) {
+      return;
+    }
+    void startSrsSession(state.pack, state.direction);
+    return;
+  }
+  if (!state.verbPack) {
+    return;
+  }
+  void startVerbSession(state.verbPack);
 }
 
 function redoIncorrectSession(): void {
-  if (!state.pack || !state.session) {
+  if (state.mode === 'vocab') {
+    if (!state.pack || !state.session) {
+      return;
+    }
+
+    const session = redoIncorrect(state.pack, state.session);
+    if (session === state.session) {
+      return;
+    }
+    setState({ session, showIncorrect: false });
     return;
   }
 
-  const session = redoIncorrect(state.pack, state.session);
-  if (session === state.session) {
+  if (!state.verbPack || !state.verbSession) {
     return;
   }
-  setState({ session, showIncorrect: false });
+
+  const session = redoIncorrectVerbs(state.verbPack, state.verbSession);
+  if (session === state.verbSession) {
+    return;
+  }
+  setState({ verbSession: session, showIncorrect: false });
 }
 
 async function selectPack(id: string | undefined): Promise<void> {
@@ -163,14 +299,106 @@ async function selectPack(id: string | undefined): Promise<void> {
   }
 }
 
-function goToNext(): void {
-  if (!state.pack || !state.session) {
+async function selectVerbPack(id: string | undefined): Promise<void> {
+  if (!id) {
+    setState({
+      verbPackId: undefined,
+      verbPack: undefined,
+      error: undefined,
+      showIncorrect: false,
+      showStats: false,
+      verbSession: undefined,
+      reviewCards: [],
+      dailyAttempts: [],
+      statsDays: 7,
+      showItemStats: false,
+      reviewStatsLoading: false
+    });
     return;
   }
 
-  const session = nextCard(state.session);
-  if (session !== state.session) {
-    setState({ session });
+  const currentToken = ++verbLoadToken;
+
+  setState({
+    verbPackId: id,
+    loading: true,
+    error: undefined
+  });
+
+  try {
+    const pack = await fetchVerbPack(id);
+
+    if (currentToken !== verbLoadToken) {
+      return;
+    }
+
+    setState({
+      verbPack: pack,
+      loading: false,
+      showIncorrect: false,
+      showStats: false,
+      verbSession: undefined
+    });
+    void refreshReviewStats(pack);
+    void startVerbSession(pack);
+  } catch (error) {
+    if (currentToken !== verbLoadToken) {
+      return;
+    }
+
+    const message = error instanceof Error ? error.message : 'Unknown error while loading the verb pack.';
+    setState({ loading: false, error: message });
+  }
+}
+
+function goToNext(): void {
+  if (state.mode === 'vocab') {
+    if (!state.pack || !state.session) {
+      return;
+    }
+
+    const session = nextCard(state.session);
+    if (session !== state.session) {
+      setState({ session });
+      queueMicrotask(() => {
+        const input = root.querySelector<HTMLInputElement>('.answer-input');
+        if (input && !input.readOnly) {
+          input.focus();
+        }
+      });
+    }
+    return;
+  }
+
+  if (!state.verbPack || !state.verbSession) {
+    return;
+  }
+
+  const previous = state.verbSession;
+  const nextSession = nextVerbStep(state.verbPack, previous);
+  if (nextSession !== previous) {
+    if (previous.phase !== 'recap' && nextSession.phase === 'recap' && nextSession.lastScore) {
+      const itemIndex = previous.order[previous.currentIndex];
+      const item = state.verbPack.items[itemIndex];
+      void recordReviewResult(
+        {
+          packId: state.verbPack.id,
+          itemId: item.id,
+          direction: 'dst-to-src'
+        },
+        {
+          correct: nextSession.lastScore.correct,
+          quality: nextSession.lastScore.quality,
+          now: Date.now()
+        }
+      )
+        .then(() => refreshReviewStats(state.verbPack))
+        .catch((error) => {
+          console.warn('Failed to record verb review result', error);
+        });
+    }
+
+    setState({ verbSession: nextSession });
     queueMicrotask(() => {
       const input = root.querySelector<HTMLInputElement>('.answer-input');
       if (input && !input.readOnly) {
@@ -197,37 +425,104 @@ async function startSrsSession(pack: VocabPack, direction: DrillDirection): Prom
   setState({ session, showIncorrect: false });
 }
 
+async function startVerbSession(pack: VerbPack): Promise<void> {
+  const token = ++verbSessionToken;
+  const direction: DrillDirection = 'dst-to-src';
+  const cards = await listReviewCardsByPackAndDirection(pack.id, direction);
+  if (token !== verbSessionToken) {
+    return;
+  }
+  const order = buildSrsOrder(pack.items, direction, cards, {
+    now: Date.now(),
+    sessionSize: DEFAULT_SESSION_SIZE,
+    maxNew: 15,
+    maxReview: 120,
+    rng: Math.random
+  });
+  const session = createVerbSession(pack, order);
+  setState({ verbSession: session, showIncorrect: false });
+}
+
+function renderModeSelector(container: HTMLElement): void {
+  const section = document.createElement('section');
+  section.className = 'panel direction-toggle';
+
+  const label = document.createElement('span');
+  label.className = 'panel-label';
+  label.textContent = 'Drill mode';
+  section.append(label);
+
+  for (const mode of Object.keys(MODE_LABELS) as AppState['mode'][]) {
+    const option = document.createElement('label');
+    option.className = 'direction-option';
+
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'drill-mode';
+    input.value = mode;
+    input.checked = state.mode === mode;
+    input.addEventListener('change', () => {
+      setMode(mode);
+    });
+
+    const text = document.createElement('span');
+    text.textContent = MODE_LABELS[mode];
+
+    option.append(input, text);
+    section.append(option);
+  }
+
+  container.append(section);
+}
+
 function renderPackSelector(container: HTMLElement): void {
   const section = document.createElement('section');
   section.className = 'panel pack-picker';
 
   const label = document.createElement('label');
   label.className = 'panel-label';
-  label.textContent = 'Choose a phrase pack';
-  label.setAttribute('for', 'pack-select');
+  const isVerbMode = state.mode === 'verbs';
+  label.textContent = isVerbMode ? 'Choose a verb pack' : 'Choose a phrase pack';
+  label.setAttribute('for', isVerbMode ? 'verb-pack-select' : 'pack-select');
 
   const select = document.createElement('select');
-  select.id = 'pack-select';
+  select.id = isVerbMode ? 'verb-pack-select' : 'pack-select';
   select.className = 'panel-control';
 
   const defaultOption = document.createElement('option');
   defaultOption.value = '';
-  defaultOption.textContent = '— Select a pack —';
+  defaultOption.textContent = isVerbMode ? '— Select a verb pack —' : '— Select a pack —';
   select.append(defaultOption);
 
-  for (const pack of AVAILABLE_PHRASEPACKS) {
-    const option = document.createElement('option');
-    option.value = pack.id;
-    option.textContent = pack.title;
-    if (pack.id === state.packId) {
-      option.selected = true;
+  if (isVerbMode) {
+    for (const pack of AVAILABLE_VERBPACKS) {
+      const option = document.createElement('option');
+      option.value = pack.id;
+      option.textContent = pack.title;
+      if (pack.id === state.verbPackId) {
+        option.selected = true;
+      }
+      select.append(option);
     }
-    select.append(option);
+  } else {
+    for (const pack of AVAILABLE_PHRASEPACKS) {
+      const option = document.createElement('option');
+      option.value = pack.id;
+      option.textContent = pack.title;
+      if (pack.id === state.packId) {
+        option.selected = true;
+      }
+      select.append(option);
+    }
   }
 
   select.addEventListener('change', (event) => {
     const target = event.target as HTMLSelectElement;
-    void selectPack(target.value || undefined);
+    if (isVerbMode) {
+      void selectVerbPack(target.value || undefined);
+    } else {
+      void selectPack(target.value || undefined);
+    }
   });
 
   section.append(label, select);
@@ -397,6 +692,260 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   }
 }
 
+function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
+  const session = state.verbSession;
+
+  if (!session) {
+    return;
+  }
+
+  const { order, currentIndex, phase, answerInput, sessionComplete } = session;
+
+  if (order.length === 0) {
+    const emptyNotice = document.createElement('p');
+    emptyNotice.className = 'empty-pack';
+    emptyNotice.textContent = 'This verb pack has no items.';
+    container.append(emptyNotice);
+    return;
+  }
+
+  const itemIndex = order[currentIndex];
+  const item = pack.items[itemIndex];
+  const stepResolved = isVerbStepResolved(session);
+  const stepResult = getVerbStepResult(session);
+  const attempts = getVerbStepAttempts(session);
+  const attemptNumber = Math.min(attempts.length + 1, 2);
+
+  const person = phase === 'conjugation' ? VERB_PERSONS[session.currentPersonIndex] : undefined;
+  const stepLabel = phase === 'infinitive' ? 'Infinitive' : person ? `Present • ${VERB_PERSON_LABELS[person]}` : 'Recap';
+  const currentExpected =
+    phase === 'infinitive'
+      ? formatAnswerSpec(item.src)
+      : person
+        ? formatAnswerSpec(item.conjugations.present[person])
+        : '';
+
+  const card = document.createElement('section');
+  card.className = sessionComplete ? 'drill-card session-complete-card' : 'drill-card';
+
+  const meta = document.createElement('div');
+  meta.className = 'drill-meta';
+  meta.textContent = `Verb ${currentIndex + 1} of ${order.length}`;
+
+  const prompt = document.createElement('div');
+  prompt.className = 'drill-prompt';
+
+  const promptBadge = document.createElement('span');
+  promptBadge.className = 'badge';
+  promptBadge.textContent = LANGUAGE_LABELS[pack.dst] ?? pack.dst.toUpperCase();
+
+  const promptTextNode = document.createElement('span');
+  promptTextNode.className = 'prompt-text';
+  promptTextNode.textContent = item.dst;
+
+  prompt.append(promptBadge, promptTextNode);
+
+  const infinitive = document.createElement('div');
+  const showInfinitive = session.phase !== 'infinitive' && Boolean(session.infinitive.result);
+  infinitive.className = showInfinitive ? 'drill-answer revealed' : 'drill-answer hidden';
+
+  const infinitiveBadge = document.createElement('span');
+  infinitiveBadge.className = 'badge';
+  infinitiveBadge.textContent = 'Infinitive';
+
+  const infinitiveText = document.createElement('span');
+  infinitiveText.className = 'answer-text';
+  infinitiveText.textContent = showInfinitive ? formatAnswerSpec(item.src) : 'Infinitive hidden';
+
+  infinitive.append(infinitiveBadge, infinitiveText);
+
+  const expected = document.createElement('div');
+  expected.className = stepResolved ? 'drill-answer revealed' : 'drill-answer hidden';
+
+  const expectedBadge = document.createElement('span');
+  expectedBadge.className = 'badge';
+  expectedBadge.textContent = stepLabel;
+
+  const expectedText = document.createElement('span');
+  expectedText.className = 'answer-text';
+  expectedText.textContent = stepResolved ? currentExpected : 'Answer hidden';
+
+  expected.append(expectedBadge, expectedText);
+
+  const form = document.createElement('form');
+  form.className = 'answer-form';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'answer-input panel-control';
+  input.placeholder =
+    phase === 'infinitive'
+      ? 'Type the Italian infinitive'
+      : phase === 'conjugation'
+        ? `Type the ${VERB_PERSON_LABELS[person ?? 'io']} form`
+        : 'Review the recap';
+  input.value = answerInput;
+  input.autocomplete = 'off';
+  input.spellcheck = false;
+  input.readOnly = stepResolved || sessionComplete || phase === 'recap';
+
+  const checkButton = document.createElement('button');
+  checkButton.type = 'submit';
+  checkButton.className = 'primary';
+  checkButton.textContent = 'Check answer';
+  checkButton.disabled = stepResolved || sessionComplete || phase === 'recap' || answerInput.trim() === '';
+
+  input.addEventListener('input', (event) => {
+    const target = event.target as HTMLInputElement;
+    if (!state.verbSession) {
+      return;
+    }
+    state.verbSession.answerInput = target.value;
+    const answered = isVerbStepResolved(state.verbSession) || state.verbSession.sessionComplete;
+    checkButton.disabled = answered || state.verbSession.phase === 'recap' || target.value.trim() === '';
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!state.verbSession) {
+      return;
+    }
+    if (isVerbStepResolved(state.verbSession)) {
+      goToNext();
+      return;
+    }
+    const currentSession = state.verbSession;
+    let nextSession = currentSession;
+    if (currentSession.phase === 'infinitive') {
+      nextSession = submitInfinitiveAnswer(pack, currentSession, currentSession.answerInput);
+    } else if (currentSession.phase === 'conjugation') {
+      nextSession = submitConjugationAnswer(pack, currentSession, currentSession.answerInput);
+    } else {
+      goToNext();
+      return;
+    }
+    setState({ verbSession: nextSession });
+  });
+
+  form.append(input, checkButton);
+
+  const feedback = document.createElement('p');
+  feedback.className = 'answer-feedback';
+  if (phase === 'recap') {
+    feedback.textContent = ' ';
+  } else if (session.lastFeedback === 'correct') {
+    if (stepResult === 'correct-second') {
+      feedback.textContent = 'Correct (second try).';
+    } else {
+      feedback.textContent = 'Correct!';
+    }
+    feedback.classList.add('correct');
+  } else if (session.lastFeedback === 'retry') {
+    feedback.textContent = 'Not quite. Try again.';
+    feedback.classList.add('incorrect');
+  } else if (session.lastFeedback === 'revealed') {
+    feedback.textContent = 'Correct answer shown above.';
+    feedback.classList.add('incorrect');
+  } else {
+    feedback.textContent = ' ';
+  }
+
+  const controls = document.createElement('div');
+  controls.className = 'drill-controls';
+
+  const attempt = document.createElement('span');
+  attempt.className = 'session-summary';
+  if (!stepResolved && phase !== 'recap') {
+    attempt.textContent = `Attempt ${attemptNumber} of 2`;
+  } else {
+    attempt.textContent = '';
+  }
+
+  const nextButton = document.createElement('button');
+  nextButton.type = 'button';
+  nextButton.textContent = phase === 'recap' ? 'Next verb' : 'Next form';
+  nextButton.disabled = !stepResolved || sessionComplete;
+  nextButton.addEventListener('click', () => {
+    if (!state.verbSession || !isVerbStepResolved(state.verbSession)) {
+      return;
+    }
+    goToNext();
+  });
+
+  controls.append(attempt, nextButton);
+
+  card.append(meta, prompt);
+  if (phase !== 'infinitive') {
+    card.append(infinitive);
+  }
+  if (phase !== 'recap') {
+    card.append(expected);
+  }
+  card.append(form, feedback, controls);
+
+  if (phase === 'recap') {
+    const recap = document.createElement('div');
+    recap.className = 'panel';
+
+    const recapTitle = document.createElement('span');
+    recapTitle.className = 'panel-label';
+    recapTitle.textContent = 'Recap';
+
+    const score = session.lastScore;
+    const scoreText = document.createElement('p');
+    scoreText.className = 'session-summary';
+    if (score) {
+      const conjugationCorrect = session.persons.filter(
+        (step) => step.result === 'correct-first' || step.result === 'correct-second'
+      ).length;
+      const conjugationSecond = session.persons.filter((step) => step.result === 'correct-second').length;
+      scoreText.textContent = `Conjugation: ${conjugationCorrect}/6 correct · ${conjugationSecond} on 2nd try · Total: ${score.points}/7 points`;
+    } else {
+      scoreText.textContent = 'Recap unavailable.';
+    }
+
+    recap.append(recapTitle, scoreText);
+
+    const mistakes = session.persons
+      .map((step, index) => ({
+        person: VERB_PERSONS[index],
+        result: step.result,
+        attempts: step.attempts,
+        expected: formatAnswerSpec(item.conjugations.present[VERB_PERSONS[index]])
+      }))
+      .filter((entry) => entry.result !== 'correct-first');
+
+    if (session.infinitive.result !== 'correct-first') {
+      const info = document.createElement('p');
+      info.className = 'session-summary';
+      info.textContent = `Infinitive: ${formatAnswerSpec(item.src)} (${session.infinitive.result ?? 'missed'})`;
+      recap.append(info);
+    }
+
+    if (mistakes.length > 0) {
+      const list = document.createElement('ul');
+      list.className = 'incorrect-list';
+
+      for (const entry of mistakes) {
+        const listItem = document.createElement('li');
+        listItem.className = 'incorrect-item';
+        const attemptText = entry.attempts.length > 0 ? entry.attempts.join(' / ') : '—';
+        listItem.textContent = `${VERB_PERSON_LABELS[entry.person]}: ${entry.expected} (you answered: ${attemptText})`;
+        list.append(listItem);
+      }
+      recap.append(list);
+    }
+
+    card.append(recap);
+  }
+
+  container.append(card);
+
+  if (!sessionComplete && state.verbSession && !isVerbStepResolved(state.verbSession)) {
+    input.focus();
+  }
+}
+
 function renderSessionPanel(container: HTMLElement): void {
   const panel = document.createElement('section');
   panel.className = 'panel session-panel';
@@ -481,7 +1030,109 @@ function renderSessionPanel(container: HTMLElement): void {
   container.append(panel);
 }
 
-async function refreshReviewStats(pack: VocabPack): Promise<void> {
+function renderVerbSessionPanel(container: HTMLElement): void {
+  const panel = document.createElement('section');
+  panel.className = 'panel session-panel';
+
+  if (!state.verbSession) {
+    return;
+  }
+
+  const heading = document.createElement('span');
+  heading.className = 'panel-label';
+  heading.textContent = 'Session stats';
+
+  const summary = document.createElement('div');
+  summary.className = 'session-summary';
+  summary.textContent = `Correct: ${state.verbSession.sessionCorrect} · Incorrect: ${state.verbSession.sessionIncorrect}`;
+
+  panel.append(heading, summary);
+
+  const actions = document.createElement('div');
+  actions.className = 'session-actions';
+
+  if (state.verbSession.sessionComplete) {
+    const doneMessage = document.createElement('p');
+    doneMessage.className = 'session-complete';
+    doneMessage.textContent = 'Session complete! Want to try the misses again or start fresh?';
+    panel.append(doneMessage);
+  }
+
+  const toggleButton = document.createElement('button');
+  toggleButton.type = 'button';
+  toggleButton.textContent = state.showIncorrect ? 'Hide incorrect verbs' : 'Show incorrect verbs';
+  toggleButton.disabled = state.verbSession.incorrectItems.length === 0;
+  toggleButton.addEventListener('click', () => {
+    setState({ showIncorrect: !state.showIncorrect });
+  });
+
+  const statsButton = document.createElement('button');
+  statsButton.type = 'button';
+  statsButton.textContent = state.showStats ? 'Hide progress stats' : 'Show progress stats';
+  statsButton.addEventListener('click', () => {
+    setState({ showStats: !state.showStats });
+  });
+
+  const redoButton = document.createElement('button');
+  redoButton.type = 'button';
+  redoButton.textContent = 'Redo incorrect';
+  redoButton.disabled = state.verbSession.incorrectItems.length === 0;
+  redoButton.addEventListener('click', () => {
+    redoIncorrectSession();
+  });
+
+  const newSessionButton = document.createElement('button');
+  newSessionButton.type = 'button';
+  newSessionButton.textContent = 'Start new session';
+  newSessionButton.addEventListener('click', () => {
+    startNewSession();
+  });
+
+  actions.append(toggleButton, statsButton);
+  if (state.verbSession.sessionComplete) {
+    actions.append(redoButton, newSessionButton);
+  } else {
+    actions.append(newSessionButton);
+  }
+
+  panel.append(actions);
+
+  if (state.showIncorrect && state.verbSession.incorrectItems.length > 0) {
+    const list = document.createElement('ul');
+    list.className = 'incorrect-list';
+
+    for (const item of state.verbSession.incorrectItems) {
+      const revealed = item.personResults
+        .filter((entry) => entry.result === 'revealed')
+        .map((entry) => `${VERB_PERSON_LABELS[entry.person]}=${entry.expected}`);
+      const secondTry = item.personResults
+        .filter((entry) => entry.result === 'correct-second')
+        .map((entry) => `${VERB_PERSON_LABELS[entry.person]}=${entry.expected}`);
+
+      const listItem = document.createElement('li');
+      listItem.className = 'incorrect-item';
+      const parts = [
+        `${item.prompt} → ${item.infinitiveExpected}`,
+        `score: ${item.points}/${item.maxPoints}`,
+        `infinitive: ${formatVerbStepResult(item.infinitiveResult)}`
+      ];
+      if (revealed.length > 0) {
+        parts.push(`revealed: ${revealed.join(', ')}`);
+      }
+      if (secondTry.length > 0) {
+        parts.push(`2nd try: ${secondTry.join(', ')}`);
+      }
+      listItem.textContent = parts.join(' · ');
+      list.append(listItem);
+    }
+
+    panel.append(list);
+  }
+
+  container.append(panel);
+}
+
+async function refreshReviewStats(pack: VocabPack | VerbPack): Promise<void> {
   const token = ++statsToken;
   setState({ reviewStatsLoading: true });
   try {
@@ -506,7 +1157,7 @@ async function refreshReviewStats(pack: VocabPack): Promise<void> {
   }
 }
 
-function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
+function renderStatsPanel(container: HTMLElement, pack: VocabPack | VerbPack): void {
   const panel = document.createElement('section');
   panel.className = 'panel stats-panel';
 
@@ -700,7 +1351,7 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack): void {
       }
       const itemAccuracy = stats.attempts > 0 ? Math.round((stats.correct / stats.attempts) * 100) : 0;
       return {
-        label: `${item.src} ↔ ${item.dst}`,
+        label: `${formatAnswerSpec(item.src)} ↔ ${item.dst}`,
         attempts: stats.attempts,
         accuracy: itemAccuracy
       };
@@ -749,17 +1400,18 @@ function render(): void {
 
   const subtitle = document.createElement('p');
   subtitle.className = 'app-subtitle';
-  subtitle.textContent = 'Pick a phrase pack and practice translating into Italian.';
+  subtitle.textContent = 'Practice vocabulary and verb conjugations with focused daily drills.';
 
   header.append(title, subtitle);
   container.append(header);
 
+  renderModeSelector(container);
   renderPackSelector(container);
 
   if (state.loading) {
     const loading = document.createElement('p');
     loading.className = 'status loading';
-    loading.textContent = 'Loading phrase pack…';
+    loading.textContent = state.mode === 'verbs' ? 'Loading verb pack…' : 'Loading phrase pack…';
     container.append(loading);
   }
 
@@ -770,17 +1422,34 @@ function render(): void {
     container.append(error);
   }
 
-  if (state.pack && !state.loading) {
-    renderDrillCard(container, state.pack);
-    renderSessionPanel(container);
-    if (state.showStats) {
-      renderStatsPanel(container, state.pack);
+  if (!state.loading) {
+    if (state.mode === 'vocab') {
+      if (state.pack) {
+        renderDrillCard(container, state.pack);
+        renderSessionPanel(container);
+        if (state.showStats) {
+          renderStatsPanel(container, state.pack);
+        }
+      } else {
+        const hint = document.createElement('p');
+        hint.className = 'status hint';
+        hint.textContent = 'Select a phrase pack to start a drill.';
+        container.append(hint);
+      }
+    } else if (state.mode === 'verbs') {
+      if (state.verbPack) {
+        renderVerbDrillCard(container, state.verbPack);
+        renderVerbSessionPanel(container);
+        if (state.showStats) {
+          renderStatsPanel(container, state.verbPack);
+        }
+      } else {
+        const hint = document.createElement('p');
+        hint.className = 'status hint';
+        hint.textContent = 'Select a verb pack to start a drill.';
+        container.append(hint);
+      }
     }
-  } else if (!state.loading) {
-    const hint = document.createElement('p');
-    hint.className = 'status hint';
-    hint.textContent = 'Select a phrase pack to start a drill.';
-    container.append(hint);
   }
 
   root.append(container);
