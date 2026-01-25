@@ -204,6 +204,17 @@ main.app {
   align-items: center;
 }
 
+@media (max-width: 520px) {
+  .answer-form {
+    grid-template-columns: 1fr;
+  }
+
+  .answer-form button {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
 .verb-table {
   display: flex;
   flex-direction: column;
