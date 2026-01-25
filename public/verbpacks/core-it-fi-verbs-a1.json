@@ -79,6 +79,456 @@
           "loro": "bevono"
         }
       }
+    },
+    {
+      "id": "parlare",
+      "src": "parlare",
+      "dst": "puhua",
+      "conjugations": {
+        "present": {
+          "io": "parlo",
+          "tu": "parli",
+          "luiLei": "parla",
+          "noi": "parliamo",
+          "voi": "parlate",
+          "loro": "parlano"
+        }
+      }
+    },
+    {
+      "id": "mangiare",
+      "src": "mangiare",
+      "dst": "syödä",
+      "conjugations": {
+        "present": {
+          "io": "mangio",
+          "tu": "mangi",
+          "luiLei": "mangia",
+          "noi": "mangiamo",
+          "voi": "mangiate",
+          "loro": "mangiano"
+        }
+      }
+    },
+    {
+      "id": "vivere",
+      "src": "vivere",
+      "dst": "elää",
+      "conjugations": {
+        "present": {
+          "io": "vivo",
+          "tu": "vivi",
+          "luiLei": "vive",
+          "noi": "viviamo",
+          "voi": "vivete",
+          "loro": "vivono"
+        }
+      }
+    },
+    {
+      "id": "dormire",
+      "src": "dormire",
+      "dst": "nukkua",
+      "conjugations": {
+        "present": {
+          "io": "dormo",
+          "tu": "dormi",
+          "luiLei": "dorme",
+          "noi": "dormiamo",
+          "voi": "dormite",
+          "loro": "dormono"
+        }
+      }
+    },
+    {
+      "id": "capire",
+      "src": "capire",
+      "dst": "ymmärtää",
+      "conjugations": {
+        "present": {
+          "io": "capisco",
+          "tu": "capisci",
+          "luiLei": "capisce",
+          "noi": "capiamo",
+          "voi": "capite",
+          "loro": "capiscono"
+        }
+      }
+    },
+    {
+      "id": "finire",
+      "src": "finire",
+      "dst": "lopettaa",
+      "conjugations": {
+        "present": {
+          "io": "finisco",
+          "tu": "finisci",
+          "luiLei": "finisce",
+          "noi": "finiamo",
+          "voi": "finite",
+          "loro": "finiscono"
+        }
+      }
+    },
+    {
+      "id": "preferire",
+      "src": "preferire",
+      "dst": "pitää enemmän",
+      "conjugations": {
+        "present": {
+          "io": "preferisco",
+          "tu": "preferisci",
+          "luiLei": "preferisce",
+          "noi": "preferiamo",
+          "voi": "preferite",
+          "loro": "preferiscono"
+        }
+      }
+    },
+    {
+      "id": "partire",
+      "src": "partire",
+      "dst": "lähteä",
+      "conjugations": {
+        "present": {
+          "io": "parto",
+          "tu": "parti",
+          "luiLei": "parte",
+          "noi": "partiamo",
+          "voi": "partite",
+          "loro": "partono"
+        }
+      }
+    },
+    {
+      "id": "venire",
+      "src": "venire",
+      "dst": "tulla",
+      "conjugations": {
+        "present": {
+          "io": "vengo",
+          "tu": "vieni",
+          "luiLei": "viene",
+          "noi": "veniamo",
+          "voi": "venite",
+          "loro": "vengono"
+        }
+      }
+    },
+    {
+      "id": "stare",
+      "src": "stare",
+      "dst": "olla (sijaita/voida)",
+      "conjugations": {
+        "present": {
+          "io": "sto",
+          "tu": "stai",
+          "luiLei": "sta",
+          "noi": "stiamo",
+          "voi": "state",
+          "loro": "stanno"
+        }
+      }
+    },
+    {
+      "id": "dare",
+      "src": "dare",
+      "dst": "antaa",
+      "conjugations": {
+        "present": {
+          "io": "do",
+          "tu": "dai",
+          "luiLei": "dà",
+          "noi": "diamo",
+          "voi": "date",
+          "loro": "danno"
+        }
+      }
+    },
+    {
+      "id": "dire",
+      "src": "dire",
+      "dst": "sanoa",
+      "conjugations": {
+        "present": {
+          "io": "dico",
+          "tu": "dici",
+          "luiLei": "dice",
+          "noi": "diciamo",
+          "voi": "dite",
+          "loro": "dicono"
+        }
+      }
+    },
+    {
+      "id": "vedere",
+      "src": "vedere",
+      "dst": "nähdä",
+      "conjugations": {
+        "present": {
+          "io": "vedo",
+          "tu": "vedi",
+          "luiLei": "vede",
+          "noi": "vediamo",
+          "voi": "vedete",
+          "loro": "vedono"
+        }
+      }
+    },
+    {
+      "id": "sapere",
+      "src": "sapere",
+      "dst": "tietää",
+      "conjugations": {
+        "present": {
+          "io": "so",
+          "tu": "sai",
+          "luiLei": "sa",
+          "noi": "sappiamo",
+          "voi": "sapete",
+          "loro": "sanno"
+        }
+      }
+    },
+    {
+      "id": "potere",
+      "src": "potere",
+      "dst": "voida",
+      "conjugations": {
+        "present": {
+          "io": "posso",
+          "tu": "puoi",
+          "luiLei": "può",
+          "noi": "possiamo",
+          "voi": "potete",
+          "loro": "possono"
+        }
+      }
+    },
+    {
+      "id": "dovere",
+      "src": "dovere",
+      "dst": "täytyä",
+      "conjugations": {
+        "present": {
+          "io": "devo",
+          "tu": "devi",
+          "luiLei": "deve",
+          "noi": "dobbiamo",
+          "voi": "dovete",
+          "loro": "devono"
+        }
+      }
+    },
+    {
+      "id": "volere",
+      "src": "volere",
+      "dst": "haluta",
+      "conjugations": {
+        "present": {
+          "io": "voglio",
+          "tu": "vuoi",
+          "luiLei": "vuole",
+          "noi": "vogliamo",
+          "voi": "volete",
+          "loro": "vogliono"
+        }
+      }
+    },
+    {
+      "id": "prendere",
+      "src": "prendere",
+      "dst": "ottaa",
+      "conjugations": {
+        "present": {
+          "io": "prendo",
+          "tu": "prendi",
+          "luiLei": "prende",
+          "noi": "prendiamo",
+          "voi": "prendete",
+          "loro": "prendono"
+        }
+      }
+    },
+    {
+      "id": "mettere",
+      "src": "mettere",
+      "dst": "laittaa",
+      "conjugations": {
+        "present": {
+          "io": "metto",
+          "tu": "metti",
+          "luiLei": "mette",
+          "noi": "mettiamo",
+          "voi": "mettete",
+          "loro": "mettono"
+        }
+      }
+    },
+    {
+      "id": "uscire",
+      "src": "uscire",
+      "dst": "mennä ulos",
+      "conjugations": {
+        "present": {
+          "io": "esco",
+          "tu": "esci",
+          "luiLei": "esce",
+          "noi": "usciamo",
+          "voi": "uscite",
+          "loro": "escono"
+        }
+      }
+    },
+    {
+      "id": "entrare",
+      "src": "entrare",
+      "dst": "tulla sisään",
+      "conjugations": {
+        "present": {
+          "io": "entro",
+          "tu": "entri",
+          "luiLei": "entra",
+          "noi": "entriamo",
+          "voi": "entrate",
+          "loro": "entrano"
+        }
+      }
+    },
+    {
+      "id": "arrivare",
+      "src": "arrivare",
+      "dst": "saapua",
+      "conjugations": {
+        "present": {
+          "io": "arrivo",
+          "tu": "arrivi",
+          "luiLei": "arriva",
+          "noi": "arriviamo",
+          "voi": "arrivate",
+          "loro": "arrivano"
+        }
+      }
+    },
+    {
+      "id": "leggere",
+      "src": "leggere",
+      "dst": "lukea",
+      "conjugations": {
+        "present": {
+          "io": "leggo",
+          "tu": "leggi",
+          "luiLei": "legge",
+          "noi": "leggiamo",
+          "voi": "leggete",
+          "loro": "leggono"
+        }
+      }
+    },
+    {
+      "id": "scrivere",
+      "src": "scrivere",
+      "dst": "kirjoittaa",
+      "conjugations": {
+        "present": {
+          "io": "scrivo",
+          "tu": "scrivi",
+          "luiLei": "scrive",
+          "noi": "scriviamo",
+          "voi": "scrivete",
+          "loro": "scrivono"
+        }
+      }
+    },
+    {
+      "id": "ascoltare",
+      "src": "ascoltare",
+      "dst": "kuunnella",
+      "conjugations": {
+        "present": {
+          "io": "ascolto",
+          "tu": "ascolti",
+          "luiLei": "ascolta",
+          "noi": "ascoltiamo",
+          "voi": "ascoltate",
+          "loro": "ascoltano"
+        }
+      }
+    },
+    {
+      "id": "comprare",
+      "src": "comprare",
+      "dst": "ostaa",
+      "conjugations": {
+        "present": {
+          "io": "compro",
+          "tu": "compri",
+          "luiLei": "compra",
+          "noi": "compriamo",
+          "voi": "comprate",
+          "loro": "comprano"
+        }
+      }
+    },
+    {
+      "id": "pensare",
+      "src": "pensare",
+      "dst": "ajatella",
+      "conjugations": {
+        "present": {
+          "io": "penso",
+          "tu": "pensi",
+          "luiLei": "pensa",
+          "noi": "pensiamo",
+          "voi": "pensate",
+          "loro": "pensano"
+        }
+      }
+    },
+    {
+      "id": "lavorare",
+      "src": "lavorare",
+      "dst": "työskennellä",
+      "conjugations": {
+        "present": {
+          "io": "lavoro",
+          "tu": "lavori",
+          "luiLei": "lavora",
+          "noi": "lavoriamo",
+          "voi": "lavorate",
+          "loro": "lavorano"
+        }
+      }
+    },
+    {
+      "id": "studiare",
+      "src": "studiare",
+      "dst": "opiskella",
+      "conjugations": {
+        "present": {
+          "io": "studio",
+          "tu": "studi",
+          "luiLei": "studia",
+          "noi": "studiamo",
+          "voi": "studiate",
+          "loro": "studiano"
+        }
+      }
+    },
+    {
+      "id": "chiamare",
+      "src": "chiamare",
+      "dst": "kutsua; soittaa",
+      "conjugations": {
+        "present": {
+          "io": "chiamo",
+          "tu": "chiami",
+          "luiLei": "chiama",
+          "noi": "chiamiamo",
+          "voi": "chiamate",
+          "loro": "chiamano"
+        }
+      }
     }
   ]
 }
