@@ -529,6 +529,231 @@
           "loro": "chiamano"
         }
       }
+    },
+    {
+      "id": "conoscere",
+      "src": "conoscere",
+      "dst": "tuntea",
+      "conjugations": {
+        "present": {
+          "io": "conosco",
+          "tu": "conosci",
+          "luiLei": "conosce",
+          "noi": "conosciamo",
+          "voi": "conoscete",
+          "loro": "conoscono"
+        }
+      }
+    },
+    {
+      "id": "scegliere",
+      "src": "scegliere",
+      "dst": "valita",
+      "conjugations": {
+        "present": {
+          "io": "scelgo",
+          "tu": "scegli",
+          "luiLei": "sceglie",
+          "noi": "scegliamo",
+          "voi": "scegliete",
+          "loro": "scelgono"
+        }
+      }
+    },
+    {
+      "id": "tenere",
+      "src": "tenere",
+      "dst": "pitää (kädessä)",
+      "conjugations": {
+        "present": {
+          "io": "tengo",
+          "tu": "tieni",
+          "luiLei": "tiene",
+          "noi": "teniamo",
+          "voi": "tenete",
+          "loro": "tengono"
+        }
+      }
+    },
+    {
+      "id": "togliere",
+      "src": "togliere",
+      "dst": "ottaa pois",
+      "conjugations": {
+        "present": {
+          "io": "tolgo",
+          "tu": "togli",
+          "luiLei": "toglie",
+          "noi": "togliamo",
+          "voi": "togliete",
+          "loro": "tolgono"
+        }
+      }
+    },
+    {
+      "id": "piacere",
+      "src": "piacere",
+      "dst": "miellyttää; tykätä",
+      "conjugations": {
+        "present": {
+          "io": "piaccio",
+          "tu": "piaci",
+          "luiLei": "piace",
+          "noi": "piacciamo",
+          "voi": "piacete",
+          "loro": "piacciono"
+        }
+      }
+    },
+    {
+      "id": "morire",
+      "src": "morire",
+      "dst": "kuolla",
+      "conjugations": {
+        "present": {
+          "io": "muoio",
+          "tu": "muori",
+          "luiLei": "muore",
+          "noi": "moriamo",
+          "voi": "morite",
+          "loro": "muoiono"
+        }
+      }
+    },
+    {
+      "id": "nascere",
+      "src": "nascere",
+      "dst": "syntyä",
+      "conjugations": {
+        "present": {
+          "io": "nasco",
+          "tu": "nasci",
+          "luiLei": "nasce",
+          "noi": "nasciamo",
+          "voi": "nascete",
+          "loro": "nascono"
+        }
+      }
+    },
+    {
+      "id": "porre",
+      "src": "porre",
+      "dst": "asettaa",
+      "conjugations": {
+        "present": {
+          "io": "pongo",
+          "tu": "poni",
+          "luiLei": "pone",
+          "noi": "poniamo",
+          "voi": "ponete",
+          "loro": "pongono"
+        }
+      }
+    },
+    {
+      "id": "trarre",
+      "src": "trarre",
+      "dst": "vetää",
+      "conjugations": {
+        "present": {
+          "io": "traggo",
+          "tu": "trai",
+          "luiLei": "trae",
+          "noi": "traiamo",
+          "voi": "traete",
+          "loro": "traggono"
+        }
+      }
+    },
+    {
+      "id": "tradurre",
+      "src": "tradurre",
+      "dst": "kääntää",
+      "conjugations": {
+        "present": {
+          "io": "traduco",
+          "tu": "traduci",
+          "luiLei": "traduce",
+          "noi": "traduciamo",
+          "voi": "traducete",
+          "loro": "traducono"
+        }
+      }
+    },
+    {
+      "id": "produrre",
+      "src": "produrre",
+      "dst": "tuottaa",
+      "conjugations": {
+        "present": {
+          "io": "produco",
+          "tu": "produci",
+          "luiLei": "produce",
+          "noi": "produciamo",
+          "voi": "producete",
+          "loro": "producono"
+        }
+      }
+    },
+    {
+      "id": "valere",
+      "src": "valere",
+      "dst": "olla arvoinen",
+      "conjugations": {
+        "present": {
+          "io": "valgo",
+          "tu": "vali",
+          "luiLei": "vale",
+          "noi": "valiamo",
+          "voi": "valete",
+          "loro": "valgono"
+        }
+      }
+    },
+    {
+      "id": "salire",
+      "src": "salire",
+      "dst": "nousta",
+      "conjugations": {
+        "present": {
+          "io": "salgo",
+          "tu": "sali",
+          "luiLei": "sale",
+          "noi": "saliamo",
+          "voi": "salite",
+          "loro": "salgono"
+        }
+      }
+    },
+    {
+      "id": "rimanere",
+      "src": "rimanere",
+      "dst": "jäädä",
+      "conjugations": {
+        "present": {
+          "io": "rimango",
+          "tu": "rimani",
+          "luiLei": "rimane",
+          "noi": "rimaniamo",
+          "voi": "rimanete",
+          "loro": "rimangono"
+        }
+      }
+    },
+    {
+      "id": "raccogliere",
+      "src": "raccogliere",
+      "dst": "kerätä; poimia",
+      "conjugations": {
+        "present": {
+          "io": "raccolgo",
+          "tu": "raccogli",
+          "luiLei": "raccoglie",
+          "noi": "raccogliamo",
+          "voi": "raccogliete",
+          "loro": "raccolgono"
+        }
+      }
     }
   ]
 }
