@@ -18,49 +18,49 @@ accepting "io sono" in addition to "sono" if the pack provides it).
    - After the infinitive is resolved (correct or revealed), keep the correct infinitive visible during conjugation.
 
 2. Conjugation phase (present indicative):
-   - Prompt sequentially, one person at a time (mobile-friendly):
+   - Show all six persons at once with six inputs:
      - io, tu, lui/lei, noi, voi, loro
    - User inputs verb form only (e.g. "sono", not "io sono").
-   - For each person, allow up to 2 attempts:
-     - Correct on attempt 1: mark that person correct.
-     - Correct on attempt 2: mark correct-with-penalty (see Scoring).
-     - Wrong after attempt 2: reveal the correct form and mark incorrect.
+   - Each input supports up to 2 attempts:
+     - Attempt 1: if wrong, show "Try again" for that row.
+     - Attempt 2: if wrong, reveal the correct form in that row.
+   - The user can complete rows in any order; each row is independently resolved.
 
 3. Card completion:
    - Show a recap for the verb:
      - Infinitive correctness (1st try / 2nd try / revealed)
      - Conjugation score (e.g. "4 / 6 correct, 1 on 2nd try")
      - Total points (e.g. "5.5 / 7 points")
-     - Optionally a compact table of user answers vs expected.
+     - Conjugation table stays visible with both user answers and correct answers.
    - Then allow moving to the next verb.
 
-## Interaction Rules (Step State Machine)
+## Interaction Rules (Infinitive + Per-Row State)
 
-Each verb card is a sequence of steps. Each step is answerable until it becomes resolved.
+Infinitive is a single step; conjugation uses six independent rows.
 
-Steps:
-- Infinitive step.
-- 6 person steps: io, tu, lui/lei, noi, voi, loro.
-- Recap step (no input).
+Infinitive step:
+- Two attempts, same behavior as before (correct-first / correct-second / revealed).
+- After it resolves, show the correct infinitive and enable conjugation inputs.
 
-For an answerable step:
+Conjugation rows:
+- Each person has a row with its own input, feedback, and result state.
 - Attempt 1:
-  - If correct: resolve the step as "correct-first".
-  - If wrong: show "Not quite. Try again." and stay on the same step (attempt 2).
+  - If correct: resolve row as "correct-first".
+  - If wrong: show "Try again" for that row and keep it editable.
 - Attempt 2:
-  - If correct: resolve as "correct-second".
-  - If wrong: resolve as "revealed" and show the correct answer.
+  - If correct: resolve row as "correct-second".
+  - If wrong: resolve row as "revealed" and show the correct form.
 
 Controls / enabled state:
-- While the current step is unresolved:
-  - input: editable
-  - "Check": enabled only when input is non-empty
-  - "Next": disabled
-- After the current step resolves:
-  - input: read-only (or cleared + disabled)
-  - "Check": disabled
-  - "Next": enabled
-  - Enter key activates "Next" (matching the existing drill behavior).
+- Infinitive:
+  - Single "Check" button for the infinitive step.
+  - "Next verb" disabled until all six conjugation rows are resolved.
+- Conjugation rows:
+  - Each row has its own "Check" button (or a single "Check all" that evaluates only unresolved rows).
+  - Resolved rows become read-only and show the expected form.
+- Enter key:
+  - While editing a row, Enter triggers that row's check.
+  - When all rows resolve, Enter can activate "Next verb".
 
 ## Data Model (Separate Verb Packs)
 
@@ -188,7 +188,7 @@ Rationale:
 For "Redo incorrect", include verbs where the final verb result is incorrect, i.e. `correct === false`
 (equivalently `quality < 3`).
 
-## UI Plan (Minimal changes, step-by-step prompts)
+## UI Plan (All Six Forms Visible)
 
 Add a new drill mode selector:
 - "Vocabulary translation" (existing)
@@ -201,15 +201,15 @@ Pack selection:
   2) a single dropdown with grouped options (phrases vs verbs).
 
 Verb drill UI elements:
-- Prompt header: meaning (dst) + optionally show infinitive once revealed/answered.
-- Input box (single) reused for infinitive and each person prompt.
-- Person label when in conjugation phase (e.g. "tu").
-- Attempt indicator (e.g. "Attempt 1/2") for current prompt.
-- Feedback after each submission and on reveal.
-- Recap panel after completing 6 persons:
-  - Show earned points and a short list/table of any mistakes.
+- Prompt header: meaning (dst) + infinitive (hidden until resolved).
+- Infinitive input section with 2-attempt feedback.
+- Conjugation table with six rows:
+  - Columns: person label, input, feedback, correct answer (revealed after resolution).
+  - Each row shows its own attempt status.
+- Recap panel after all six rows resolve:
   - Show conjugation summary: "X/6 correct" and "Y correct on 2nd try".
   - Show total summary: "P/7 points" (ties to SRS quality mapping).
+  - Keep the full conjugation table visible for pattern learning.
 
 Keyboard behavior:
 - Keep the existing "Enter advances when the step is already checked" behavior, adapted for step-by-step prompts.
