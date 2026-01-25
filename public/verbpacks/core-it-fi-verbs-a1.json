@@ -1,0 +1,84 @@
+{
+  "type": "verbs",
+  "id": "core-it-fi-verbs-a1",
+  "title": "Core Verbs A1 — Italian⇄Finnish",
+  "src": "it",
+  "dst": "fi",
+  "items": [
+    {
+      "id": "essere",
+      "src": ["essere", "esser"],
+      "dst": "olla",
+      "conjugations": {
+        "present": {
+          "io": ["sono", "io sono"],
+          "tu": "sei",
+          "luiLei": "è",
+          "noi": "siamo",
+          "voi": "siete",
+          "loro": "sono"
+        }
+      }
+    },
+    {
+      "id": "avere",
+      "src": "avere",
+      "dst": "olla (omistaa)",
+      "conjugations": {
+        "present": {
+          "io": "ho",
+          "tu": "hai",
+          "luiLei": "ha",
+          "noi": "abbiamo",
+          "voi": "avete",
+          "loro": "hanno"
+        }
+      }
+    },
+    {
+      "id": "andare",
+      "src": "andare",
+      "dst": "mennä",
+      "conjugations": {
+        "present": {
+          "io": "vado",
+          "tu": "vai",
+          "luiLei": "va",
+          "noi": "andiamo",
+          "voi": "andate",
+          "loro": "vanno"
+        }
+      }
+    },
+    {
+      "id": "fare",
+      "src": "fare",
+      "dst": "tehdä",
+      "conjugations": {
+        "present": {
+          "io": "faccio",
+          "tu": "fai",
+          "luiLei": "fa",
+          "noi": "facciamo",
+          "voi": "fate",
+          "loro": "fanno"
+        }
+      }
+    },
+    {
+      "id": "bere",
+      "src": "bere",
+      "dst": "juoda",
+      "conjugations": {
+        "present": {
+          "io": "bevo",
+          "tu": "bevi",
+          "luiLei": "beve",
+          "noi": "beviamo",
+          "voi": "bevete",
+          "loro": "bevono"
+        }
+      }
+    }
+  ]
+}
