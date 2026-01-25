@@ -4,6 +4,8 @@ Goal: add an offline-only drill mode to practice Italian verb conjugations, keep
 `/src/logic` with unit-first tests.
 
 This plan targets v1: present indicative, 6 persons (io/tu/lui|lei/noi/voi/loro), verb-form-only input.
+Optionally, each expected answer may include multiple accepted variants (e.g. alternative conjugations, or
+accepting "io sono" in addition to "sono" if the pack provides it).
 
 ## User Flow (One Verb Card)
 
@@ -13,6 +15,7 @@ This plan targets v1: present indicative, 6 persons (io/tu/lui|lei/noi/voi/loro)
    - Allow up to 2 attempts:
      - If correct on attempt 1 or 2: proceed to conjugation phase.
      - If still wrong after attempt 2: reveal the correct infinitive and proceed to conjugation anyway.
+   - After the infinitive is resolved (correct or revealed), keep the correct infinitive visible during conjugation.
 
 2. Conjugation phase (present indicative):
    - Prompt sequentially, one person at a time (mobile-friendly):
@@ -26,9 +29,38 @@ This plan targets v1: present indicative, 6 persons (io/tu/lui|lei/noi/voi/loro)
 3. Card completion:
    - Show a recap for the verb:
      - Infinitive correctness (1st try / 2nd try / revealed)
-     - Conjugation score (e.g. "4.5 / 6")
+     - Conjugation score (e.g. "4 / 6 correct, 1 on 2nd try")
+     - Total points (e.g. "5.5 / 7 points")
      - Optionally a compact table of user answers vs expected.
    - Then allow moving to the next verb.
+
+## Interaction Rules (Step State Machine)
+
+Each verb card is a sequence of steps. Each step is answerable until it becomes resolved.
+
+Steps:
+- Infinitive step.
+- 6 person steps: io, tu, lui/lei, noi, voi, loro.
+- Recap step (no input).
+
+For an answerable step:
+- Attempt 1:
+  - If correct: resolve the step as "correct-first".
+  - If wrong: show "Not quite. Try again." and stay on the same step (attempt 2).
+- Attempt 2:
+  - If correct: resolve as "correct-second".
+  - If wrong: resolve as "revealed" and show the correct answer.
+
+Controls / enabled state:
+- While the current step is unresolved:
+  - input: editable
+  - "Check": enabled only when input is non-empty
+  - "Next": disabled
+- After the current step resolves:
+  - input: read-only (or cleared + disabled)
+  - "Check": disabled
+  - "Next": enabled
+  - Enter key activates "Next" (matching the existing drill behavior).
 
 ## Data Model (Separate Verb Packs)
 
@@ -54,9 +86,9 @@ Example (illustrative):
       "dst": "olla",
       "conjugations": {
         "present": {
-          "io": "sono",
+          "io": ["sono", "io sono"],
           "tu": "sei",
-          "luiLei": "e",
+          "luiLei": "è",
           "noi": "siamo",
           "voi": "siete",
           "loro": "sono"
@@ -70,14 +102,17 @@ Example (illustrative):
 Notes:
 - `src` is always Italian infinitive in v1.
 - `dst` is the user language translation (Finnish/Swedish).
-- Conjugations are explicit strings; answer matching uses the existing normalization rules.
+- Conjugations are explicit strings; a field may also be a string array to represent accepted variants.
+- If a field is a string array, the first entry is the canonical display form; all entries are accepted.
+- Answer matching uses the existing normalization rules (case/accents/punctuation-insensitive).
 
 ### TypeScript types (conceptual)
 
 - Add new types in `src/types.ts`:
+  - `AnswerSpec = string | string[]`
   - `VerbPerson = 'io' | 'tu' | 'luiLei' | 'noi' | 'voi' | 'loro'`
-  - `VerbConjugationTable = Record<VerbPerson, string>`
-  - `VerbItem { id, src, dst, conjugations: { present: VerbConjugationTable } }`
+  - `VerbConjugationTable = Record<VerbPerson, AnswerSpec>`
+  - `VerbItem { id, src: AnswerSpec, dst: string, conjugations: { present: VerbConjugationTable } }`
   - `VerbPack { type:'verbs', id, title, src, dst, items: VerbItem[] }`
 
 ## Business Logic (Strict /src/logic boundary)
@@ -86,14 +121,17 @@ Create a dedicated logic module, e.g. `src/logic/verbSession.ts`:
 - No DOM, no IndexedDB, no framework types.
 - Pure functions + serializable state, similar to `src/logic/session.ts`.
 - Use `src/logic/answerCheck.ts` (`isAnswerCorrect`) for comparisons.
+- Add a small helper that supports variants:
+  - `isAnswerCorrectSpec(expected: AnswerSpec, actual: string): boolean` which returns true if any accepted
+    expected variant matches `actual` using `isAnswerCorrect`.
 
 ### Session state (conceptual)
 
 Track:
 - Pack id, order, current verb index
-- Phase: `infinitive` -> `conjugation` -> `doneForVerb`
+- Phase: `infinitive` -> `conjugation` -> `recap`
 - For current verb:
-  - `infinitive`: attempts (0..2), answer(s), result (correct first/second/revealed)
+  - `infinitive`: attempts (0..2), answer(s), result (correct-first/correct-second/revealed)
   - `conjugation`: current person index (0..5), attempts (0..2), answers, per-person result
 - Aggregates:
   - `sessionCorrect`, `sessionIncorrect` (card-level; see Scoring + SRS mapping)
@@ -145,6 +183,11 @@ Rationale:
 - Keeps storage unchanged and deterministic.
 - Gives partial credit scheduling effects without tracking 6 separate SRS cards per verb.
 
+### Redo incorrect policy
+
+For "Redo incorrect", include verbs where the final verb result is incorrect, i.e. `correct === false`
+(equivalently `quality < 3`).
+
 ## UI Plan (Minimal changes, step-by-step prompts)
 
 Add a new drill mode selector:
@@ -165,6 +208,8 @@ Verb drill UI elements:
 - Feedback after each submission and on reveal.
 - Recap panel after completing 6 persons:
   - Show earned points and a short list/table of any mistakes.
+  - Show conjugation summary: "X/6 correct" and "Y correct on 2nd try".
+  - Show total summary: "P/7 points" (ties to SRS quality mapping).
 
 Keyboard behavior:
 - Keep the existing "Enter advances when the step is already checked" behavior, adapted for step-by-step prompts.
@@ -185,8 +230,10 @@ Unit-first (Vitest, no DOM):
   - infinitive: 2-attempt behavior + reveal + proceeds to conjugation
   - conjugation: 2-attempt behavior per person + reveal
   - scoring: earnedPoints and quality mapping for key cases (all first-try, all second-try, mixed, all revealed)
-  - redoIncorrect verb-level behavior
+  - redoIncorrect verb-level behavior (quality < 3)
+  - variants: accepts any variant in `AnswerSpec` (string array)
   - normalization (accents/case/punctuation) on conjugations
+  - Data for unit tests is an in-memory `VerbPack` constant inside the test file (no JSON required).
 
 Minimal e2e (Playwright):
 - Add one happy-path test:
@@ -194,6 +241,7 @@ Minimal e2e (Playwright):
   - answer infinitive correctly
   - answer 6 present forms with at least one second-attempt correction
   - verify recap shows partial score and the session advances
+  - E2E uses a small real `public/verbpacks/*.json` file and adds it to the verb pack list in `src/data/verbpacks.ts`.
 
 ## Implementation Checklist (Later)
 
@@ -209,4 +257,3 @@ Minimal e2e (Playwright):
    - Add `tests/e2e/verbs.spec.ts`.
 6) Add initial verb pack JSON:
    - Include at least 5 verbs, including irregulars (e.g. essere, avere, andare).
-
