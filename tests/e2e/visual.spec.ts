@@ -31,8 +31,37 @@ async function openVerbConjugation(page: import('@playwright/test').Page): Promi
   await expect(page.locator('.verb-row input[data-verb-person=\"io\"]')).toBeEnabled();
 }
 
+async function openHome(page: import('@playwright/test').Page): Promise<void> {
+  await page.goto('/');
+  await expect(page.getByText('Italian Language Trainer', { exact: true })).toBeVisible();
+}
+
+async function openVocabDrill(page: import('@playwright/test').Page): Promise<void> {
+  await page.goto('/');
+  await page.getByText('Vocabulary', { exact: true }).click();
+  await page.selectOption('#pack-select', 'core-it-fi-a1');
+  await page.getByText('moi / hei', { exact: false }).first().waitFor();
+  await expect(page.locator('.answer-input')).toBeVisible();
+}
+
 test.describe('visual regression', () => {
   test.use({ colorScheme: 'light' });
+
+  test('home (desktop)', async ({ page }) => {
+    await prepareStablePage(page);
+    await openHome(page);
+
+    const app = page.locator('main.app');
+    await expect(app).toHaveScreenshot('home-desktop.png');
+  });
+
+  test('vocab drill (desktop)', async ({ page }) => {
+    await prepareStablePage(page);
+    await openVocabDrill(page);
+
+    const card = page.locator('.drill-card').first();
+    await expect(card).toHaveScreenshot('vocab-drill-desktop.png');
+  });
 
   test('verb conjugation layout (desktop)', async ({ page }) => {
     await prepareStablePage(page);
@@ -49,6 +78,22 @@ test.describe('visual regression', () => {
       isMobile: true,
       hasTouch: true,
       colorScheme: 'light'
+    });
+
+    test('home (mobile)', async ({ page }) => {
+      await prepareStablePage(page);
+      await openHome(page);
+
+      const app = page.locator('main.app');
+      await expect(app).toHaveScreenshot('home-mobile.png');
+    });
+
+    test('vocab drill (mobile)', async ({ page }) => {
+      await prepareStablePage(page);
+      await openVocabDrill(page);
+
+      const card = page.locator('.drill-card').first();
+      await expect(card).toHaveScreenshot('vocab-drill-mobile.png');
     });
 
     test('verb row keeps person and input inline (mobile)', async ({ page }) => {
