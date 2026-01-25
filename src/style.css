@@ -213,6 +213,7 @@ main.app {
 .verb-row {
   display: grid;
   grid-template-columns: 0.6fr minmax(0, 1.4fr) 1fr 1fr auto;
+  grid-template-areas: "person input feedback expected check";
   gap: 0.5rem;
   align-items: center;
 }
@@ -222,6 +223,7 @@ main.app {
 }
 
 .verb-person {
+  grid-area: person;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -229,10 +231,12 @@ main.app {
 }
 
 .verb-input {
+  grid-area: input;
   min-height: 2.6rem;
 }
 
 .verb-feedback {
+  grid-area: feedback;
   font-weight: 600;
   min-height: 1.2rem;
 }
@@ -246,6 +250,7 @@ main.app {
 }
 
 .verb-expected {
+  grid-area: expected;
   font-weight: 600;
   color: #111827;
 }
@@ -417,17 +422,30 @@ button.primary[disabled] {
 }
 
 .verb-row button {
+  grid-area: check;
   width: 100%;
 }
 
 @media (max-width: 720px) {
   .verb-row {
-    grid-template-columns: 1fr;
-    gap: 0.4rem;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "person input check"
+      "feedback feedback feedback"
+      "expected expected expected";
+    gap: 0.35rem 0.5rem;
   }
 
   .verb-person {
     font-size: 0.8rem;
+  }
+
+  .verb-row button {
+    width: auto;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    justify-self: end;
   }
 }
 
