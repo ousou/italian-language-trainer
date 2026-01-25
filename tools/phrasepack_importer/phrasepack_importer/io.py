@@ -22,16 +22,21 @@ class RepoRootNotFoundError(RuntimeError):
 
 
 def detect_repo_root() -> Path:
-    """Find the repository root by locating public/phrasepacks.
+    """Find the repository root by locating the app public/phrasepacks.
 
-    The CLI is often run from tools/phrasepack_importer/, so relative paths
-    would otherwise end up under tools/ by accident.
+    The tools directory also has a public/phrasepacks folder for fixtures,
+    so we first prefer a directory that looks like the app root.
     """
     for start in [Path.cwd(), Path(__file__).resolve()]:
         for parent in [start, *start.parents]:
+            if (parent / "package.json").is_file() and (parent / "public" / "phrasepacks").is_dir():
+                return parent
+        for parent in [start, *start.parents]:
             if (parent / "public" / "phrasepacks").is_dir():
                 return parent
-    raise RepoRootNotFoundError("Could not locate repo root (public/phrasepacks not found).")
+    raise RepoRootNotFoundError(
+        "Could not locate repo root (public/phrasepacks not found)."
+    )
 
 
 def default_phrasepack_output_path(pack_id: str) -> Path:
