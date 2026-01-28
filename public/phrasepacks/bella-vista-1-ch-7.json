@@ -284,6 +284,41 @@
       "id": "chiedere",
       "src": "chiedere",
       "dst": "kysyä neuvoa"
+    },
+    {
+      "id": "a-che-ora-ci-vediamo",
+      "src": "A che ora ci vediamo?",
+      "dst": "Moneltako tapaamme?"
+    },
+    {
+      "id": "anche-a-me-va-tutto-bene",
+      "src": "Anche a me va tutto bene.",
+      "dst": "Minullekin kuuluu hyvää."
+    },
+    {
+      "id": "fare-una-passeggiata",
+      "src": "fare una passeggiata",
+      "dst": "käydä kävelyllä"
+    },
+    {
+      "id": "esce-di-casa",
+      "src": "esce di casa",
+      "dst": "hän lähtee kotoa"
+    },
+    {
+      "id": "facciamo-alle-undici",
+      "src": "Facciamo alle undici?",
+      "dst": "Sovitaanko kello yhdeltätoista?"
+    },
+    {
+      "id": "come-si-arriva",
+      "src": "Come si arriva al Colosseo...?",
+      "dst": "Miten Colosseumille pääsee...?"
+    },
+    {
+      "id": "prendere-la-seconda",
+      "src": "prendere la seconda traversa",
+      "dst": "kääntyä toiselle poikkikadulle"
     }
   ]
 }
