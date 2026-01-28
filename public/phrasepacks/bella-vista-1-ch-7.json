@@ -123,6 +123,11 @@
     {
       "id": "da-via-andrea-doria",
       "src": "da via Andrea Doria",
+      "dst": "Andrea Dorian kautta"
+    },
+    {
+      "id": "da",
+      "src": "da",
       "dst": "jostakin (prep.)"
     },
     {
@@ -247,7 +252,7 @@
     },
     {
       "id": "l-aiuto",
-      "src": "l' aiuto",
+      "src": "l'aiuto",
       "dst": "apu"
     },
     {
