@@ -7,6 +7,10 @@
 - **Unit-first testing**: business logic has dedicated unit tests without mocks or DOM.
 - **Minimal e2e**: keep end-to-end tests lean and only for critical flows.
 
+## Implementing specs
+
+The user may ask you to implement a spec from a file. In that case, read the file specs/HOW_TO_IMPLEMENT.md for information on how to do this.
+
 ## Additional Guidance
 
 - Keep `/src/logic` as a strict boundary: no DOM, no storage adapters, no framework types.
