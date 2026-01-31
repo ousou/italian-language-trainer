@@ -3,13 +3,26 @@ import type { AnswerSpec, DrillDirection, LanguageCode, VocabPack, VerbPack } fr
 import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
 import { AVAILABLE_VERBPACKS, fetchVerbPack } from './data/verbpacks.ts';
 import {
+  listAllReviewCards,
+  listAllReviewEvents,
   listReviewCardsByPack,
   listReviewCardsByPackAndDirection,
   listReviewEventsByPackSince,
   recordReviewResult
 } from './data/reviewStore.ts';
 import type { ReviewCard } from './logic/review.ts';
-import { buildDailyAttemptCounts, startOfLocalDay, type DailyAttemptCount } from './logic/reviewEvents.ts';
+import {
+  buildDailyAttemptCounts,
+  startOfLocalDay,
+  type DailyAttemptCount,
+  type ReviewEvent
+} from './logic/reviewEvents.ts';
+import {
+  buildHistorySummary,
+  buildPackSummaries,
+  type HistorySummary,
+  type PackHistorySummary
+} from './logic/history.ts';
 import { buildSrsOrder } from './logic/srs.ts';
 import {
   createVerbSession,
@@ -32,6 +45,7 @@ import {
 } from './logic/session.ts';
 
 interface AppState {
+  view: 'practice' | 'history';
   mode: 'vocab' | 'verbs';
   packId?: string;
   pack?: VocabPack;
@@ -49,6 +63,15 @@ interface AppState {
   statsDays: number;
   showItemStats: boolean;
   reviewStatsLoading: boolean;
+  historyPackId: string;
+  historyCards: ReviewCard[];
+  historyEvents: ReviewEvent[];
+  historyDailyAttempts: DailyAttemptCount[];
+  historyStatsDays: number;
+  historySummary?: HistorySummary;
+  historyPackSummaries: PackHistorySummary[];
+  historyLoading: boolean;
+  historyError?: string;
 }
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
@@ -72,6 +95,7 @@ const VERB_PERSON_LABELS: Record<typeof VERB_PERSONS[number], string> = {
 };
 
 const state: AppState = {
+  view: 'practice',
   mode: 'vocab',
   packId: undefined,
   pack: undefined,
@@ -88,7 +112,16 @@ const state: AppState = {
   dailyAttempts: [],
   statsDays: 7,
   showItemStats: false,
-  reviewStatsLoading: false
+  reviewStatsLoading: false,
+  historyPackId: 'all',
+  historyCards: [],
+  historyEvents: [],
+  historyDailyAttempts: [],
+  historyStatsDays: 30,
+  historySummary: undefined,
+  historyPackSummaries: [],
+  historyLoading: false,
+  historyError: undefined
 };
 
 let loadToken = 0;
@@ -96,6 +129,7 @@ let verbLoadToken = 0;
 let statsToken = 0;
 let sessionToken = 0;
 let verbSessionToken = 0;
+let historyToken = 0;
 let globalKeyListenerAttached = false;
 
 const rootElement = document.querySelector<HTMLDivElement>('#app');
@@ -177,6 +211,16 @@ function setMode(mode: AppState['mode']): void {
   });
 }
 
+function setView(view: AppState['view']): void {
+  if (state.view === view) {
+    return;
+  }
+  setState({ view, historyError: undefined });
+  if (view === 'history') {
+    void refreshHistoryData();
+  }
+}
+
 function formatAnswerSpec(value: AnswerSpec): string {
   if (Array.isArray(value)) {
     return value[0] ?? '';
@@ -195,6 +239,42 @@ function formatVerbStepResult(result?: VerbStepResult): string {
     return 'revealed';
   }
   return 'unanswered';
+}
+
+function formatDateLabel(timestamp?: number): string {
+  if (typeof timestamp !== 'number') {
+    return '—';
+  }
+  return new Date(timestamp).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+
+function buildPackLabelMap(): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const pack of AVAILABLE_PHRASEPACKS) {
+    map.set(pack.id, `${pack.title} (Vocab)`);
+  }
+  for (const pack of AVAILABLE_VERBPACKS) {
+    map.set(pack.id, `${pack.title} (Verbs)`);
+  }
+  return map;
+}
+
+function buildHistoryDerived(
+  cards: ReviewCard[],
+  events: ReviewEvent[],
+  packId: string,
+  statsDays: number
+): { summary: HistorySummary; dailyAttempts: DailyAttemptCount[]; packSummaries: PackHistorySummary[] } {
+  const selectedEvents = packId === 'all' ? events : events.filter((event) => event.packId === packId);
+  const selectedCards = packId === 'all' ? cards : cards.filter((card) => card.packId === packId);
+  const summary = buildHistorySummary(selectedEvents, selectedCards);
+  const dailyAttempts = buildDailyAttemptCounts(selectedEvents, Date.now(), statsDays);
+  const packSummaries = buildPackSummaries(events);
+  return { summary, dailyAttempts, packSummaries };
 }
 
 function isInfinitiveResolved(session: VerbSessionState): boolean {
@@ -471,6 +551,36 @@ function renderModeSelector(container: HTMLElement): void {
   }
 
   container.append(section);
+}
+
+function renderPrimaryNav(container: HTMLElement): void {
+  const nav = document.createElement('nav');
+  nav.className = 'panel primary-nav';
+
+  const label = document.createElement('span');
+  label.className = 'panel-label';
+  label.textContent = 'Navigate';
+
+  const buttonRow = document.createElement('div');
+  buttonRow.className = 'primary-nav-actions';
+
+  const practiceButton = document.createElement('button');
+  practiceButton.type = 'button';
+  practiceButton.textContent = 'Practice';
+  practiceButton.className = state.view === 'practice' ? 'primary is-active' : '';
+  practiceButton.setAttribute('aria-pressed', String(state.view === 'practice'));
+  practiceButton.addEventListener('click', () => setView('practice'));
+
+  const historyButton = document.createElement('button');
+  historyButton.type = 'button';
+  historyButton.textContent = 'History';
+  historyButton.className = state.view === 'history' ? 'primary is-active' : '';
+  historyButton.setAttribute('aria-pressed', String(state.view === 'history'));
+  historyButton.addEventListener('click', () => setView('history'));
+
+  buttonRow.append(practiceButton, historyButton);
+  nav.append(label, buttonRow);
+  container.append(nav);
 }
 
 function renderPackSelector(container: HTMLElement): void {
@@ -1272,6 +1382,150 @@ async function refreshReviewStats(pack: VocabPack | VerbPack): Promise<void> {
   }
 }
 
+async function refreshHistoryData(): Promise<void> {
+  const token = ++historyToken;
+  setState({ historyLoading: true, historyError: undefined });
+  try {
+    const [cards, events] = await Promise.all([listAllReviewCards(), listAllReviewEvents()]);
+    if (token !== historyToken) {
+      return;
+    }
+    const derived = buildHistoryDerived(cards, events, state.historyPackId, state.historyStatsDays);
+    setState({
+      historyCards: cards,
+      historyEvents: events,
+      historySummary: derived.summary,
+      historyDailyAttempts: derived.dailyAttempts,
+      historyPackSummaries: derived.packSummaries,
+      historyLoading: false
+    });
+  } catch (error) {
+    if (token !== historyToken) {
+      return;
+    }
+    const message = error instanceof Error ? error.message : 'Unable to load history.';
+    setState({ historyLoading: false, historyError: message });
+  }
+}
+
+function applyHistoryFilters(nextPackId?: string, nextStatsDays?: number): void {
+  const packId = nextPackId ?? state.historyPackId;
+  const statsDays = nextStatsDays ?? state.historyStatsDays;
+  const derived = buildHistoryDerived(state.historyCards, state.historyEvents, packId, statsDays);
+  setState({
+    historyPackId: packId,
+    historyStatsDays: statsDays,
+    historySummary: derived.summary,
+    historyDailyAttempts: derived.dailyAttempts,
+    historyPackSummaries: derived.packSummaries
+  });
+}
+
+function renderDailyAttemptsChart(
+  container: HTMLElement,
+  dailyAttempts: DailyAttemptCount[],
+  headingText: string
+): void {
+  if (dailyAttempts.length === 0) {
+    return;
+  }
+
+  const dailyHeading = document.createElement('p');
+  dailyHeading.className = 'session-summary';
+  dailyHeading.textContent = headingText;
+  container.append(dailyHeading);
+
+  const maxCount = Math.max(1, ...dailyAttempts.map((entry) => entry.count));
+  const chartGrid = document.createElement('div');
+  chartGrid.className = 'stats-chart-grid';
+
+  const yAxis = document.createElement('div');
+  yAxis.className = 'stats-y-axis';
+  const yTop = document.createElement('span');
+  yTop.textContent = `${maxCount}`;
+  const yMid = document.createElement('span');
+  yMid.textContent = `${Math.round(maxCount / 2)}`;
+  const yBottom = document.createElement('span');
+  yBottom.textContent = '0';
+  yAxis.append(yTop, yMid, yBottom);
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const width = 100;
+  const height = 60;
+  const paddingTop = 4;
+  const paddingBottom = 6;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.classList.add('stats-line-svg');
+
+  const baseline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  const baselineY = height - paddingBottom;
+  baseline.setAttribute('x1', '0');
+  baseline.setAttribute('x2', `${width}`);
+  baseline.setAttribute('y1', `${baselineY}`);
+  baseline.setAttribute('y2', `${baselineY}`);
+  baseline.setAttribute('class', 'stats-line-axis');
+  svg.append(baseline);
+
+  const points: { x: number; y: number; title: string }[] = [];
+  const usableHeight = height - paddingTop - paddingBottom;
+  const count = dailyAttempts.length;
+  const step = count > 0 ? width / count : 0;
+  dailyAttempts.forEach((entry, index) => {
+    const x = count > 0 ? step * (index + 0.5) : width / 2;
+    const ratio = entry.count / maxCount;
+    const y = paddingTop + (1 - ratio) * usableHeight;
+    points.push({
+      x,
+      y,
+      title: `${entry.dayKey}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`
+    });
+  });
+
+  if (points.length > 0) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const d = points
+      .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+      .join(' ');
+    path.setAttribute('d', d);
+    path.setAttribute('class', 'stats-line-path');
+    svg.append(path);
+
+    for (const point of points) {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', point.x.toFixed(2));
+      circle.setAttribute('cy', point.y.toFixed(2));
+      circle.setAttribute('r', '1.8');
+      circle.setAttribute('class', 'stats-line-point');
+      circle.appendChild(createSvgTitle(point.title));
+      svg.append(circle);
+    }
+  }
+
+  const chartCanvas = document.createElement('div');
+  chartCanvas.className = 'stats-chart-canvas';
+  chartCanvas.append(svg);
+
+  chartGrid.append(yAxis, chartCanvas);
+  container.append(chartGrid);
+
+  const xAxis = document.createElement('div');
+  xAxis.className = 'stats-x-axis';
+  const spacer = document.createElement('span');
+  spacer.className = 'stats-x-spacer';
+  const labels = document.createElement('div');
+  labels.className = 'stats-x-labels';
+  labels.style.setProperty('--stats-days', String(dailyAttempts.length));
+  for (const entry of dailyAttempts) {
+    const label = document.createElement('span');
+    label.className = 'stats-x-label';
+    label.textContent = entry.dayKey;
+    labels.append(label);
+  }
+  xAxis.append(spacer, labels);
+  container.append(xAxis);
+}
+
 function renderStatsPanel(container: HTMLElement, pack: VocabPack | VerbPack): void {
   const panel = document.createElement('section');
   panel.className = 'panel stats-panel';
@@ -1353,102 +1607,11 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack | VerbPack): v
   controls.append(statsLabel, statsSelect);
   panel.append(controls);
 
-  if (state.dailyAttempts.length > 0) {
-    const dailyHeading = document.createElement('p');
-    dailyHeading.className = 'session-summary';
-    dailyHeading.textContent = `Daily attempts (last ${state.dailyAttempts.length} days)`;
-    panel.append(dailyHeading);
-
-    const maxCount = Math.max(1, ...state.dailyAttempts.map((entry) => entry.count));
-    const chartGrid = document.createElement('div');
-    chartGrid.className = 'stats-chart-grid';
-
-    const yAxis = document.createElement('div');
-    yAxis.className = 'stats-y-axis';
-    const yTop = document.createElement('span');
-    yTop.textContent = `${maxCount}`;
-    const yMid = document.createElement('span');
-    yMid.textContent = `${Math.round(maxCount / 2)}`;
-    const yBottom = document.createElement('span');
-    yBottom.textContent = '0';
-    yAxis.append(yTop, yMid, yBottom);
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const width = 100;
-    const height = 60;
-    const paddingTop = 4;
-    const paddingBottom = 6;
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.classList.add('stats-line-svg');
-
-    const baseline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    const baselineY = height - paddingBottom;
-    baseline.setAttribute('x1', '0');
-    baseline.setAttribute('x2', `${width}`);
-    baseline.setAttribute('y1', `${baselineY}`);
-    baseline.setAttribute('y2', `${baselineY}`);
-    baseline.setAttribute('class', 'stats-line-axis');
-    svg.append(baseline);
-
-    const points: { x: number; y: number; title: string }[] = [];
-    const usableHeight = height - paddingTop - paddingBottom;
-    const count = state.dailyAttempts.length;
-    const step = count > 0 ? width / count : 0;
-    state.dailyAttempts.forEach((entry, index) => {
-      const x = count > 0 ? step * (index + 0.5) : width / 2;
-      const ratio = entry.count / maxCount;
-      const y = paddingTop + (1 - ratio) * usableHeight;
-      points.push({
-        x,
-        y,
-        title: `${entry.dayKey}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`
-      });
-    });
-
-    if (points.length > 0) {
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      const d = points
-        .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
-        .join(' ');
-      path.setAttribute('d', d);
-      path.setAttribute('class', 'stats-line-path');
-      svg.append(path);
-
-      for (const point of points) {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', point.x.toFixed(2));
-        circle.setAttribute('cy', point.y.toFixed(2));
-        circle.setAttribute('r', '1.8');
-        circle.setAttribute('class', 'stats-line-point');
-        circle.appendChild(createSvgTitle(point.title));
-        svg.append(circle);
-      }
-    }
-
-    const chartCanvas = document.createElement('div');
-    chartCanvas.className = 'stats-chart-canvas';
-    chartCanvas.append(svg);
-
-    chartGrid.append(yAxis, chartCanvas);
-    panel.append(chartGrid);
-
-    const xAxis = document.createElement('div');
-    xAxis.className = 'stats-x-axis';
-    const spacer = document.createElement('span');
-    spacer.className = 'stats-x-spacer';
-    const labels = document.createElement('div');
-    labels.className = 'stats-x-labels';
-    labels.style.setProperty('--stats-days', String(state.dailyAttempts.length));
-    for (const entry of state.dailyAttempts) {
-      const label = document.createElement('span');
-      label.className = 'stats-x-label';
-      label.textContent = entry.dayKey;
-      labels.append(label);
-    }
-    xAxis.append(spacer, labels);
-    panel.append(xAxis);
-  }
+  renderDailyAttemptsChart(
+    panel,
+    state.dailyAttempts,
+    `Daily attempts (last ${state.dailyAttempts.length} days)`
+  );
 
   const itemStats = new Map<string, { attempts: number; correct: number }>();
   for (const card of cards) {
@@ -1500,6 +1663,159 @@ function renderStatsPanel(container: HTMLElement, pack: VocabPack | VerbPack): v
   container.append(panel);
 }
 
+function renderHistoryPage(container: HTMLElement): void {
+  const packLabelMap = buildPackLabelMap();
+
+  const controlPanel = document.createElement('section');
+  controlPanel.className = 'panel history-controls';
+
+  const controlLabel = document.createElement('span');
+  controlLabel.className = 'panel-label';
+  controlLabel.textContent = 'History scope';
+
+  const controlRow = document.createElement('div');
+  controlRow.className = 'history-controls-row';
+
+  const packSelect = document.createElement('select');
+  packSelect.className = 'panel-control';
+
+  const allOption = document.createElement('option');
+  allOption.value = 'all';
+  allOption.textContent = 'All packs (vocab + verbs)';
+  packSelect.append(allOption);
+
+  const packOptions: { id: string; label: string }[] = [];
+  for (const pack of AVAILABLE_PHRASEPACKS) {
+    packOptions.push({ id: pack.id, label: packLabelMap.get(pack.id) ?? pack.title });
+  }
+  for (const pack of AVAILABLE_VERBPACKS) {
+    packOptions.push({ id: pack.id, label: packLabelMap.get(pack.id) ?? pack.title });
+  }
+  packOptions.forEach((optionData) => {
+    const option = document.createElement('option');
+    option.value = optionData.id;
+    option.textContent = optionData.label;
+    packSelect.append(option);
+  });
+
+  if (state.historyPackId && state.historyPackId !== 'all' && !packLabelMap.has(state.historyPackId)) {
+    const option = document.createElement('option');
+    option.value = state.historyPackId;
+    option.textContent = `Unknown pack (${state.historyPackId})`;
+    packSelect.append(option);
+  }
+
+  packSelect.value = state.historyPackId;
+  packSelect.addEventListener('change', () => {
+    applyHistoryFilters(packSelect.value);
+  });
+
+  const daysSelect = document.createElement('select');
+  daysSelect.className = 'panel-control';
+  for (const value of [7, 14, 30, 90]) {
+    const option = document.createElement('option');
+    option.value = String(value);
+    option.textContent = `${value} days`;
+    if (value === state.historyStatsDays) {
+      option.selected = true;
+    }
+    daysSelect.append(option);
+  }
+  daysSelect.addEventListener('change', () => {
+    const nextDays = Number(daysSelect.value);
+    if (!Number.isFinite(nextDays) || nextDays <= 0) {
+      return;
+    }
+    applyHistoryFilters(undefined, nextDays);
+  });
+
+  const refreshButton = document.createElement('button');
+  refreshButton.type = 'button';
+  refreshButton.textContent = 'Refresh history';
+  refreshButton.addEventListener('click', () => {
+    void refreshHistoryData();
+  });
+
+  controlRow.append(packSelect, daysSelect, refreshButton);
+  controlPanel.append(controlLabel, controlRow);
+  container.append(controlPanel);
+
+  const summaryPanel = document.createElement('section');
+  summaryPanel.className = 'panel history-summary';
+
+  const summaryLabel = document.createElement('span');
+  summaryLabel.className = 'panel-label';
+  summaryLabel.textContent = 'Training history';
+  summaryPanel.append(summaryLabel);
+
+  if (state.historyLoading) {
+    const loading = document.createElement('p');
+    loading.className = 'status loading';
+    loading.textContent = 'Loading history…';
+    summaryPanel.append(loading);
+    container.append(summaryPanel);
+  } else if (state.historyError) {
+    const error = document.createElement('p');
+    error.className = 'status error';
+    error.textContent = state.historyError;
+    summaryPanel.append(error);
+    container.append(summaryPanel);
+  } else if (!state.historySummary) {
+    const empty = document.createElement('p');
+    empty.className = 'status hint';
+    empty.textContent = 'History is ready when you answer prompts.';
+    summaryPanel.append(empty);
+    container.append(summaryPanel);
+  } else if (state.historySummary.totalAttempts === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'status hint';
+    empty.textContent = 'No history yet. Complete a session to see your timeline.';
+    summaryPanel.append(empty);
+    container.append(summaryPanel);
+  } else {
+    const summary = state.historySummary;
+    const summaryText = document.createElement('p');
+    summaryText.className = 'session-summary';
+    summaryText.textContent = `Attempts: ${summary.totalAttempts} · Correct: ${summary.correct} · Accuracy: ${summary.accuracy}% · Items: ${summary.uniqueItems}`;
+    summaryPanel.append(summaryText);
+
+    const range = document.createElement('p');
+    range.className = 'session-summary';
+    range.textContent = `First activity: ${formatDateLabel(summary.firstReviewedAt)} · Last activity: ${formatDateLabel(
+      summary.lastReviewedAt
+    )}`;
+    summaryPanel.append(range);
+
+    renderDailyAttemptsChart(
+      summaryPanel,
+      state.historyDailyAttempts,
+      `Daily attempts (last ${state.historyDailyAttempts.length} days)`
+    );
+
+    if (state.historyPackId === 'all' && state.historyPackSummaries.length > 0) {
+      const packHeading = document.createElement('p');
+      packHeading.className = 'session-summary';
+      packHeading.textContent = 'Pack breakdown';
+      summaryPanel.append(packHeading);
+
+      const list = document.createElement('ul');
+      list.className = 'stats-list';
+      for (const packSummary of state.historyPackSummaries) {
+        const listItem = document.createElement('li');
+        listItem.className = 'stats-item';
+        const label = packLabelMap.get(packSummary.packId) ?? packSummary.packId;
+        const lastSeen = formatDateLabel(packSummary.lastReviewedAt);
+        listItem.textContent = `${label} — ${packSummary.attempts} attempts · ${packSummary.accuracy}% accuracy · last ${lastSeen}`;
+        list.append(listItem);
+      }
+      summaryPanel.append(list);
+    }
+
+    container.append(summaryPanel);
+  }
+
+}
+
 function render(): void {
   attachGlobalKeyListener();
   root.innerHTML = '';
@@ -1520,51 +1836,57 @@ function render(): void {
   header.append(title, subtitle);
   container.append(header);
 
-  renderModeSelector(container);
-  renderPackSelector(container);
+  renderPrimaryNav(container);
 
-  if (state.loading) {
-    const loading = document.createElement('p');
-    loading.className = 'status loading';
-    loading.textContent = state.mode === 'verbs' ? 'Loading verb pack…' : 'Loading phrase pack…';
-    container.append(loading);
-  }
+  if (state.view === 'practice') {
+    renderModeSelector(container);
+    renderPackSelector(container);
 
-  if (state.error) {
-    const error = document.createElement('p');
-    error.className = 'status error';
-    error.textContent = state.error;
-    container.append(error);
-  }
+    if (state.loading) {
+      const loading = document.createElement('p');
+      loading.className = 'status loading';
+      loading.textContent = state.mode === 'verbs' ? 'Loading verb pack…' : 'Loading phrase pack…';
+      container.append(loading);
+    }
 
-  if (!state.loading) {
-    if (state.mode === 'vocab') {
-      if (state.pack) {
-        renderDrillCard(container, state.pack);
-        renderSessionPanel(container);
-        if (state.showStats) {
-          renderStatsPanel(container, state.pack);
+    if (state.error) {
+      const error = document.createElement('p');
+      error.className = 'status error';
+      error.textContent = state.error;
+      container.append(error);
+    }
+
+    if (!state.loading) {
+      if (state.mode === 'vocab') {
+        if (state.pack) {
+          renderDrillCard(container, state.pack);
+          renderSessionPanel(container);
+          if (state.showStats) {
+            renderStatsPanel(container, state.pack);
+          }
+        } else {
+          const hint = document.createElement('p');
+          hint.className = 'status hint';
+          hint.textContent = 'Select a phrase pack to start a drill.';
+          container.append(hint);
         }
-      } else {
-        const hint = document.createElement('p');
-        hint.className = 'status hint';
-        hint.textContent = 'Select a phrase pack to start a drill.';
-        container.append(hint);
-      }
-    } else if (state.mode === 'verbs') {
-      if (state.verbPack) {
-        renderVerbDrillCard(container, state.verbPack);
-        renderVerbSessionPanel(container);
-        if (state.showStats) {
-          renderStatsPanel(container, state.verbPack);
+      } else if (state.mode === 'verbs') {
+        if (state.verbPack) {
+          renderVerbDrillCard(container, state.verbPack);
+          renderVerbSessionPanel(container);
+          if (state.showStats) {
+            renderStatsPanel(container, state.verbPack);
+          }
+        } else {
+          const hint = document.createElement('p');
+          hint.className = 'status hint';
+          hint.textContent = 'Select a verb pack to start a drill.';
+          container.append(hint);
         }
-      } else {
-        const hint = document.createElement('p');
-        hint.className = 'status hint';
-        hint.textContent = 'Select a verb pack to start a drill.';
-        container.append(hint);
       }
     }
+  } else {
+    renderHistoryPage(container);
   }
 
   root.append(container);

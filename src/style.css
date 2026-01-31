@@ -56,6 +56,16 @@ main.app {
   box-shadow: 0 24px 60px rgba(79, 70, 229, 0.08);
 }
 
+.primary-nav {
+  align-items: center;
+}
+
+.primary-nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .pack-picker {
   align-items: flex-start;
 }
@@ -375,6 +385,17 @@ button.primary[disabled] {
   gap: 0.75rem;
 }
 
+.history-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.history-controls-row .panel-control {
+  flex: 1 1 180px;
+}
+
 .incorrect-list {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
@@ -501,6 +522,7 @@ button.primary[disabled] {
   color: #4338ca;
 }
 
+
 .status.error {
   background: rgba(254, 226, 226, 0.9);
   color: #7f1d1d;
@@ -606,6 +628,7 @@ button.primary[disabled] {
     background: rgba(99, 102, 241, 0.18);
     color: #c7d2fe;
   }
+
 
   .status.error {
     background: rgba(239, 68, 68, 0.24);

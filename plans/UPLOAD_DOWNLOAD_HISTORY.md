@@ -1,0 +1,5 @@
+- [x] Review current review history storage + UI and define history DTO/logic needed for stats, export/import, and merge behavior.
+- [x] Add logic module + unit tests for history aggregation/merge + export/import validation, keeping logic separate from storage/UI.
+- [x] Extend IndexedDB data layer with history list/export/import helpers and wire into UI state.
+- [ ] Build new history page UI (all packs + per-pack) with download/upload/merge/overwrite flows and update styles.
+- [ ] Run required tests/build/e2e, update snapshots/docs/spec, commit per checklist item.

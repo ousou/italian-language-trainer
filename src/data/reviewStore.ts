@@ -104,6 +104,15 @@ export async function listReviewCardsByPack(packId: string): Promise<ReviewCard[
   return result;
 }
 
+export async function listAllReviewCards(): Promise<ReviewCard[]> {
+  const db = await getDb();
+  const transaction = db.transaction(STORE_REVIEW_CARDS, 'readonly');
+  const store = transaction.objectStore(STORE_REVIEW_CARDS);
+  const result = await requestToPromise(store.getAll());
+  await transactionDone(transaction);
+  return result;
+}
+
 export async function listReviewCardsByPackAndDirection(
   packId: string,
   direction: ReviewCard['direction']
@@ -119,6 +128,15 @@ export async function listReviewEventsByPackSince(packId: string, since: number)
   const index = store.index('by-pack-timestamp');
   const range = IDBKeyRange.bound([packId, since], [packId, Number.MAX_SAFE_INTEGER]);
   const result = await requestToPromise(index.getAll(range));
+  await transactionDone(transaction);
+  return result;
+}
+
+export async function listAllReviewEvents(): Promise<ReviewEvent[]> {
+  const db = await getDb();
+  const transaction = db.transaction(STORE_REVIEW_EVENTS, 'readonly');
+  const store = transaction.objectStore(STORE_REVIEW_EVENTS);
+  const result = await requestToPromise(store.getAll());
   await transactionDone(transaction);
   return result;
 }
