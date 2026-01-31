@@ -76,6 +76,8 @@ interface AppState {
   historyStatsDays: number;
   historySummary?: HistorySummary;
   historyPackSummaries: PackHistorySummary[];
+  historyPackSortKey: HistoryPackSortKey;
+  historyPackSortDirection: SortDirection;
   historyLoading: boolean;
   historyError?: string;
   historyMessage?: string;
@@ -84,6 +86,22 @@ interface AppState {
     summary: HistorySummary;
     fileName: string;
   };
+}
+
+type SortDirection = 'asc' | 'desc';
+
+type HistoryPackSortKey = 'name' | 'last' | 'attempts' | 'accuracy';
+
+interface SortState<Key extends string> {
+  key: Key;
+  direction: SortDirection;
+}
+
+interface SortableColumn<Row, Key extends string> {
+  key: Key;
+  label: string;
+  getValue: (row: Row) => string | number;
+  render?: (row: Row) => string;
 }
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
@@ -133,6 +151,8 @@ const state: AppState = {
   historyStatsDays: 30,
   historySummary: undefined,
   historyPackSummaries: [],
+  historyPackSortKey: 'last',
+  historyPackSortDirection: 'desc',
   historyLoading: false,
   historyError: undefined,
   historyMessage: undefined,
@@ -1651,6 +1671,78 @@ function renderDailyAttemptsChart(
   container.append(xAxis);
 }
 
+function sortRows<Row, Key extends string>(
+  rows: Row[],
+  sortState: SortState<Key>,
+  columns: SortableColumn<Row, Key>[]
+): Row[] {
+  const column = columns.find((entry) => entry.key === sortState.key);
+  if (!column) {
+    return rows;
+  }
+  const direction = sortState.direction === 'asc' ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    const aValue = column.getValue(a);
+    const bValue = column.getValue(b);
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return direction * (aValue - bValue);
+    }
+    return direction * String(aValue).localeCompare(String(bValue));
+  });
+}
+
+function renderSortableTable<Row, Key extends string>(
+  container: HTMLElement,
+  rows: Row[],
+  columns: SortableColumn<Row, Key>[],
+  sortState: SortState<Key>,
+  onSort: (next: SortState<Key>) => void
+): void {
+  const table = document.createElement('table');
+  table.className = 'stats-table';
+
+  const head = document.createElement('thead');
+  const headRow = document.createElement('tr');
+
+  for (const column of columns) {
+    const th = document.createElement('th');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'stats-table-sort';
+    button.textContent = column.label;
+    const isActive = sortState.key === column.key;
+    if (isActive) {
+      button.setAttribute('aria-sort', sortState.direction === 'asc' ? 'ascending' : 'descending');
+    } else {
+      button.setAttribute('aria-sort', 'none');
+    }
+    button.addEventListener('click', () => {
+      const nextDirection = isActive && sortState.direction === 'desc' ? 'asc' : 'desc';
+      onSort({ key: column.key, direction: nextDirection });
+    });
+    th.append(button);
+    headRow.append(th);
+  }
+
+  head.append(headRow);
+  table.append(head);
+
+  const body = document.createElement('tbody');
+  const sortedRows = sortRows(rows, sortState, columns);
+  for (const row of sortedRows) {
+    const tr = document.createElement('tr');
+    for (const column of columns) {
+      const td = document.createElement('td');
+      td.textContent = column.render ? column.render(row) : String(column.getValue(row));
+      tr.append(td);
+    }
+    body.append(tr);
+  }
+  table.append(body);
+
+  container.append(table);
+}
+
 function renderStatsPanel(container: HTMLElement, pack: VocabPack | VerbPack): void {
   const panel = document.createElement('section');
   panel.className = 'panel stats-panel';
@@ -1923,17 +2015,44 @@ function renderHistoryPage(container: HTMLElement): void {
       packHeading.textContent = 'Pack breakdown';
       summaryPanel.append(packHeading);
 
-      const list = document.createElement('ul');
-      list.className = 'stats-list';
-      for (const packSummary of state.historyPackSummaries) {
-        const listItem = document.createElement('li');
-        listItem.className = 'stats-item';
-        const label = packLabelMap.get(packSummary.packId) ?? packSummary.packId;
-        const lastSeen = formatDateLabel(packSummary.lastReviewedAt);
-        listItem.textContent = `${label} — ${packSummary.attempts} attempts · ${packSummary.accuracy}% accuracy · last ${lastSeen}`;
-        list.append(listItem);
-      }
-      summaryPanel.append(list);
+      const columns: SortableColumn<PackHistorySummary, HistoryPackSortKey>[] = [
+        {
+          key: 'name',
+          label: 'Pack',
+          getValue: (row) => packLabelMap.get(row.packId) ?? row.packId
+        },
+        {
+          key: 'last',
+          label: 'Last trained',
+          getValue: (row) => row.lastReviewedAt ?? 0,
+          render: (row) => formatDateLabel(row.lastReviewedAt)
+        },
+        {
+          key: 'attempts',
+          label: 'Attempts',
+          getValue: (row) => row.attempts,
+          render: (row) => `${row.attempts}`
+        },
+        {
+          key: 'accuracy',
+          label: 'Accuracy',
+          getValue: (row) => row.accuracy,
+          render: (row) => `${row.accuracy}%`
+        }
+      ];
+
+      renderSortableTable(
+        summaryPanel,
+        state.historyPackSummaries,
+        columns,
+        {
+          key: state.historyPackSortKey,
+          direction: state.historyPackSortDirection
+        },
+        (next) => {
+          setState({ historyPackSortKey: next.key, historyPackSortDirection: next.direction });
+        }
+      );
     }
 
     container.append(summaryPanel);
