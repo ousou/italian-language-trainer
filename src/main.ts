@@ -226,11 +226,50 @@ function focusInputElement(input: HTMLInputElement | null): void {
   }
 }
 
+function getScrollTop(): number {
+  return document.scrollingElement?.scrollTop ?? window.scrollY;
+}
+
+function setScrollTop(top: number): void {
+  const scrollingElement = document.scrollingElement;
+  if (scrollingElement) {
+    scrollingElement.scrollTop = top;
+    return;
+  }
+  window.scrollTo(0, top);
+}
+
+let scrollLock: { top: number; expiresAt: number; restoresRemaining: number } | null = null;
+
+function lockScrollPosition(restores = 3, maxMs = 2000): void {
+  scrollLock = {
+    top: getScrollTop(),
+    expiresAt: Date.now() + maxMs,
+    restoresRemaining: restores
+  };
+}
+
+function applyScrollLock(): void {
+  if (!scrollLock) {
+    return;
+  }
+  if (Date.now() > scrollLock.expiresAt || scrollLock.restoresRemaining <= 0) {
+    scrollLock = null;
+    return;
+  }
+  const { top } = scrollLock;
+  scrollLock.restoresRemaining -= 1;
+  requestAnimationFrame(() => {
+    setScrollTop(top);
+  });
+}
+
 function withScrollPreservation(action: () => void): void {
-  const scrollY = window.scrollY;
+  const scrollTop = getScrollTop();
+  lockScrollPosition();
   action();
   requestAnimationFrame(() => {
-    window.scrollTo(0, scrollY);
+    setScrollTop(scrollTop);
   });
 }
 
@@ -2397,6 +2436,7 @@ function render(): void {
   }
 
   root.append(container);
+  applyScrollLock();
 }
 
 function createSvgTitle(value: string): SVGTitleElement {
