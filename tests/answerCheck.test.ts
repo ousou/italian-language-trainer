@@ -5,6 +5,8 @@ import {
   isAnswerCorrect,
   isAnswerAccentIssue,
   isAnswerAccentIssueSpec,
+  isAnswerApostropheIssue,
+  isAnswerApostropheIssueSpec,
   normalizeAnswer
 } from '../src/logic/answerCheck.ts';
 
@@ -81,5 +83,29 @@ describe('isAnswerAccentIssueSpec', () => {
 
   it('flags accent differences when only the accented option exists', () => {
     expect(isAnswerAccentIssueSpec(['perché'], 'perche')).toBe(true);
+  });
+});
+
+describe('isAnswerApostropheIssue', () => {
+  it('detects missing apostrophes when the answer is otherwise correct', () => {
+    expect(isAnswerApostropheIssue("l'uomo", 'luomo')).toBe(true);
+  });
+
+  it('does not flag exact apostrophe matches', () => {
+    expect(isAnswerApostropheIssue("c'e", "c'e")).toBe(false);
+  });
+
+  it('returns false when the answer is incorrect', () => {
+    expect(isAnswerApostropheIssue('grazie', 'prego')).toBe(false);
+  });
+});
+
+describe('isAnswerApostropheIssueSpec', () => {
+  it('does not flag when an un-apostrophized option is allowed', () => {
+    expect(isAnswerApostropheIssueSpec(["c'e", 'ce'], 'ce')).toBe(false);
+  });
+
+  it('flags missing apostrophes when only the apostrophized option exists', () => {
+    expect(isAnswerApostropheIssueSpec(["c'e"], 'ce')).toBe(true);
   });
 });

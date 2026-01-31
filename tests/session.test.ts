@@ -62,6 +62,22 @@ describe('submitAnswer and session flow', () => {
     expect(next.lastAccentIssue).toBe(true);
   });
 
+  it('accepts missing apostrophes and flags the issue', () => {
+    const pack: VocabPack = {
+      type: 'vocab',
+      id: 'apostrophe',
+      title: 'Apostrophe',
+      src: 'it',
+      dst: 'fi',
+      items: [{ id: 'luomo', src: "l'uomo", dst: 'Test' }]
+    };
+    const session = createSession(pack, 'dst-to-src', [0]);
+    const next = submitAnswer(pack, session, 'luomo');
+
+    expect(next.lastResult).toBe('correct');
+    expect(next.lastApostropheIssue).toBe(true);
+  });
+
   it('records incorrect answers with prompt and expected text', () => {
     const order = [0];
     const session = createSession(SAMPLE_PACK, 'src-to-dst', order);

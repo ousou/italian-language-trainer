@@ -1,5 +1,10 @@
 import type { DrillDirection, VocabPack } from '../types.ts';
-import { isAnswerAlmost, isAnswerCorrect, isAnswerAccentIssue } from './answerCheck.ts';
+import {
+  isAnswerAlmost,
+  isAnswerCorrect,
+  isAnswerAccentIssue,
+  isAnswerApostropheIssue
+} from './answerCheck.ts';
 
 export interface IncorrectEntry {
   key: string;
@@ -19,6 +24,7 @@ export interface SessionState {
   incorrectItems: IncorrectEntry[];
   lastResult?: 'correct' | 'incorrect' | 'almost';
   lastAccentIssue?: boolean;
+  lastApostropheIssue?: boolean;
   attempts: string[];
   answerInput: string;
   sessionComplete: boolean;
@@ -56,6 +62,7 @@ export function createSession(pack: VocabPack, direction: DrillDirection, order:
     incorrectItems: [],
     lastResult: undefined,
     lastAccentIssue: undefined,
+    lastApostropheIssue: undefined,
     attempts: [],
     answerInput: '',
     sessionComplete: false
@@ -80,11 +87,13 @@ export function submitAnswer(pack: VocabPack, state: SessionState, answer: strin
   const almost = !correct && isAnswerAlmost(answerText, answer) && attempts.length === 1;
   const result: SessionState['lastResult'] = correct ? 'correct' : almost ? 'almost' : 'incorrect';
   const accentIssue = correct ? isAnswerAccentIssue(answerText, answer) : false;
+  const apostropheIssue = correct ? isAnswerApostropheIssue(answerText, answer) : false;
 
   const updated: SessionState = {
     ...state,
     lastResult: result,
     lastAccentIssue: accentIssue,
+    lastApostropheIssue: apostropheIssue,
     attempts,
     answerInput: answer
   };
@@ -136,6 +145,7 @@ export function nextCard(state: SessionState): SessionState {
     answerInput: '',
     lastResult: undefined,
     lastAccentIssue: undefined,
+    lastApostropheIssue: undefined,
     attempts: []
   };
 }

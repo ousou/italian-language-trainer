@@ -755,7 +755,15 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
     return;
   }
 
-  const { order, currentIndex, lastResult, lastAccentIssue, answerInput, sessionComplete } = session;
+  const {
+    order,
+    currentIndex,
+    lastResult,
+    lastAccentIssue,
+    lastApostropheIssue,
+    answerInput,
+    sessionComplete
+  } = session;
 
   if (order.length === 0) {
     const emptyNotice = document.createElement('p');
@@ -885,7 +893,15 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   const feedback = document.createElement('p');
   feedback.className = `answer-feedback ${lastResult ?? ''}`.trim();
   if (lastResult === 'correct') {
-    feedback.textContent = lastAccentIssue ? 'Correct (check accents)' : 'Correct!';
+    if (lastAccentIssue && lastApostropheIssue) {
+      feedback.textContent = 'Correct (check accents and apostrophes)';
+    } else if (lastAccentIssue) {
+      feedback.textContent = 'Correct (check accents)';
+    } else if (lastApostropheIssue) {
+      feedback.textContent = 'Correct (check apostrophes)';
+    } else {
+      feedback.textContent = 'Correct!';
+    }
   } else if (lastResult === 'almost') {
     feedback.textContent = 'Almost!';
   } else if (lastResult === 'incorrect') {
@@ -1035,13 +1051,25 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   infinitiveFeedback.className = 'answer-feedback';
   if (session.infinitiveFeedback === 'correct') {
     if (session.infinitive.result === 'correct-second') {
-      infinitiveFeedback.textContent = session.infinitive.accentIssue
-        ? 'Correct (second try, check accents)'
-        : 'Correct (second try).';
+      if (session.infinitive.accentIssue && session.infinitive.apostropheIssue) {
+        infinitiveFeedback.textContent = 'Correct (second try, check accents and apostrophes)';
+      } else if (session.infinitive.accentIssue) {
+        infinitiveFeedback.textContent = 'Correct (second try, check accents)';
+      } else if (session.infinitive.apostropheIssue) {
+        infinitiveFeedback.textContent = 'Correct (second try, check apostrophes)';
+      } else {
+        infinitiveFeedback.textContent = 'Correct (second try).';
+      }
     } else {
-      infinitiveFeedback.textContent = session.infinitive.accentIssue
-        ? 'Correct (check accents)'
-        : 'Correct!';
+      if (session.infinitive.accentIssue && session.infinitive.apostropheIssue) {
+        infinitiveFeedback.textContent = 'Correct (check accents and apostrophes)';
+      } else if (session.infinitive.accentIssue) {
+        infinitiveFeedback.textContent = 'Correct (check accents)';
+      } else if (session.infinitive.apostropheIssue) {
+        infinitiveFeedback.textContent = 'Correct (check apostrophes)';
+      } else {
+        infinitiveFeedback.textContent = 'Correct!';
+      }
     }
     infinitiveFeedback.classList.add('correct');
   } else if (session.infinitiveFeedback === 'almost') {
@@ -1127,13 +1155,25 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     const rowFeedback = session.personFeedback[index];
     if (rowFeedback === 'correct') {
       if (session.persons[index].result === 'correct-second') {
-        feedback.textContent = session.persons[index].accentIssue
-          ? 'Correct (2nd try, check accents)'
-          : 'Correct (2nd try)';
+        if (session.persons[index].accentIssue && session.persons[index].apostropheIssue) {
+          feedback.textContent = 'Correct (2nd try, check accents and apostrophes)';
+        } else if (session.persons[index].accentIssue) {
+          feedback.textContent = 'Correct (2nd try, check accents)';
+        } else if (session.persons[index].apostropheIssue) {
+          feedback.textContent = 'Correct (2nd try, check apostrophes)';
+        } else {
+          feedback.textContent = 'Correct (2nd try)';
+        }
       } else {
-        feedback.textContent = session.persons[index].accentIssue
-          ? 'Correct (check accents)'
-          : 'Correct';
+        if (session.persons[index].accentIssue && session.persons[index].apostropheIssue) {
+          feedback.textContent = 'Correct (check accents and apostrophes)';
+        } else if (session.persons[index].accentIssue) {
+          feedback.textContent = 'Correct (check accents)';
+        } else if (session.persons[index].apostropheIssue) {
+          feedback.textContent = 'Correct (check apostrophes)';
+        } else {
+          feedback.textContent = 'Correct';
+        }
       }
       feedback.classList.add('correct');
     } else if (rowFeedback === 'almost') {

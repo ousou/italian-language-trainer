@@ -21,8 +21,33 @@ export function normalizeAnswerWithAccents(value: string): string {
     .trim();
 }
 
+export function normalizeAnswerWithApostrophes(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/['’‘`´]/g, "'")
+    .replace(/[^\p{L}\p{N}\s']/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function normalizeAnswerWithoutApostrophes(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/['’‘`´]/g, '')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function isAnswerCorrect(expected: string, actual: string): boolean {
-  return normalizeAnswer(expected) === normalizeAnswer(actual);
+  return (
+    normalizeAnswer(expected) === normalizeAnswer(actual) ||
+    normalizeAnswerWithoutApostrophes(expected) === normalizeAnswerWithoutApostrophes(actual)
+  );
 }
 
 export function isAnswerCorrectSpec(expected: AnswerSpec, actual: string): boolean {
@@ -50,6 +75,41 @@ export function isAnswerAccentIssueSpec(expected: AnswerSpec, actual: string): b
     );
   }
   return isAnswerAccentIssue(expected, actual);
+}
+
+export function isAnswerApostropheIssue(expected: string, actual: string): boolean {
+  if (!isAnswerCorrect(expected, actual)) {
+    return false;
+  }
+  const normalizedExpected = normalizeAnswerWithApostrophes(expected);
+  const normalizedActual = normalizeAnswerWithApostrophes(actual);
+  if (normalizedExpected === normalizedActual) {
+    return false;
+  }
+  if (!normalizedExpected.includes("'") || normalizedActual.includes("'")) {
+    return false;
+  }
+  return normalizeAnswerWithoutApostrophes(expected) === normalizeAnswerWithoutApostrophes(actual);
+}
+
+export function isAnswerApostropheIssueSpec(expected: AnswerSpec, actual: string): boolean {
+  if (!isAnswerCorrectSpec(expected, actual)) {
+    return false;
+  }
+  const normalizedActual = normalizeAnswerWithApostrophes(actual);
+  const normalizedActualNoApos = normalizeAnswerWithoutApostrophes(actual);
+  if (Array.isArray(expected)) {
+    if (expected.some((option) => normalizeAnswerWithApostrophes(option) === normalizedActual)) {
+      return false;
+    }
+    return expected.some(
+      (option) =>
+        normalizeAnswerWithApostrophes(option).includes("'") &&
+        normalizeAnswerWithoutApostrophes(option) === normalizedActualNoApos &&
+        !normalizedActual.includes("'")
+    );
+  }
+  return isAnswerApostropheIssue(expected, actual);
 }
 
 export function damerauLevenshteinDistance(a: string, b: string): number {
