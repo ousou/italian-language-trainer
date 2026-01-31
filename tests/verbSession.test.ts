@@ -35,16 +35,25 @@ const SAMPLE_PACK: VerbPack = {
 };
 
 describe('verb session flow', () => {
-  it('allows two infinitive attempts and reveals after the second miss', () => {
+  it('allows a retry after an almost-correct infinitive answer', () => {
     const session = createVerbSession(SAMPLE_PACK, [0]);
-    const first = submitInfinitiveAnswer(SAMPLE_PACK, session, 'fare');
+    const first = submitInfinitiveAnswer(SAMPLE_PACK, session, 'essre');
     expect(first.infinitive.result).toBeUndefined();
-    expect(first.infinitiveFeedback).toBe('retry');
+    expect(first.infinitiveFeedback).toBe('almost');
+    expect(first.phase).toBe('infinitive');
 
     const second = submitInfinitiveAnswer(SAMPLE_PACK, first, 'avere');
     expect(second.infinitive.result).toBe('revealed');
     expect(second.infinitiveFeedback).toBe('revealed');
     expect(second.phase).toBe('conjugation');
+  });
+
+  it('reveals immediately after a non-almost infinitive miss', () => {
+    const session = createVerbSession(SAMPLE_PACK, [0]);
+    const first = submitInfinitiveAnswer(SAMPLE_PACK, session, 'fare');
+    expect(first.infinitive.result).toBe('revealed');
+    expect(first.infinitiveFeedback).toBe('revealed');
+    expect(first.phase).toBe('conjugation');
   });
 
   it('accepts answer variants for infinitive and conjugations', () => {
@@ -62,13 +71,12 @@ describe('verb session flow', () => {
     session = submitInfinitiveAnswer(SAMPLE_PACK, session, 'essere');
     expect(session.phase).toBe('conjugation');
 
-    session = submitConjugationAnswer(SAMPLE_PACK, session, 'io', 'x');
+    session = submitConjugationAnswer(SAMPLE_PACK, session, 'io', 'sno');
     session = submitConjugationAnswer(SAMPLE_PACK, session, 'io', 'sono');
 
     for (let index = 1; index < VERB_PERSONS.length; index += 1) {
       const person = VERB_PERSONS[index];
-      session = submitConjugationAnswer(SAMPLE_PACK, session, person, 'x');
-      session = submitConjugationAnswer(SAMPLE_PACK, session, person, 'y');
+      session = submitConjugationAnswer(SAMPLE_PACK, session, person, 'xyz');
     }
 
     expect(session.phase).toBe('recap');

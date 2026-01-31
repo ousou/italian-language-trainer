@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isAnswerCorrect, normalizeAnswer } from '../src/logic/answerCheck.ts';
+import { damerauLevenshteinDistance, isAnswerAlmost, isAnswerCorrect, normalizeAnswer } from '../src/logic/answerCheck.ts';
 
 describe('normalizeAnswer', () => {
   it('trims and collapses whitespace', () => {
@@ -32,5 +32,23 @@ describe('isAnswerCorrect', () => {
 
   it('returns false for different answers', () => {
     expect(isAnswerCorrect('grazie', 'prego')).toBe(false);
+  });
+});
+
+describe('damerauLevenshteinDistance', () => {
+  it('returns 1 for a single substitution', () => {
+    expect(damerauLevenshteinDistance('ciao', 'cibo')).toBe(1);
+  });
+
+  it('returns 1 for a transposition', () => {
+    expect(damerauLevenshteinDistance('ciao', 'ciao')).toBe(0);
+    expect(damerauLevenshteinDistance('ciao', 'caio')).toBe(1);
+  });
+});
+
+describe('isAnswerAlmost', () => {
+  it('matches answers that are one edit away after normalization', () => {
+    expect(isAnswerAlmost('Città', 'citta')).toBe(false);
+    expect(isAnswerAlmost('Città', 'citt')).toBe(true);
   });
 });

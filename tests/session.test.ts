@@ -73,6 +73,28 @@ describe('submitAnswer and session flow', () => {
     expect(next.incorrectItems[0].expected).toBe('fi-0');
   });
 
+  it('allows one retry after an almost-correct answer', () => {
+    const pack: VocabPack = {
+      type: 'vocab',
+      id: 'almost',
+      title: 'Almost',
+      src: 'it',
+      dst: 'fi',
+      items: [{ id: 'casa', src: 'casa', dst: 'house' }]
+    };
+    const session = createSession(pack, 'dst-to-src', [0]);
+    const almost = submitAnswer(pack, session, 'cas');
+
+    expect(almost.lastResult).toBe('almost');
+    expect(almost.sessionIncorrect).toBe(0);
+    expect(almost.sessionComplete).toBe(false);
+
+    const corrected = submitAnswer(pack, almost, 'casa');
+    expect(corrected.lastResult).toBe('correct');
+    expect(corrected.sessionCorrect).toBe(1);
+    expect(corrected.sessionComplete).toBe(true);
+  });
+
   it('advances to the next card only after an answer', () => {
     const order = [0, 1];
     const session = createSession(SAMPLE_PACK, 'src-to-dst', order);
@@ -83,6 +105,22 @@ describe('submitAnswer and session flow', () => {
     const next = nextCard(answered);
     expect(next.currentIndex).toBe(1);
     expect(next.lastResult).toBeUndefined();
+  });
+
+  it('does not advance after an almost-correct answer', () => {
+    const pack: VocabPack = {
+      type: 'vocab',
+      id: 'almost-advance',
+      title: 'Almost Advance',
+      src: 'it',
+      dst: 'fi',
+      items: [{ id: 'ciao', src: 'ciao', dst: 'hello' }, { id: 'grazie', src: 'grazie', dst: 'thanks' }]
+    };
+    const session = createSession(pack, 'dst-to-src', [0, 1]);
+    const almost = submitAnswer(pack, session, 'cia');
+    const next = nextCard(almost);
+    expect(next.currentIndex).toBe(0);
+    expect(next.lastResult).toBe('almost');
   });
 });
 

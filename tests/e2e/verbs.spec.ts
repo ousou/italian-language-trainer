@@ -18,9 +18,9 @@ test('runs a verb conjugation drill with a second-try correction', async ({ page
   await expect(page.getByText('Correct!')).toBeVisible();
 
   const ioRow = page.locator('.verb-row', { hasText: 'io' });
-  await ioRow.locator('input').fill('x');
+  await ioRow.locator('input').fill('sno');
   await ioRow.getByRole('button', { name: 'Check' }).click();
-  await expect(ioRow.getByText('Try again')).toBeVisible();
+  await expect(ioRow.getByText('Almost!')).toBeVisible();
 
   await ioRow.locator('input').fill('sono');
   await ioRow.getByRole('button', { name: 'Check' }).click();

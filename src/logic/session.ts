@@ -1,5 +1,5 @@
 import type { DrillDirection, VocabPack } from '../types.ts';
-import { isAnswerCorrect } from './answerCheck.ts';
+import { isAnswerAlmost, isAnswerCorrect } from './answerCheck.ts';
 
 export interface IncorrectEntry {
   key: string;
@@ -17,7 +17,8 @@ export interface SessionState {
   sessionCorrect: number;
   sessionIncorrect: number;
   incorrectItems: IncorrectEntry[];
-  lastResult?: 'correct' | 'incorrect';
+  lastResult?: 'correct' | 'incorrect' | 'almost';
+  attempts: string[];
   answerInput: string;
   sessionComplete: boolean;
 }
@@ -53,6 +54,7 @@ export function createSession(pack: VocabPack, direction: DrillDirection, order:
     sessionIncorrect: 0,
     incorrectItems: [],
     lastResult: undefined,
+    attempts: [],
     answerInput: '',
     sessionComplete: false
   };
@@ -63,7 +65,7 @@ export function resetSession(pack: VocabPack, direction: DrillDirection, order: 
 }
 
 export function submitAnswer(pack: VocabPack, state: SessionState, answer: string): SessionState {
-  if (state.sessionComplete || state.lastResult !== undefined) {
+  if (state.sessionComplete || state.lastResult === 'correct' || state.lastResult === 'incorrect') {
     return state;
   }
 
@@ -71,18 +73,21 @@ export function submitAnswer(pack: VocabPack, state: SessionState, answer: strin
   const item = pack.items[itemIndex];
   const promptText = state.direction === 'src-to-dst' ? item.src : item.dst;
   const answerText = state.direction === 'src-to-dst' ? item.dst : item.src;
+  const attempts = [...state.attempts, answer];
   const correct = isAnswerCorrect(answerText, answer);
-  const result: SessionState['lastResult'] = correct ? 'correct' : 'incorrect';
+  const almost = !correct && isAnswerAlmost(answerText, answer) && attempts.length === 1;
+  const result: SessionState['lastResult'] = correct ? 'correct' : almost ? 'almost' : 'incorrect';
 
   const updated: SessionState = {
     ...state,
     lastResult: result,
+    attempts,
     answerInput: answer
   };
 
   if (correct) {
     updated.sessionCorrect += 1;
-  } else {
+  } else if (!almost) {
     updated.sessionIncorrect += 1;
     const key = `${item.id}:${state.direction}`;
     const entry: IncorrectEntry = {
@@ -102,7 +107,7 @@ export function submitAnswer(pack: VocabPack, state: SessionState, answer: strin
     }
   }
 
-  if (state.currentIndex === state.order.length - 1) {
+  if (!almost && state.currentIndex === state.order.length - 1) {
     updated.sessionComplete = true;
   }
 
@@ -110,7 +115,10 @@ export function submitAnswer(pack: VocabPack, state: SessionState, answer: strin
 }
 
 export function nextCard(state: SessionState): SessionState {
-  if (state.sessionComplete || state.lastResult === undefined) {
+  if (
+    state.sessionComplete ||
+    (state.lastResult !== 'correct' && state.lastResult !== 'incorrect')
+  ) {
     return state;
   }
 
@@ -122,7 +130,8 @@ export function nextCard(state: SessionState): SessionState {
     ...state,
     currentIndex: state.currentIndex + 1,
     answerInput: '',
-    lastResult: undefined
+    lastResult: undefined,
+    attempts: []
   };
 }
 

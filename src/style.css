@@ -256,6 +256,10 @@ main.app {
   color: #16a34a;
 }
 
+.verb-feedback.almost {
+  color: #d97706;
+}
+
 .verb-feedback.incorrect {
   color: #b91c1c;
 }
@@ -278,6 +282,10 @@ main.app {
 
 .answer-feedback.correct {
   color: #16a34a;
+}
+
+.answer-feedback.almost {
+  color: #d97706;
 }
 
 .answer-feedback.incorrect {

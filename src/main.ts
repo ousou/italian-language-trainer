@@ -118,7 +118,9 @@ function attachGlobalKeyListener(): void {
       return;
     }
     const vocabReady =
-      state.session && state.session.lastResult !== undefined && !state.session.sessionComplete;
+      state.session &&
+      (state.session.lastResult === 'correct' || state.session.lastResult === 'incorrect') &&
+      !state.session.sessionComplete;
     if (!vocabReady) {
       return;
     }
@@ -506,7 +508,7 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   const answerText = direction === 'src-to-dst' ? item.dst : item.src;
   const promptLabel = direction === 'src-to-dst' ? pack.src : pack.dst;
   const answerLabel = direction === 'src-to-dst' ? pack.dst : pack.src;
-  const showAnswer = lastResult !== undefined;
+  const showAnswer = lastResult === 'correct' || lastResult === 'incorrect';
 
   const card = document.createElement('section');
   card.className = sessionComplete ? 'drill-card session-complete-card' : 'drill-card';
@@ -572,7 +574,10 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
       return;
     }
     state.session.answerInput = target.value;
-    const answered = state.session.lastResult !== undefined || state.session.sessionComplete;
+    const answered =
+      state.session.lastResult === 'correct' ||
+      state.session.lastResult === 'incorrect' ||
+      state.session.sessionComplete;
     checkButton.disabled = answered || target.value.trim() === '';
   });
 
@@ -581,13 +586,13 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
     if (!state.session) {
       return;
     }
-    if (state.session.lastResult !== undefined) {
+    if (state.session.lastResult === 'correct' || state.session.lastResult === 'incorrect') {
       goToNext();
       return;
     }
     const currentSession = state.session;
     const nextSession = submitAnswer(pack, currentSession, currentSession.answerInput);
-    if (nextSession.lastResult) {
+    if (nextSession.lastResult === 'correct' || nextSession.lastResult === 'incorrect') {
       const itemIndex = currentSession.order[currentSession.currentIndex];
       const item = pack.items[itemIndex];
       void recordReviewResult(
@@ -615,6 +620,8 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   feedback.className = `answer-feedback ${lastResult ?? ''}`.trim();
   if (lastResult === 'correct') {
     feedback.textContent = 'Correct!';
+  } else if (lastResult === 'almost') {
+    feedback.textContent = 'Almost!';
   } else if (lastResult === 'incorrect') {
     feedback.textContent = 'Not quite. Review the correct translation above.';
   } else {
@@ -629,7 +636,10 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   nextButton.textContent = 'Next word';
   nextButton.disabled = !showAnswer || sessionComplete;
   nextButton.addEventListener('click', () => {
-    if (!state.session || state.session.lastResult === undefined) {
+    if (
+      !state.session ||
+      (state.session.lastResult !== 'correct' && state.session.lastResult !== 'incorrect')
+    ) {
       return;
     }
     goToNext();
@@ -765,6 +775,9 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     infinitiveFeedback.textContent =
       session.infinitive.result === 'correct-second' ? 'Correct (second try).' : 'Correct!';
     infinitiveFeedback.classList.add('correct');
+  } else if (session.infinitiveFeedback === 'almost') {
+    infinitiveFeedback.textContent = 'Almost!';
+    infinitiveFeedback.classList.add('almost');
   } else if (session.infinitiveFeedback === 'retry') {
     infinitiveFeedback.textContent = 'Not quite. Try again.';
     infinitiveFeedback.classList.add('incorrect');
@@ -848,6 +861,9 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
       feedback.textContent =
         session.persons[index].result === 'correct-second' ? 'Correct (2nd try)' : 'Correct';
       feedback.classList.add('correct');
+    } else if (rowFeedback === 'almost') {
+      feedback.textContent = 'Almost!';
+      feedback.classList.add('almost');
     } else if (rowFeedback === 'retry') {
       feedback.textContent = 'Try again';
       feedback.classList.add('incorrect');
