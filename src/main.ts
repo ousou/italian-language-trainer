@@ -161,6 +161,17 @@ function attachGlobalKeyListener(): void {
   }
   globalKeyListenerAttached = true;
   document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      if (state.menuOpen) {
+        setState({ menuOpen: false });
+        return;
+      }
+      if (state.view === 'history') {
+        setView('practice');
+        return;
+      }
+      return;
+    }
     if (event.key !== 'Enter') {
       return;
     }
@@ -1803,14 +1814,7 @@ function renderHistoryPage(container: HTMLElement): void {
     applyHistoryFilters(undefined, nextDays);
   });
 
-  const refreshButton = document.createElement('button');
-  refreshButton.type = 'button';
-  refreshButton.textContent = 'Refresh history';
-  refreshButton.addEventListener('click', () => {
-    void refreshHistoryData();
-  });
-
-  controlRow.append(packSelect, daysSelect, refreshButton);
+  controlRow.append(packSelect, daysSelect);
   controlPanel.append(controlLabel, controlRow);
   container.append(controlPanel);
 
