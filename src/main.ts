@@ -134,6 +134,24 @@ function setState(partial: Partial<AppState>): void {
   render();
 }
 
+function focusInputElement(input: HTMLInputElement | null): void {
+  if (!input || input.readOnly) {
+    return;
+  }
+  try {
+    input.focus({ preventScroll: true });
+  } catch {
+    input.focus();
+  }
+}
+
+function queueFocusInput(selector: string): void {
+  requestAnimationFrame(() => {
+    const input = root.querySelector<HTMLInputElement>(selector);
+    focusInputElement(input);
+  });
+}
+
 function setMode(mode: AppState['mode']): void {
   if (state.mode === mode) {
     return;
@@ -338,12 +356,7 @@ function goToNext(): void {
     const session = nextCard(state.session);
     if (session !== state.session) {
       setState({ session });
-      queueMicrotask(() => {
-        const input = root.querySelector<HTMLInputElement>('.answer-input');
-        if (input && !input.readOnly) {
-          input.focus();
-        }
-      });
+      queueFocusInput('.answer-input');
     }
     return;
   }
@@ -650,8 +663,12 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   card.append(meta, prompt, answer, form, feedback, controls);
   container.append(card);
 
-  if (!sessionComplete && state.session && state.session.lastResult === undefined) {
-    input.focus();
+  if (
+    !sessionComplete &&
+    state.session &&
+    (state.session.lastResult === undefined || state.session.lastResult === 'almost')
+  ) {
+    focusInputElement(input);
   }
 }
 
@@ -720,6 +737,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   infinitiveInput.value = session.infinitiveInput;
   infinitiveInput.autocomplete = 'off';
   infinitiveInput.spellcheck = false;
+  infinitiveInput.enterKeyHint = 'next';
   infinitiveInput.readOnly = infinitiveResolved || sessionComplete;
 
   const infinitiveButton = document.createElement('button');
@@ -750,20 +768,9 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     setState({ verbSession: nextSession });
 
     if (isInfinitiveResolved(nextSession)) {
-      queueMicrotask(() => {
-        const selector = `.verb-row input[data-verb-person="${VERB_PERSONS[0]}"]`;
-        const input = root.querySelector<HTMLInputElement>(selector);
-        if (input && !input.readOnly) {
-          input.focus();
-        }
-      });
+      queueFocusInput(`.verb-row input[data-verb-person="${VERB_PERSONS[0]}"]`);
     } else {
-      queueMicrotask(() => {
-        const input = root.querySelector<HTMLInputElement>('.answer-input');
-        if (input && !input.readOnly) {
-          input.focus();
-        }
-      });
+      queueFocusInput('.answer-input');
     }
   });
 
@@ -798,13 +805,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   function queueFocusVerbRow(nextIndex: number): void {
     const nextPerson = VERB_PERSONS[nextIndex];
-    queueMicrotask(() => {
-      const selector = `.verb-row input[data-verb-person="${nextPerson}"]`;
-      const input = root.querySelector<HTMLInputElement>(selector);
-      if (input && !input.readOnly) {
-        input.focus();
-      }
-    });
+    queueFocusInput(`.verb-row input[data-verb-person="${nextPerson}"]`);
   }
 
   function queueFocusNextUnresolvedRow(fromIndex: number, nextSession: VerbSessionState): void {
@@ -827,7 +828,11 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     queueMicrotask(() => {
       const button = root.querySelector<HTMLButtonElement>('#verb-next-button');
       if (button && !button.disabled) {
-        button.focus();
+        try {
+          button.focus({ preventScroll: true });
+        } catch {
+          button.focus();
+        }
       }
     });
   }
@@ -848,6 +853,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     input.value = session.personInputs[index] ?? '';
     input.autocomplete = 'off';
     input.spellcheck = false;
+    input.enterKeyHint = 'next';
     input.readOnly = sessionComplete || !conjugationReady || Boolean(session.persons[index].result);
 
     const expected = document.createElement('span');
@@ -1021,7 +1027,7 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
 
   container.append(card);
   if (!sessionComplete && state.verbSession && !isInfinitiveResolved(state.verbSession)) {
-    infinitiveInput.focus();
+    focusInputElement(infinitiveInput);
   }
 }
 
