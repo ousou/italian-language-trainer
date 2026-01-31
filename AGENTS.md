@@ -26,6 +26,7 @@ The user may ask you to implement a spec from a file. In that case, read the fil
 - If UI/styling changes might affect screenshots, run `pnpm test:e2e`; update snapshots with `pnpm test:e2e --update-snapshots` only for intentional visual changes and commit the PNGs.
 - Automatically fix any issues uncovered by unit tests before reporting back.
 - Keep README documentation in sync when behavior or data storage changes.
+- Commit often.
 - After tests pass, create a git commit for each change set.
 - Commit messages must explain both why the change was made and what was changed.
 
