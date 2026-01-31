@@ -1576,12 +1576,44 @@ function formatFilenameDate(timestamp: number): string {
   return `${year}-${month}-${day}`;
 }
 
-function renderDailyAttemptsChart(
-  container: HTMLElement,
-  dailyAttempts: DailyAttemptCount[],
-  headingText: string
-): void {
-  if (dailyAttempts.length === 0) {
+type LineChartEntry = {
+  label: string;
+  title: string;
+  value: number;
+};
+
+let chartIdCounter = 0;
+
+function dayKeyToTimestamp(dayKey: string): number | undefined {
+  const [year, month, day] = dayKey.split('-').map((value) => Number(value));
+  if (!year || !month || !day) {
+    return undefined;
+  }
+  const date = new Date(year, month - 1, day);
+  return Number.isNaN(date.getTime()) ? undefined : date.getTime();
+}
+
+function formatDayKeyShort(dayKey: string): string {
+  const timestamp = dayKeyToTimestamp(dayKey);
+  if (typeof timestamp !== 'number') {
+    return dayKey;
+  }
+  const date = new Date(timestamp);
+  const month = date.toLocaleDateString(undefined, { month: 'short' });
+  return `${month} ${date.getDate()}`;
+}
+
+function getNiceMax(value: number): number {
+  const safeValue = Math.max(1, value);
+  const exponent = Math.floor(Math.log10(safeValue));
+  const magnitude = Math.pow(10, exponent);
+  const normalized = safeValue / magnitude;
+  const niceFactor = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+  return niceFactor * magnitude;
+}
+
+function renderLineChart(container: HTMLElement, entries: LineChartEntry[], headingText: string): void {
+  if (entries.length === 0) {
     return;
   }
 
@@ -1590,31 +1622,67 @@ function renderDailyAttemptsChart(
   dailyHeading.textContent = headingText;
   container.append(dailyHeading);
 
-  const maxCount = Math.max(1, ...dailyAttempts.map((entry) => entry.count));
+  const rawMax = Math.max(1, ...entries.map((entry) => entry.value));
+  const maxValue = getNiceMax(rawMax);
+  const ticks = [maxValue, Math.round(maxValue / 2), 0];
+
   const chartGrid = document.createElement('div');
   chartGrid.className = 'stats-chart-grid';
 
   const yAxis = document.createElement('div');
   yAxis.className = 'stats-y-axis';
-  const yTop = document.createElement('span');
-  yTop.textContent = `${maxCount}`;
-  const yMid = document.createElement('span');
-  yMid.textContent = `${Math.round(maxCount / 2)}`;
-  const yBottom = document.createElement('span');
-  yBottom.textContent = '0';
-  yAxis.append(yTop, yMid, yBottom);
+  for (const tick of ticks) {
+    const label = document.createElement('span');
+    label.textContent = `${tick}`;
+    yAxis.append(label);
+  }
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const width = 100;
-  const height = 60;
-  const paddingTop = 4;
-  const paddingBottom = 6;
+  const height = 64;
+  const paddingTop = 6;
+  const paddingBottom = 8;
+  const paddingX = 6;
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
   svg.setAttribute('preserveAspectRatio', 'none');
   svg.classList.add('stats-line-svg');
 
-  const baseline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  const gradientId = `stats-line-gradient-${chartIdCounter}`;
+  chartIdCounter += 1;
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+  gradient.setAttribute('id', gradientId);
+  gradient.setAttribute('x1', '0');
+  gradient.setAttribute('x2', '0');
+  gradient.setAttribute('y1', '0');
+  gradient.setAttribute('y2', '1');
+  const stopTop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stopTop.setAttribute('offset', '0%');
+  stopTop.setAttribute('class', 'stats-line-gradient-top');
+  const stopBottom = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stopBottom.setAttribute('offset', '100%');
+  stopBottom.setAttribute('class', 'stats-line-gradient-bottom');
+  gradient.append(stopTop, stopBottom);
+  defs.append(gradient);
+  svg.append(defs);
+
   const baselineY = height - paddingBottom;
+  for (const tick of ticks) {
+    if (tick === 0) {
+      continue;
+    }
+    const ratio = tick / maxValue;
+    const y = paddingTop + (1 - ratio) * (height - paddingTop - paddingBottom);
+    const grid = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    grid.setAttribute('x1', '0');
+    grid.setAttribute('x2', `${width}`);
+    grid.setAttribute('y1', `${y}`);
+    grid.setAttribute('y2', `${y}`);
+    grid.setAttribute('class', 'stats-line-grid');
+    svg.append(grid);
+  }
+
+  const baseline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   baseline.setAttribute('x1', '0');
   baseline.setAttribute('x2', `${width}`);
   baseline.setAttribute('y1', `${baselineY}`);
@@ -1622,35 +1690,49 @@ function renderDailyAttemptsChart(
   baseline.setAttribute('class', 'stats-line-axis');
   svg.append(baseline);
 
-  const points: { x: number; y: number; title: string }[] = [];
+  const points: { x: number; y: number; title: string; value: number }[] = [];
   const usableHeight = height - paddingTop - paddingBottom;
-  const count = dailyAttempts.length;
-  const step = count > 0 ? width / count : 0;
-  dailyAttempts.forEach((entry, index) => {
-    const x = count > 0 ? step * (index + 0.5) : width / 2;
-    const ratio = entry.count / maxCount;
+  const count = entries.length;
+  const innerWidth = width - paddingX * 2;
+  const step = count > 1 ? innerWidth / (count - 1) : 0;
+  entries.forEach((entry, index) => {
+    const x = count > 1 ? paddingX + step * index : width / 2;
+    const ratio = entry.value / maxValue;
     const y = paddingTop + (1 - ratio) * usableHeight;
     points.push({
       x,
       y,
-      title: `${entry.dayKey}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`
+      title: entry.title,
+      value: entry.value
     });
   });
 
   if (points.length > 0) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    const d = points
+    const linePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const lineD = points
       .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
       .join(' ');
-    path.setAttribute('d', d);
-    path.setAttribute('class', 'stats-line-path');
-    svg.append(path);
+    linePath.setAttribute('d', lineD);
+    linePath.setAttribute('class', 'stats-line-path');
+
+    const areaPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const areaD = `${lineD} L ${points[points.length - 1].x.toFixed(2)} ${baselineY.toFixed(2)} L ${points[0].x.toFixed(
+      2
+    )} ${baselineY.toFixed(2)} Z`;
+    areaPath.setAttribute('d', areaD);
+    areaPath.setAttribute('class', 'stats-line-area');
+    areaPath.setAttribute('fill', `url(#${gradientId})`);
+
+    svg.append(areaPath, linePath);
 
     for (const point of points) {
+      if (point.value === 0) {
+        continue;
+      }
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', point.x.toFixed(2));
       circle.setAttribute('cy', point.y.toFixed(2));
-      circle.setAttribute('r', '1.8');
+      circle.setAttribute('r', '2.2');
       circle.setAttribute('class', 'stats-line-point');
       circle.appendChild(createSvgTitle(point.title));
       svg.append(circle);
@@ -1670,15 +1752,47 @@ function renderDailyAttemptsChart(
   spacer.className = 'stats-x-spacer';
   const labels = document.createElement('div');
   labels.className = 'stats-x-labels';
-  labels.style.setProperty('--stats-days', String(dailyAttempts.length));
-  for (const entry of dailyAttempts) {
-    const label = document.createElement('span');
-    label.className = 'stats-x-label';
-    label.textContent = entry.dayKey;
-    labels.append(label);
+  labels.style.setProperty('--stats-days', String(entries.length));
+  const maxLabels = 6;
+  const labelInterval = Math.max(1, Math.ceil(entries.length / maxLabels));
+  const majorIndexes = new Set<number>();
+  for (let index = 0; index < entries.length; index += labelInterval) {
+    majorIndexes.add(index);
   }
+  majorIndexes.add(0);
+  majorIndexes.add(entries.length - 1);
+  entries.forEach((entry, index) => {
+    const label = document.createElement('span');
+    const isMajor = majorIndexes.has(index);
+    label.className = `stats-x-label ${isMajor ? 'is-major' : 'is-minor'}`;
+    label.textContent = isMajor ? entry.label : '';
+    labels.append(label);
+  });
   xAxis.append(spacer, labels);
   container.append(xAxis);
+}
+
+function renderDailyAttemptsChart(
+  container: HTMLElement,
+  dailyAttempts: DailyAttemptCount[],
+  headingText: string
+): void {
+  if (dailyAttempts.length === 0) {
+    return;
+  }
+
+  const entries = dailyAttempts.map((entry) => {
+    const timestamp = dayKeyToTimestamp(entry.dayKey);
+    const dayLabel = formatDayKeyShort(entry.dayKey);
+    const longLabel = typeof timestamp === 'number' ? formatDateLabel(timestamp) : entry.dayKey;
+    return {
+      label: dayLabel,
+      title: `${longLabel}: ${entry.count} ${entry.count === 1 ? 'attempt' : 'attempts'}`,
+      value: entry.count
+    };
+  });
+
+  renderLineChart(container, entries, headingText);
 }
 
 function sortRows<Row, Key extends string>(
