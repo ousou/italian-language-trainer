@@ -178,14 +178,14 @@ export function submitConjugationAnswer(
     return finalizeIfComplete(pack, next);
   }
 
-  if (attempts.length >= 2) {
+  if (!almost) {
     updatedStep.result = 'revealed';
     nextPersonFeedback[personIndex] = 'revealed';
     nextPersons[personIndex] = updatedStep;
     return finalizeIfComplete(pack, next);
   }
 
-  nextPersonFeedback[personIndex] = 'retry';
+  nextPersonFeedback[personIndex] = 'almost';
   nextPersons[personIndex] = updatedStep;
   return next;
 }
@@ -214,6 +214,41 @@ export function redoIncorrect(pack: VerbPack, state: VerbSessionState): VerbSess
   }
   const order = state.incorrectItems.map((item) => item.itemIndex);
   return createVerbSession(pack, order);
+}
+
+export function forceCompleteVerb(pack: VerbPack, state: VerbSessionState): VerbSessionState {
+  if (state.sessionComplete || state.phase === 'recap') {
+    return state;
+  }
+
+  const nextInfinitive =
+    state.infinitive.result
+      ? state.infinitive
+      : {
+          ...state.infinitive,
+          result: 'revealed' as const
+        };
+
+  const nextPersons = state.persons.map((step) =>
+    step.result
+      ? step
+      : {
+          ...step,
+          result: 'revealed' as const
+        }
+  );
+
+  const next: VerbSessionState = {
+    ...state,
+    infinitive: nextInfinitive,
+    persons: nextPersons,
+    infinitiveFeedback: state.infinitive.result ? state.infinitiveFeedback : 'revealed',
+    personFeedback: nextPersons.map((step, index) =>
+      step.result && state.persons[index]?.result ? state.personFeedback[index] : 'revealed'
+    )
+  };
+
+  return finalizeVerb(pack, next);
 }
 
 function startNextVerb(state: VerbSessionState): VerbSessionState {

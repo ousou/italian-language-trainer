@@ -13,6 +13,7 @@ import { buildDailyAttemptCounts, startOfLocalDay, type DailyAttemptCount } from
 import { buildSrsOrder } from './logic/srs.ts';
 import {
   createVerbSession,
+  forceCompleteVerb,
   nextVerbStep,
   redoIncorrect as redoIncorrectVerbs,
   submitConjugationAnswer,
@@ -200,10 +201,6 @@ function isInfinitiveResolved(session: VerbSessionState): boolean {
   return Boolean(session.infinitive.result);
 }
 
-function isConjugationComplete(session: VerbSessionState): boolean {
-  return session.persons.every((step) => Boolean(step.result));
-}
-
 function startNewSession(): void {
   if (state.mode === 'vocab') {
     if (!state.pack) {
@@ -365,14 +362,47 @@ function goToNext(): void {
     return;
   }
 
+  const verbPack = state.verbPack;
   const previous = state.verbSession;
+  const itemIndex = previous.order[previous.currentIndex];
+  const item = verbPack.items[itemIndex];
+
   if (previous.phase !== 'recap') {
+    const completed = forceCompleteVerb(verbPack, previous);
+    if (completed !== previous && completed.lastScore) {
+      void recordReviewResult(
+        {
+          packId: verbPack.id,
+          itemId: item.id,
+          direction: 'dst-to-src'
+        },
+        {
+          correct: completed.lastScore.correct,
+          quality: completed.lastScore.quality,
+          now: Date.now()
+        }
+      )
+        .then(() => refreshReviewStats(verbPack))
+        .catch((error) => {
+          console.warn('Failed to record verb review result', error);
+        });
+    }
+    const advanced = nextVerbStep(completed);
+    if (advanced !== previous) {
+      setState({ verbSession: advanced });
+      if (!advanced.sessionComplete) {
+        queueFocusInput('.answer-input');
+      }
+    }
     return;
   }
 
   const nextSession = nextVerbStep(previous);
   if (nextSession !== previous) {
     setState({ verbSession: nextSession });
+    if (!nextSession.sessionComplete) {
+      queueFocusInput('.answer-input');
+    }
   }
 }
 
@@ -957,13 +987,13 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   nextButton.id = 'verb-next-button';
   nextButton.type = 'button';
   nextButton.textContent = 'Next verb';
-  nextButton.disabled = !isConjugationComplete(session) || sessionComplete;
-  nextButton.addEventListener('click', () => {
-    if (!state.verbSession || !isConjugationComplete(state.verbSession)) {
-      return;
-    }
-    goToNext();
-  });
+    nextButton.disabled = sessionComplete;
+    nextButton.addEventListener('click', () => {
+      if (!state.verbSession) {
+        return;
+      }
+      goToNext();
+    });
 
   controls.append(nextButton);
 

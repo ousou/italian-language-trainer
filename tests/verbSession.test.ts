@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { VerbPack } from '../src/types.ts';
 import {
   createVerbSession,
-  nextVerbStep,
+  forceCompleteVerb,
   redoIncorrect,
   submitConjugationAnswer,
   submitInfinitiveAnswer,
@@ -89,5 +89,16 @@ describe('verb session flow', () => {
     const redo = redoIncorrect(SAMPLE_PACK, session);
     expect(redo.order).toEqual([0]);
     expect(redo.sessionCorrect).toBe(0);
+  });
+
+  it('forces completion with zero score when skipping', () => {
+    const session = createVerbSession(SAMPLE_PACK, [0]);
+    const completed = forceCompleteVerb(SAMPLE_PACK, session);
+
+    expect(completed.phase).toBe('recap');
+    expect(completed.lastScore?.points).toBe(0);
+    expect(completed.sessionIncorrect).toBe(1);
+    expect(completed.persons.every((step) => step.result === 'revealed')).toBe(true);
+    expect(completed.infinitive.result).toBe('revealed');
   });
 });
