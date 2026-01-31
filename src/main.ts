@@ -20,6 +20,7 @@ import {
 import {
   buildHistorySummary,
   buildPackSummaries,
+  createHistoryExport,
   type HistorySummary,
   type PackHistorySummary
 } from './logic/history.ts';
@@ -72,6 +73,7 @@ interface AppState {
   historyPackSummaries: PackHistorySummary[];
   historyLoading: boolean;
   historyError?: string;
+  historyMessage?: string;
 }
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
@@ -121,7 +123,8 @@ const state: AppState = {
   historySummary: undefined,
   historyPackSummaries: [],
   historyLoading: false,
-  historyError: undefined
+  historyError: undefined,
+  historyMessage: undefined
 };
 
 let loadToken = 0;
@@ -215,7 +218,7 @@ function setView(view: AppState['view']): void {
   if (state.view === view) {
     return;
   }
-  setState({ view, historyError: undefined });
+  setState({ view, historyError: undefined, historyMessage: undefined });
   if (view === 'history') {
     void refreshHistoryData();
   }
@@ -1421,6 +1424,42 @@ function applyHistoryFilters(nextPackId?: string, nextStatsDays?: number): void 
   });
 }
 
+async function downloadHistoryFile(): Promise<void> {
+  setState({ historyMessage: undefined, historyError: undefined });
+  try {
+    const [cards, events] = await Promise.all([listAllReviewCards(), listAllReviewEvents()]);
+    const payload = createHistoryExport({ cards, events }, Date.now());
+    const content = JSON.stringify(payload, null, 2);
+    const filenameDate = formatFilenameDate(payload.createdAt);
+    const filename = `italian-language-trainer-history-${filenameDate}.json`;
+    triggerDownload(filename, content);
+    setState({ historyMessage: 'History download ready.' });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unable to download history.';
+    setState({ historyError: message });
+  }
+}
+
+function triggerDownload(filename: string, content: string): void {
+  const blob = new Blob([content], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function formatFilenameDate(timestamp: number): string {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function renderDailyAttemptsChart(
   container: HTMLElement,
   dailyAttempts: DailyAttemptCount[],
@@ -1748,6 +1787,13 @@ function renderHistoryPage(container: HTMLElement): void {
   summaryLabel.textContent = 'Training history';
   summaryPanel.append(summaryLabel);
 
+  if (state.historyMessage) {
+    const message = document.createElement('p');
+    message.className = 'status success';
+    message.textContent = state.historyMessage;
+    summaryPanel.append(message);
+  }
+
   if (state.historyLoading) {
     const loading = document.createElement('p');
     loading.className = 'status loading';
@@ -1814,6 +1860,32 @@ function renderHistoryPage(container: HTMLElement): void {
     container.append(summaryPanel);
   }
 
+  const downloadPanel = document.createElement('section');
+  downloadPanel.className = 'panel history-transfer';
+
+  const downloadLabel = document.createElement('span');
+  downloadLabel.className = 'panel-label';
+  downloadLabel.textContent = 'Download history';
+
+  const downloadIntro = document.createElement('p');
+  downloadIntro.className = 'session-summary';
+  downloadIntro.textContent = 'Save your complete training history as a JSON file for backup.';
+
+  const downloadActions = document.createElement('div');
+  downloadActions.className = 'history-transfer-actions';
+
+  const downloadButton = document.createElement('button');
+  downloadButton.type = 'button';
+  downloadButton.className = 'primary';
+  downloadButton.textContent = 'Download history';
+  downloadButton.disabled = state.historyLoading;
+  downloadButton.addEventListener('click', () => {
+    void downloadHistoryFile();
+  });
+
+  downloadActions.append(downloadButton);
+  downloadPanel.append(downloadLabel, downloadIntro, downloadActions);
+  container.append(downloadPanel);
 }
 
 function render(): void {

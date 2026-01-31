@@ -396,6 +396,13 @@ button.primary[disabled] {
   flex: 1 1 180px;
 }
 
+.history-transfer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 .incorrect-list {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
@@ -522,6 +529,12 @@ button.primary[disabled] {
   color: #4338ca;
 }
 
+.status.success {
+  background: rgba(209, 250, 229, 0.9);
+  color: #065f46;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
 
 .status.error {
   background: rgba(254, 226, 226, 0.9);
@@ -627,6 +640,12 @@ button.primary[disabled] {
   .status.loading {
     background: rgba(99, 102, 241, 0.18);
     color: #c7d2fe;
+  }
+
+  .status.success {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(52, 211, 153, 0.35);
+    color: #a7f3d0;
   }
 
 

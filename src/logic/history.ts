@@ -1,6 +1,18 @@
 import type { ReviewCard } from './review.ts';
 import type { ReviewEvent } from './reviewEvents.ts';
 
+export interface HistorySnapshot {
+  cards: ReviewCard[];
+  events: ReviewEvent[];
+}
+
+export interface HistoryExport {
+  version: 1;
+  createdAt: number;
+  cards: ReviewCard[];
+  events: ReviewEvent[];
+}
+
 export interface HistorySummary {
   totalAttempts: number;
   correct: number;
@@ -19,6 +31,15 @@ export interface PackHistorySummary {
   accuracy: number;
   firstReviewedAt?: number;
   lastReviewedAt?: number;
+}
+
+export function createHistoryExport(snapshot: HistorySnapshot, now: number): HistoryExport {
+  return {
+    version: 1,
+    createdAt: now,
+    cards: snapshot.cards,
+    events: snapshot.events
+  };
 }
 
 export function buildHistorySummary(events: ReviewEvent[], cards: ReviewCard[]): HistorySummary {

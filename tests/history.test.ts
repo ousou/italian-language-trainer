@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildHistorySummary, buildPackSummaries } from '../src/logic/history.ts';
+import { buildHistorySummary, buildPackSummaries, createHistoryExport } from '../src/logic/history.ts';
 import type { ReviewCard } from '../src/logic/review.ts';
 import type { ReviewEvent } from '../src/logic/reviewEvents.ts';
 
@@ -54,6 +54,18 @@ describe('buildHistorySummary', () => {
     expect(summary.firstReviewedAt).toBe(1700000000000);
     expect(summary.lastReviewedAt).toBe(1700000500000);
     expect(summary.uniqueItems).toBe(2);
+  });
+});
+
+describe('createHistoryExport', () => {
+  it('includes versioned payload metadata', () => {
+    const snapshot = { cards: [makeCard()], events: [makeEvent()] };
+    const exported = createHistoryExport(snapshot, 1700001234000);
+
+    expect(exported.version).toBe(1);
+    expect(exported.createdAt).toBe(1700001234000);
+    expect(exported.cards).toEqual(snapshot.cards);
+    expect(exported.events).toEqual(snapshot.events);
   });
 });
 
