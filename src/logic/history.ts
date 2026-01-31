@@ -141,7 +141,14 @@ export function buildPackSummaries(events: ReviewEvent[]): PackHistorySummary[] 
     summary.accuracy = summary.attempts > 0 ? Math.round((summary.correct / summary.attempts) * 100) : 0;
   }
 
-  return Array.from(summaries.values()).sort((a, b) => b.attempts - a.attempts);
+  return Array.from(summaries.values()).sort((a, b) => {
+    const aLast = a.lastReviewedAt ?? 0;
+    const bLast = b.lastReviewedAt ?? 0;
+    if (aLast !== bLast) {
+      return bLast - aLast;
+    }
+    return b.attempts - a.attempts;
+  });
 }
 
 export function mergeHistorySnapshots(base: HistorySnapshot, incoming: HistorySnapshot): HistorySnapshot {
