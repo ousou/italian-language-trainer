@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildHistorySummary, buildPackSummaries, createHistoryExport } from '../src/logic/history.ts';
+import {
+  buildHistorySummary,
+  buildPackSummaries,
+  createHistoryExport,
+  parseHistoryExport
+} from '../src/logic/history.ts';
 import type { ReviewCard } from '../src/logic/review.ts';
 import type { ReviewEvent } from '../src/logic/reviewEvents.ts';
 
@@ -68,6 +73,23 @@ describe('createHistoryExport', () => {
     expect(exported.events).toEqual(snapshot.events);
   });
 });
+
+describe('parseHistoryExport', () => {
+  it('parses a valid history payload', () => {
+    const snapshot = { cards: [makeCard()], events: [makeEvent()] };
+    const exported = createHistoryExport(snapshot, 1700001234000);
+    const parsed = parseHistoryExport(JSON.stringify(exported));
+
+    expect(parsed.cards).toEqual(snapshot.cards);
+    expect(parsed.events).toEqual(snapshot.events);
+  });
+
+  it('rejects invalid payloads', () => {
+    expect(() => parseHistoryExport('{\"version\":1}')).toThrowError();
+    expect(() => parseHistoryExport('not-json')).toThrowError();
+  });
+});
+
 
 describe('buildPackSummaries', () => {
   it('groups attempts by pack', () => {

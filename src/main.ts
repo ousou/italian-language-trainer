@@ -8,6 +8,7 @@ import {
   listReviewCardsByPack,
   listReviewCardsByPackAndDirection,
   listReviewEventsByPackSince,
+  overwriteReviewHistory,
   recordReviewResult
 } from './data/reviewStore.ts';
 import type { ReviewCard } from './logic/review.ts';
@@ -21,6 +22,8 @@ import {
   buildHistorySummary,
   buildPackSummaries,
   createHistoryExport,
+  parseHistoryExport,
+  type HistorySnapshot,
   type HistorySummary,
   type PackHistorySummary
 } from './logic/history.ts';
@@ -74,6 +77,11 @@ interface AppState {
   historyLoading: boolean;
   historyError?: string;
   historyMessage?: string;
+  historyImport?: {
+    snapshot: HistorySnapshot;
+    summary: HistorySummary;
+    fileName: string;
+  };
 }
 
 const LANGUAGE_LABELS: Record<LanguageCode, string> = {
@@ -124,7 +132,8 @@ const state: AppState = {
   historyPackSummaries: [],
   historyLoading: false,
   historyError: undefined,
-  historyMessage: undefined
+  historyMessage: undefined,
+  historyImport: undefined
 };
 
 let loadToken = 0;
@@ -218,7 +227,7 @@ function setView(view: AppState['view']): void {
   if (state.view === view) {
     return;
   }
-  setState({ view, historyError: undefined, historyMessage: undefined });
+  setState({ view, historyError: undefined, historyMessage: undefined, historyImport: undefined });
   if (view === 'history') {
     void refreshHistoryData();
   }
@@ -1440,6 +1449,50 @@ async function downloadHistoryFile(): Promise<void> {
   }
 }
 
+async function handleHistoryUpload(file: File): Promise<void> {
+  setState({ historyImport: undefined, historyMessage: undefined, historyError: undefined });
+  try {
+    const text = await file.text();
+    const snapshot = parseHistoryExport(text);
+    const summary = buildHistorySummary(snapshot.events, snapshot.cards);
+    setState({
+      historyImport: {
+        snapshot,
+        summary,
+        fileName: file.name
+      }
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unable to read history file.';
+    setState({ historyError: message });
+  }
+}
+
+async function applyHistoryImport(): Promise<void> {
+  if (!state.historyImport) {
+    return;
+  }
+  setState({ historyLoading: true, historyError: undefined, historyMessage: undefined });
+  try {
+    await overwriteReviewHistory(state.historyImport.snapshot);
+    const [cards, events] = await Promise.all([listAllReviewCards(), listAllReviewEvents()]);
+    const derived = buildHistoryDerived(cards, events, state.historyPackId, state.historyStatsDays);
+    setState({
+      historyCards: cards,
+      historyEvents: events,
+      historySummary: derived.summary,
+      historyDailyAttempts: derived.dailyAttempts,
+      historyPackSummaries: derived.packSummaries,
+      historyLoading: false,
+      historyImport: undefined,
+      historyMessage: 'History overwritten successfully.'
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unable to import history.';
+    setState({ historyLoading: false, historyError: message });
+  }
+}
+
 function triggerDownload(filename: string, content: string): void {
   const blob = new Blob([content], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -1865,11 +1918,12 @@ function renderHistoryPage(container: HTMLElement): void {
 
   const downloadLabel = document.createElement('span');
   downloadLabel.className = 'panel-label';
-  downloadLabel.textContent = 'Download history';
+  downloadLabel.textContent = 'Download or import history';
 
   const downloadIntro = document.createElement('p');
   downloadIntro.className = 'session-summary';
-  downloadIntro.textContent = 'Save your complete training history as a JSON file for backup.';
+  downloadIntro.textContent =
+    'Save your complete training history as a JSON file, or import a history file from another device.';
 
   const downloadActions = document.createElement('div');
   downloadActions.className = 'history-transfer-actions';
@@ -1884,7 +1938,59 @@ function renderHistoryPage(container: HTMLElement): void {
   });
 
   downloadActions.append(downloadButton);
-  downloadPanel.append(downloadLabel, downloadIntro, downloadActions);
+  const uploadInput = document.createElement('input');
+  uploadInput.type = 'file';
+  uploadInput.accept = 'application/json';
+  uploadInput.className = 'panel-control';
+  uploadInput.addEventListener('change', () => {
+    const file = uploadInput.files?.[0];
+    if (!file) {
+      return;
+    }
+    void handleHistoryUpload(file);
+  });
+
+  downloadPanel.append(downloadLabel, downloadIntro, downloadActions, uploadInput);
+
+  if (state.historyImport) {
+    const importSummary = state.historyImport.summary;
+    const importInfo = document.createElement('p');
+    importInfo.className = 'session-summary';
+    importInfo.textContent = `Ready to import ${state.historyImport.fileName}: ${importSummary.totalAttempts} attempts · ${importSummary.accuracy}% accuracy · ${importSummary.uniqueItems} items`;
+    downloadPanel.append(importInfo);
+
+    const hasExistingHistory = state.historyEvents.length > 0 || state.historyCards.length > 0;
+    if (hasExistingHistory) {
+      const warn = document.createElement('p');
+      warn.className = 'status hint';
+      warn.textContent = 'Existing history detected. Choose whether to overwrite it.';
+      downloadPanel.append(warn);
+    }
+
+    const importActions = document.createElement('div');
+    importActions.className = 'history-transfer-actions';
+
+    const importButton = document.createElement('button');
+    importButton.type = 'button';
+    importButton.textContent = hasExistingHistory ? 'Overwrite history' : 'Import history';
+    importButton.disabled = state.historyLoading;
+    importButton.addEventListener('click', () => {
+      void applyHistoryImport();
+    });
+    importActions.append(importButton);
+
+    const clearButton = document.createElement('button');
+    clearButton.type = 'button';
+    clearButton.textContent = 'Clear file';
+    clearButton.disabled = state.historyLoading;
+    clearButton.addEventListener('click', () => {
+      uploadInput.value = '';
+      setState({ historyImport: undefined });
+    });
+
+    importActions.append(clearButton);
+    downloadPanel.append(importActions);
+  }
   container.append(downloadPanel);
 }
 

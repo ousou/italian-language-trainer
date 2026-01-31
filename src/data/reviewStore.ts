@@ -7,6 +7,7 @@ import {
   type ReviewInput
 } from '../logic/review.ts';
 import type { ReviewEvent } from '../logic/reviewEvents.ts';
+import type { HistorySnapshot } from '../logic/history.ts';
 
 const DB_NAME = 'italian-language-trainer';
 const DB_VERSION = 2;
@@ -139,6 +140,25 @@ export async function listAllReviewEvents(): Promise<ReviewEvent[]> {
   const result = await requestToPromise(store.getAll());
   await transactionDone(transaction);
   return result;
+}
+
+export async function overwriteReviewHistory(snapshot: HistorySnapshot): Promise<void> {
+  const db = await getDb();
+  const transaction = db.transaction([STORE_REVIEW_CARDS, STORE_REVIEW_EVENTS], 'readwrite');
+  const cardStore = transaction.objectStore(STORE_REVIEW_CARDS);
+  const eventStore = transaction.objectStore(STORE_REVIEW_EVENTS);
+
+  cardStore.clear();
+  eventStore.clear();
+
+  for (const card of snapshot.cards) {
+    cardStore.put(card);
+  }
+  for (const event of snapshot.events) {
+    eventStore.put(event);
+  }
+
+  await transactionDone(transaction);
 }
 
 async function addReviewEvent(event: ReviewEvent): Promise<void> {

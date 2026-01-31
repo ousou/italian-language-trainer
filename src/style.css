@@ -403,6 +403,10 @@ button.primary[disabled] {
   align-items: center;
 }
 
+.history-transfer .panel-control {
+  margin-top: 0.5rem;
+}
+
 .incorrect-list {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
