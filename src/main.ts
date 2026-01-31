@@ -183,6 +183,14 @@ function focusInputElement(input: HTMLInputElement | null): void {
   }
 }
 
+function withScrollPreservation(action: () => void): void {
+  const scrollY = window.scrollY;
+  action();
+  requestAnimationFrame(() => {
+    window.scrollTo(0, scrollY);
+  });
+}
+
 function queueFocusInput(selector: string): void {
   requestAnimationFrame(() => {
     const input = root.querySelector<HTMLInputElement>(selector);
@@ -742,32 +750,34 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
     if (!state.session) {
       return;
     }
-    if (state.session.lastResult === 'correct' || state.session.lastResult === 'incorrect') {
-      goToNext();
-      return;
-    }
-    const currentSession = state.session;
-    const nextSession = submitAnswer(pack, currentSession, currentSession.answerInput);
-    if (nextSession.lastResult === 'correct' || nextSession.lastResult === 'incorrect') {
-      const itemIndex = currentSession.order[currentSession.currentIndex];
-      const item = pack.items[itemIndex];
-      void recordReviewResult(
-        {
-          packId: pack.id,
-          itemId: item.id,
-          direction: currentSession.direction
-        },
-        {
-          correct: nextSession.lastResult === 'correct',
-          now: Date.now()
-        }
-      )
-        .then(() => refreshReviewStats(pack))
-        .catch((error) => {
-          console.warn('Failed to record review result', error);
-        });
-    }
-    setState({ session: nextSession });
+    withScrollPreservation(() => {
+      if (state.session?.lastResult === 'correct' || state.session?.lastResult === 'incorrect') {
+        goToNext();
+        return;
+      }
+      const currentSession = state.session;
+      const nextSession = submitAnswer(pack, currentSession, currentSession.answerInput);
+      if (nextSession.lastResult === 'correct' || nextSession.lastResult === 'incorrect') {
+        const itemIndex = currentSession.order[currentSession.currentIndex];
+        const item = pack.items[itemIndex];
+        void recordReviewResult(
+          {
+            packId: pack.id,
+            itemId: item.id,
+            direction: currentSession.direction
+          },
+          {
+            correct: nextSession.lastResult === 'correct',
+            now: Date.now()
+          }
+        )
+          .then(() => refreshReviewStats(pack))
+          .catch((error) => {
+            console.warn('Failed to record review result', error);
+          });
+      }
+      setState({ session: nextSession });
+    });
   });
 
   form.append(input, checkButton);
