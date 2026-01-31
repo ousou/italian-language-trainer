@@ -3,6 +3,7 @@ import {
   buildHistorySummary,
   buildPackSummaries,
   createHistoryExport,
+  mergeHistorySnapshots,
   parseHistoryExport
 } from '../src/logic/history.ts';
 import type { ReviewCard } from '../src/logic/review.ts';
@@ -87,6 +88,26 @@ describe('parseHistoryExport', () => {
   it('rejects invalid payloads', () => {
     expect(() => parseHistoryExport('{\"version\":1}')).toThrowError();
     expect(() => parseHistoryExport('not-json')).toThrowError();
+  });
+});
+
+describe('mergeHistorySnapshots', () => {
+  it('dedupes events and keeps the newest card state', () => {
+    const base = {
+      cards: [makeCard({ attempts: 1, lastReviewedAt: 1700000000000 })],
+      events: [makeEvent({ id: 'event-1' })]
+    };
+    const incoming = {
+      cards: [makeCard({ attempts: 4, lastReviewedAt: 1700000500000 })],
+      events: [makeEvent({ id: 'event-1' }), makeEvent({ id: 'event-2', timestamp: 1700000600000 })]
+    };
+
+    const merged = mergeHistorySnapshots(base, incoming);
+
+    expect(merged.events).toHaveLength(2);
+    expect(merged.cards).toHaveLength(1);
+    expect(merged.cards[0]?.attempts).toBe(4);
+    expect(merged.cards[0]?.lastReviewedAt).toBe(1700000500000);
   });
 });
 

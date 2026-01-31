@@ -22,6 +22,7 @@ import {
   buildHistorySummary,
   buildPackSummaries,
   createHistoryExport,
+  mergeHistorySnapshots,
   parseHistoryExport,
   type HistorySnapshot,
   type HistorySummary,
@@ -1468,13 +1469,16 @@ async function handleHistoryUpload(file: File): Promise<void> {
   }
 }
 
-async function applyHistoryImport(): Promise<void> {
+async function applyHistoryImport(mode: 'overwrite' | 'merge'): Promise<void> {
   if (!state.historyImport) {
     return;
   }
   setState({ historyLoading: true, historyError: undefined, historyMessage: undefined });
   try {
-    await overwriteReviewHistory(state.historyImport.snapshot);
+    const baseSnapshot = { cards: state.historyCards, events: state.historyEvents };
+    const nextSnapshot =
+      mode === 'merge' ? mergeHistorySnapshots(baseSnapshot, state.historyImport.snapshot) : state.historyImport.snapshot;
+    await overwriteReviewHistory(nextSnapshot);
     const [cards, events] = await Promise.all([listAllReviewCards(), listAllReviewEvents()]);
     const derived = buildHistoryDerived(cards, events, state.historyPackId, state.historyStatsDays);
     setState({
@@ -1485,7 +1489,7 @@ async function applyHistoryImport(): Promise<void> {
       historyPackSummaries: derived.packSummaries,
       historyLoading: false,
       historyImport: undefined,
-      historyMessage: 'History overwritten successfully.'
+      historyMessage: mode === 'merge' ? 'History merged successfully.' : 'History overwritten successfully.'
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unable to import history.';
@@ -1963,21 +1967,41 @@ function renderHistoryPage(container: HTMLElement): void {
     if (hasExistingHistory) {
       const warn = document.createElement('p');
       warn.className = 'status hint';
-      warn.textContent = 'Existing history detected. Choose whether to overwrite it.';
+      warn.textContent = 'Existing history detected. Choose merge or overwrite.';
       downloadPanel.append(warn);
     }
 
     const importActions = document.createElement('div');
     importActions.className = 'history-transfer-actions';
 
-    const importButton = document.createElement('button');
-    importButton.type = 'button';
-    importButton.textContent = hasExistingHistory ? 'Overwrite history' : 'Import history';
-    importButton.disabled = state.historyLoading;
-    importButton.addEventListener('click', () => {
-      void applyHistoryImport();
-    });
-    importActions.append(importButton);
+    if (hasExistingHistory) {
+      const mergeButton = document.createElement('button');
+      mergeButton.type = 'button';
+      mergeButton.textContent = 'Merge history';
+      mergeButton.disabled = state.historyLoading;
+      mergeButton.addEventListener('click', () => {
+        void applyHistoryImport('merge');
+      });
+      importActions.append(mergeButton);
+
+      const overwriteButton = document.createElement('button');
+      overwriteButton.type = 'button';
+      overwriteButton.textContent = 'Overwrite history';
+      overwriteButton.disabled = state.historyLoading;
+      overwriteButton.addEventListener('click', () => {
+        void applyHistoryImport('overwrite');
+      });
+      importActions.append(overwriteButton);
+    } else {
+      const importButton = document.createElement('button');
+      importButton.type = 'button';
+      importButton.textContent = 'Import history';
+      importButton.disabled = state.historyLoading;
+      importButton.addEventListener('click', () => {
+        void applyHistoryImport('overwrite');
+      });
+      importActions.append(importButton);
+    }
 
     const clearButton = document.createElement('button');
     clearButton.type = 'button';

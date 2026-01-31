@@ -144,6 +144,63 @@ export function buildPackSummaries(events: ReviewEvent[]): PackHistorySummary[] 
   return Array.from(summaries.values()).sort((a, b) => b.attempts - a.attempts);
 }
 
+export function mergeHistorySnapshots(base: HistorySnapshot, incoming: HistorySnapshot): HistorySnapshot {
+  const eventMap = new Map<string, ReviewEvent>();
+  for (const event of base.events) {
+    eventMap.set(event.id, event);
+  }
+  for (const event of incoming.events) {
+    eventMap.set(event.id, event);
+  }
+
+  const events = Array.from(eventMap.values()).sort((a, b) => {
+    if (a.timestamp !== b.timestamp) {
+      return a.timestamp - b.timestamp;
+    }
+    return a.id.localeCompare(b.id);
+  });
+
+  const cardMap = new Map<string, ReviewCard>();
+  for (const card of base.cards) {
+    cardMap.set(card.id, card);
+  }
+  for (const card of incoming.cards) {
+    const existing = cardMap.get(card.id);
+    if (!existing) {
+      cardMap.set(card.id, card);
+      continue;
+    }
+    cardMap.set(card.id, choosePreferredCard(existing, card));
+  }
+
+  const cards = Array.from(cardMap.values()).sort((a, b) => a.id.localeCompare(b.id));
+  return { cards, events };
+}
+
+function choosePreferredCard(a: ReviewCard, b: ReviewCard): ReviewCard {
+  const aTime = a.lastReviewedAt;
+  const bTime = b.lastReviewedAt;
+  if (typeof aTime === 'number' && typeof bTime === 'number' && aTime !== bTime) {
+    return aTime > bTime ? a : b;
+  }
+  if (typeof aTime === 'number' && typeof bTime !== 'number') {
+    return a;
+  }
+  if (typeof bTime === 'number' && typeof aTime !== 'number') {
+    return b;
+  }
+  if (a.attempts !== b.attempts) {
+    return a.attempts > b.attempts ? a : b;
+  }
+  if (a.correct !== b.correct) {
+    return a.correct > b.correct ? a : b;
+  }
+  if (a.incorrect !== b.incorrect) {
+    return a.incorrect > b.incorrect ? a : b;
+  }
+  return b;
+}
+
 
 function isReviewEvent(value: unknown): value is ReviewEvent {
   if (!isRecord(value)) {
