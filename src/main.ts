@@ -51,6 +51,7 @@ import {
 
 interface AppState {
   view: 'practice' | 'history';
+  menuOpen: boolean;
   mode: 'vocab' | 'verbs';
   packId?: string;
   pack?: VocabPack;
@@ -107,6 +108,7 @@ const VERB_PERSON_LABELS: Record<typeof VERB_PERSONS[number], string> = {
 
 const state: AppState = {
   view: 'practice',
+  menuOpen: false,
   mode: 'vocab',
   packId: undefined,
   pack: undefined,
@@ -228,7 +230,13 @@ function setView(view: AppState['view']): void {
   if (state.view === view) {
     return;
   }
-  setState({ view, historyError: undefined, historyMessage: undefined, historyImport: undefined });
+  setState({
+    view,
+    historyError: undefined,
+    historyMessage: undefined,
+    historyImport: undefined,
+    menuOpen: false
+  });
   if (view === 'history') {
     void refreshHistoryData();
   }
@@ -564,36 +572,6 @@ function renderModeSelector(container: HTMLElement): void {
   }
 
   container.append(section);
-}
-
-function renderPrimaryNav(container: HTMLElement): void {
-  const nav = document.createElement('nav');
-  nav.className = 'panel primary-nav';
-
-  const label = document.createElement('span');
-  label.className = 'panel-label';
-  label.textContent = 'Navigate';
-
-  const buttonRow = document.createElement('div');
-  buttonRow.className = 'primary-nav-actions';
-
-  const practiceButton = document.createElement('button');
-  practiceButton.type = 'button';
-  practiceButton.textContent = 'Practice';
-  practiceButton.className = state.view === 'practice' ? 'primary is-active' : '';
-  practiceButton.setAttribute('aria-pressed', String(state.view === 'practice'));
-  practiceButton.addEventListener('click', () => setView('practice'));
-
-  const historyButton = document.createElement('button');
-  historyButton.type = 'button';
-  historyButton.textContent = 'History';
-  historyButton.className = state.view === 'history' ? 'primary is-active' : '';
-  historyButton.setAttribute('aria-pressed', String(state.view === 'history'));
-  historyButton.addEventListener('click', () => setView('history'));
-
-  buttonRow.append(practiceButton, historyButton);
-  nav.append(label, buttonRow);
-  container.append(nav);
 }
 
 function renderPackSelector(container: HTMLElement): void {
@@ -2028,6 +2006,12 @@ function render(): void {
   const header = document.createElement('header');
   header.className = 'app-header';
 
+  const headerRow = document.createElement('div');
+  headerRow.className = 'app-header-row';
+
+  const titleBlock = document.createElement('div');
+  titleBlock.className = 'app-header-title';
+
   const title = document.createElement('h1');
   title.textContent = 'Italian Language Trainer';
 
@@ -2035,10 +2019,44 @@ function render(): void {
   subtitle.className = 'app-subtitle';
   subtitle.textContent = 'Practice vocabulary and verb conjugations with focused daily drills.';
 
-  header.append(title, subtitle);
-  container.append(header);
+  titleBlock.append(title, subtitle);
 
-  renderPrimaryNav(container);
+  const menuWrap = document.createElement('div');
+  menuWrap.className = 'overflow-menu';
+
+  const menuButton = document.createElement('button');
+  menuButton.type = 'button';
+  menuButton.className = 'overflow-menu-button';
+  menuButton.setAttribute('aria-haspopup', 'menu');
+  menuButton.setAttribute('aria-expanded', String(state.menuOpen));
+  menuButton.textContent = '⋯';
+  menuButton.addEventListener('click', () => {
+    setState({ menuOpen: !state.menuOpen });
+  });
+
+  menuWrap.append(menuButton);
+
+  if (state.menuOpen) {
+    const menu = document.createElement('div');
+    menu.className = 'overflow-menu-panel';
+    menu.setAttribute('role', 'menu');
+
+    const historyItem = document.createElement('button');
+    historyItem.type = 'button';
+    historyItem.className = 'overflow-menu-item';
+    historyItem.setAttribute('role', 'menuitem');
+    historyItem.textContent = state.view === 'history' ? 'Back to practice' : 'History';
+    historyItem.addEventListener('click', () => {
+      setView(state.view === 'history' ? 'practice' : 'history');
+    });
+
+    menu.append(historyItem);
+    menuWrap.append(menu);
+  }
+
+  headerRow.append(titleBlock, menuWrap);
+  header.append(headerRow);
+  container.append(header);
 
   if (state.view === 'practice') {
     renderModeSelector(container);
