@@ -206,7 +206,9 @@ function attachGlobalKeyListener(): void {
       return;
     }
     event.preventDefault();
-    goToNext();
+    withScrollPreservation(() => {
+      goToNext();
+    });
   });
 }
 
@@ -906,7 +908,9 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
     ) {
       return;
     }
-    goToNext();
+    withScrollPreservation(() => {
+      goToNext();
+    });
   });
 
   controls.append(nextButton);
