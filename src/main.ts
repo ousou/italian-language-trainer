@@ -284,15 +284,51 @@ function formatDateLabel(timestamp?: number): string {
   });
 }
 
+function buildPackIdAliases(): Map<string, Set<string>> {
+  const aliases = new Map<string, Set<string>>();
+
+  for (const pack of AVAILABLE_PHRASEPACKS) {
+    const derivedId = extractPackIdFromPath(pack.path);
+    const ids = new Set<string>([pack.id, derivedId].filter(isNonEmptyString));
+    for (const id of ids) {
+      aliases.set(id, new Set(ids));
+    }
+  }
+
+  for (const pack of AVAILABLE_VERBPACKS) {
+    const ids = new Set<string>([pack.id]);
+    aliases.set(pack.id, ids);
+  }
+
+  return aliases;
+}
+
 function buildPackLabelMap(): Map<string, string> {
   const map = new Map<string, string>();
   for (const pack of AVAILABLE_PHRASEPACKS) {
-    map.set(pack.id, `${pack.title} (Vocab)`);
+    const label = `${pack.title} (Vocab)`;
+    map.set(pack.id, label);
+    const derivedId = extractPackIdFromPath(pack.path);
+    if (derivedId) {
+      map.set(derivedId, label);
+    }
   }
   for (const pack of AVAILABLE_VERBPACKS) {
     map.set(pack.id, `${pack.title} (Verbs)`);
   }
   return map;
+}
+
+function extractPackIdFromPath(path: string): string | undefined {
+  const filename = path.split('/').pop();
+  if (!filename) {
+    return undefined;
+  }
+  return filename.replace(/\.json$/i, '');
+}
+
+function isNonEmptyString(value: string | undefined): value is string {
+  return typeof value === 'string' && value.length > 0;
 }
 
 function buildHistoryDerived(
@@ -301,8 +337,12 @@ function buildHistoryDerived(
   packId: string,
   statsDays: number
 ): { summary: HistorySummary; dailyAttempts: DailyAttemptCount[]; packSummaries: PackHistorySummary[] } {
-  const selectedEvents = packId === 'all' ? events : events.filter((event) => event.packId === packId);
-  const selectedCards = packId === 'all' ? cards : cards.filter((card) => card.packId === packId);
+  const aliasMap = buildPackIdAliases();
+  const allowedIds = packId === 'all' ? undefined : aliasMap.get(packId) ?? new Set([packId]);
+  const selectedEvents =
+    packId === 'all' ? events : events.filter((event) => allowedIds?.has(event.packId));
+  const selectedCards =
+    packId === 'all' ? cards : cards.filter((card) => allowedIds?.has(card.packId));
   const summary = buildHistorySummary(selectedEvents, selectedCards);
   const dailyAttempts = buildDailyAttemptCounts(selectedEvents, Date.now(), statsDays);
   const packSummaries = buildPackSummaries(events);
