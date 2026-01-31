@@ -806,15 +806,15 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    if (!state.session) {
+    const currentSession = state.session;
+    if (!currentSession) {
       return;
     }
     withScrollPreservation(() => {
-      if (state.session?.lastResult === 'correct' || state.session?.lastResult === 'incorrect') {
+      if (currentSession.lastResult === 'correct' || currentSession.lastResult === 'incorrect') {
         goToNext();
         return;
       }
-      const currentSession = state.session;
       const nextSession = submitAnswer(pack, currentSession, currentSession.answerInput);
       if (nextSession.lastResult === 'correct' || nextSession.lastResult === 'incorrect') {
         const itemIndex = currentSession.order[currentSession.currentIndex];
