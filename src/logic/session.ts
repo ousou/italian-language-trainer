@@ -1,5 +1,5 @@
 import type { DrillDirection, VocabPack } from '../types.ts';
-import { isAnswerAlmost, isAnswerCorrect } from './answerCheck.ts';
+import { isAnswerAlmost, isAnswerCorrect, isAnswerAccentIssue } from './answerCheck.ts';
 
 export interface IncorrectEntry {
   key: string;
@@ -18,6 +18,7 @@ export interface SessionState {
   sessionIncorrect: number;
   incorrectItems: IncorrectEntry[];
   lastResult?: 'correct' | 'incorrect' | 'almost';
+  lastAccentIssue?: boolean;
   attempts: string[];
   answerInput: string;
   sessionComplete: boolean;
@@ -54,6 +55,7 @@ export function createSession(pack: VocabPack, direction: DrillDirection, order:
     sessionIncorrect: 0,
     incorrectItems: [],
     lastResult: undefined,
+    lastAccentIssue: undefined,
     attempts: [],
     answerInput: '',
     sessionComplete: false
@@ -77,10 +79,12 @@ export function submitAnswer(pack: VocabPack, state: SessionState, answer: strin
   const correct = isAnswerCorrect(answerText, answer);
   const almost = !correct && isAnswerAlmost(answerText, answer) && attempts.length === 1;
   const result: SessionState['lastResult'] = correct ? 'correct' : almost ? 'almost' : 'incorrect';
+  const accentIssue = correct ? isAnswerAccentIssue(answerText, answer) : false;
 
   const updated: SessionState = {
     ...state,
     lastResult: result,
+    lastAccentIssue: accentIssue,
     attempts,
     answerInput: answer
   };
@@ -131,6 +135,7 @@ export function nextCard(state: SessionState): SessionState {
     currentIndex: state.currentIndex + 1,
     answerInput: '',
     lastResult: undefined,
+    lastAccentIssue: undefined,
     attempts: []
   };
 }

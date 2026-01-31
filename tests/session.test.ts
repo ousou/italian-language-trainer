@@ -59,6 +59,7 @@ describe('submitAnswer and session flow', () => {
     const next = submitAnswer(pack, session, 'citta');
 
     expect(next.lastResult).toBe('correct');
+    expect(next.lastAccentIssue).toBe(true);
   });
 
   it('records incorrect answers with prompt and expected text', () => {

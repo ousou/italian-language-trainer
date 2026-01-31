@@ -1,5 +1,5 @@
 import type { AnswerSpec, VerbItem, VerbPack, VerbPerson } from '../types.ts';
-import { isAnswerAlmostSpec, isAnswerCorrectSpec } from './answerCheck.ts';
+import { isAnswerAlmostSpec, isAnswerCorrectSpec, isAnswerAccentIssueSpec } from './answerCheck.ts';
 
 export type VerbStepResult = 'correct-first' | 'correct-second' | 'revealed';
 
@@ -8,6 +8,7 @@ export type VerbStepFeedback = 'correct' | 'almost' | 'retry' | 'revealed';
 export interface VerbAnswerStep {
   attempts: string[];
   result?: VerbStepResult;
+  accentIssue?: boolean;
 }
 
 export interface VerbPersonResult extends VerbAnswerStep {
@@ -95,11 +96,13 @@ export function submitInfinitiveAnswer(pack: VerbPack, state: VerbSessionState, 
   const attempts = [...state.infinitive.attempts, answer];
   const correct = isAnswerCorrectSpec(item.src, answer);
   const almost = !correct && isAnswerAlmostSpec(item.src, answer) && attempts.length === 1;
+  const accentIssue = correct ? isAnswerAccentIssueSpec(item.src, answer) : false;
   const next: VerbSessionState = {
     ...state,
     infinitive: {
       attempts,
-      result: state.infinitive.result
+      result: state.infinitive.result,
+      accentIssue
     },
     infinitiveInput: answer,
     infinitiveFeedback: state.infinitiveFeedback
@@ -152,11 +155,13 @@ export function submitConjugationAnswer(
   const attempts = [...step.attempts, answer];
   const correct = isAnswerCorrectSpec(expected, answer);
   const almost = !correct && isAnswerAlmostSpec(expected, answer) && attempts.length === 1;
+  const accentIssue = correct ? isAnswerAccentIssueSpec(expected, answer) : false;
 
   const nextPersons = [...state.persons];
   const updatedStep: VerbAnswerStep = {
     attempts,
-    result: step.result
+    result: step.result,
+    accentIssue
   };
 
   const nextPersonInputs = [...state.personInputs];

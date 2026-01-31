@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { damerauLevenshteinDistance, isAnswerAlmost, isAnswerCorrect, normalizeAnswer } from '../src/logic/answerCheck.ts';
+import {
+  damerauLevenshteinDistance,
+  isAnswerAlmost,
+  isAnswerCorrect,
+  isAnswerAccentIssue,
+  isAnswerAccentIssueSpec,
+  normalizeAnswer
+} from '../src/logic/answerCheck.ts';
 
 describe('normalizeAnswer', () => {
   it('trims and collapses whitespace', () => {
@@ -50,5 +57,29 @@ describe('isAnswerAlmost', () => {
   it('matches answers that are one edit away after normalization', () => {
     expect(isAnswerAlmost('Città', 'citta')).toBe(false);
     expect(isAnswerAlmost('Città', 'citt')).toBe(true);
+  });
+});
+
+describe('isAnswerAccentIssue', () => {
+  it('detects missing accents when the answer is otherwise correct', () => {
+    expect(isAnswerAccentIssue('Città', 'citta')).toBe(true);
+  });
+
+  it('does not flag exact accented matches', () => {
+    expect(isAnswerAccentIssue('perché', 'perché')).toBe(false);
+  });
+
+  it('returns false when the answer is incorrect', () => {
+    expect(isAnswerAccentIssue('grazie', 'prego')).toBe(false);
+  });
+});
+
+describe('isAnswerAccentIssueSpec', () => {
+  it('does not flag when an unaccented option is allowed', () => {
+    expect(isAnswerAccentIssueSpec(['perché', 'perche'], 'perche')).toBe(false);
+  });
+
+  it('flags accent differences when only the accented option exists', () => {
+    expect(isAnswerAccentIssueSpec(['perché'], 'perche')).toBe(true);
   });
 });

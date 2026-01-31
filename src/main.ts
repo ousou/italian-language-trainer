@@ -755,7 +755,7 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
     return;
   }
 
-  const { order, currentIndex, lastResult, answerInput, sessionComplete } = session;
+  const { order, currentIndex, lastResult, lastAccentIssue, answerInput, sessionComplete } = session;
 
   if (order.length === 0) {
     const emptyNotice = document.createElement('p');
@@ -885,7 +885,7 @@ function renderDrillCard(container: HTMLElement, pack: VocabPack): void {
   const feedback = document.createElement('p');
   feedback.className = `answer-feedback ${lastResult ?? ''}`.trim();
   if (lastResult === 'correct') {
-    feedback.textContent = 'Correct!';
+    feedback.textContent = lastAccentIssue ? 'Correct (check accents)' : 'Correct!';
   } else if (lastResult === 'almost') {
     feedback.textContent = 'Almost!';
   } else if (lastResult === 'incorrect') {
@@ -1034,8 +1034,15 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
   const infinitiveFeedback = document.createElement('p');
   infinitiveFeedback.className = 'answer-feedback';
   if (session.infinitiveFeedback === 'correct') {
-    infinitiveFeedback.textContent =
-      session.infinitive.result === 'correct-second' ? 'Correct (second try).' : 'Correct!';
+    if (session.infinitive.result === 'correct-second') {
+      infinitiveFeedback.textContent = session.infinitive.accentIssue
+        ? 'Correct (second try, check accents)'
+        : 'Correct (second try).';
+    } else {
+      infinitiveFeedback.textContent = session.infinitive.accentIssue
+        ? 'Correct (check accents)'
+        : 'Correct!';
+    }
     infinitiveFeedback.classList.add('correct');
   } else if (session.infinitiveFeedback === 'almost') {
     infinitiveFeedback.textContent = 'Almost!';
@@ -1119,8 +1126,15 @@ function renderVerbDrillCard(container: HTMLElement, pack: VerbPack): void {
     feedback.className = 'verb-cell verb-feedback';
     const rowFeedback = session.personFeedback[index];
     if (rowFeedback === 'correct') {
-      feedback.textContent =
-        session.persons[index].result === 'correct-second' ? 'Correct (2nd try)' : 'Correct';
+      if (session.persons[index].result === 'correct-second') {
+        feedback.textContent = session.persons[index].accentIssue
+          ? 'Correct (2nd try, check accents)'
+          : 'Correct (2nd try)';
+      } else {
+        feedback.textContent = session.persons[index].accentIssue
+          ? 'Correct (check accents)'
+          : 'Correct';
+      }
       feedback.classList.add('correct');
     } else if (rowFeedback === 'almost') {
       feedback.textContent = 'Almost!';

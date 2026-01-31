@@ -1,0 +1,1 @@
+[x] Feature: Add an extra check if the user otherwise answers correctly, but some accent is wrong or missing. Accept the answer, but notify the user by saying Correct (check accents) in green, instead of just Correct.

@@ -11,6 +11,16 @@ export function normalizeAnswer(value: string): string {
     .trim();
 }
 
+export function normalizeAnswerWithAccents(value: string): string {
+  return value
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/['’‘`´]/g, ' ')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function isAnswerCorrect(expected: string, actual: string): boolean {
   return normalizeAnswer(expected) === normalizeAnswer(actual);
 }
@@ -20,6 +30,26 @@ export function isAnswerCorrectSpec(expected: AnswerSpec, actual: string): boole
     return expected.some((option) => isAnswerCorrect(option, actual));
   }
   return isAnswerCorrect(expected, actual);
+}
+
+export function isAnswerAccentIssue(expected: string, actual: string): boolean {
+  if (!isAnswerCorrect(expected, actual)) {
+    return false;
+  }
+  return normalizeAnswerWithAccents(expected) !== normalizeAnswerWithAccents(actual);
+}
+
+export function isAnswerAccentIssueSpec(expected: AnswerSpec, actual: string): boolean {
+  if (!isAnswerCorrectSpec(expected, actual)) {
+    return false;
+  }
+  if (Array.isArray(expected)) {
+    const normalizedActual = normalizeAnswerWithAccents(actual);
+    return !expected.some(
+      (option) => normalizeAnswerWithAccents(option) === normalizedActual
+    );
+  }
+  return isAnswerAccentIssue(expected, actual);
 }
 
 export function damerauLevenshteinDistance(a: string, b: string): number {
