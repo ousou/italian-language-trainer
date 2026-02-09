@@ -33,7 +33,7 @@
     {
       "id": "che-tipo-di",
       "src": "che tipo di?",
-      "dst": "Minkälainen?"
+      "dst": "Minkälainen? Minkä tyyppinen?"
     },
     {
       "id": "la-camera-matrimoniale",
@@ -247,7 +247,7 @@
     },
     {
       "id": "i-aria-condizionata",
-      "src": "I' aria condizionata",
+      "src": "l'aria condizionata",
       "dst": "ilmastointi"
     },
     {
@@ -282,7 +282,7 @@
     },
     {
       "id": "i-asciugacapelli",
-      "src": "I' asciugacapelli",
+      "src": "l'asciugacapelli",
       "dst": "hiustenkuivaaja"
     },
     {
