@@ -71,6 +71,11 @@
       "dst": "on ihan hirveän kylmää"
     },
     {
+      "id": "fare-freddo",
+      "src": "fare freddo",
+      "dst": "olla kylmää"
+    },
+    {
       "id": "pazzesco",
       "src": "pazzesco",
       "dst": "hirveän"
@@ -163,7 +168,7 @@
     {
       "id": "ovviamente",
       "src": "ovviamente",
-      "dst": "ja tietenkin, kuten"
+      "dst": "ja tietenkin, kuten arvata saattaa"
     },
     {
       "id": "la-renna",
@@ -186,6 +191,11 @@
       "dst": "joka"
     },
     {
+      "id": "volere-dire",
+      "src": "volere dire",
+      "dst": "tarkoittaa"
+    },
+    {
       "id": "tanti-saluti",
       "src": "tanti saluti",
       "dst": "paljon terveisiä"
@@ -202,7 +212,7 @@
     },
     {
       "id": "i-estate-scorsa",
-      "src": "I' estate scorsa",
+      "src": "l'estate scorsa",
       "dst": "viime kesänä"
     },
     {
@@ -309,6 +319,11 @@
       "id": "volere-dire",
       "src": "volere dire",
       "dst": "tarkoittaa"
+    },
+    {
+      "id": "il-consiglio",
+      "src": "il consiglio",
+      "dst": "neuvo"
     },
     {
       "id": "venuta",
