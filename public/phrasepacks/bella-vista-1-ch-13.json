@@ -226,11 +226,6 @@
       "dst": "tiedäthän"
     },
     {
-      "id": "la-passione",
-      "src": "la passione",
-      "dst": "tässä: harrastus"
-    },
-    {
       "id": "ne-sono-contenta",
       "src": "ne sono contenta",
       "dst": "olen tyytyväinen siitä"
@@ -327,7 +322,7 @@
     },
     {
       "id": "l-idea",
-      "src": "l' idea",
+      "src": "l'idea",
       "dst": "idea, ajatus"
     },
     {
