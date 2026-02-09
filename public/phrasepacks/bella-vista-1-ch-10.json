@@ -11,6 +11,11 @@
       "dst": "Tarvitsetteko muuta?"
     },
     {
+      "id": "fare-la-spesa",
+      "src": "fare la spesa",
+      "dst": "käydä ruokakaupassa"
+    },
+    {
       "id": "la-spesa",
       "src": "la spesa",
       "dst": "ostokset"
@@ -24,6 +29,11 @@
       "id": "desidera",
       "src": "Desidera?",
       "dst": "Mitä saisi olla? (kirj. Haluatte)"
+    },
+    {
+      "id": "si-ecco",
+      "src": "sì, ecco",
+      "dst": "kas niin..."
     },
     {
       "id": "del-formaggio",
@@ -43,12 +53,7 @@
     {
       "id": "quanto",
       "src": "quanto?",
-      "dst": "Paljonko?"
-    },
-    {
-      "id": "quanta",
-      "src": "quanta?",
-      "dst": "Paljonko?"
+      "dst": "Paljonko? (mask. sing.)"
     },
     {
       "id": "ne",
@@ -83,12 +88,7 @@
     {
       "id": "quanti",
       "src": "quanti?",
-      "dst": "Paljonko? Kuinka monta?"
-    },
-    {
-      "id": "quante",
-      "src": "quante?",
-      "dst": "Paljonko? Kuinka monta?"
+      "dst": "Paljonko? Kuinka monta? (mask. plur.)"
     },
     {
       "id": "purtroppo",
@@ -103,12 +103,12 @@
     {
       "id": "ne-abbiamo-poche",
       "src": "ne abbiamo poche",
-      "dst": "meillä on niitä vain"
+      "dst": "meillä on niitä vain muutamia"
     },
     {
       "id": "lultimo",
       "src": "l'ultimo",
-      "dst": "muutamia"
+      "dst": "viimeinen"
     },
     {
       "id": "te-prendo-tutte",
@@ -118,7 +118,7 @@
     {
       "id": "anzi",
       "src": "anzi",
-      "dst": "sittenkin, tarkemmin"
+      "dst": "sittenkin, tarkemmin ajatellen"
     },
     {
       "id": "la-confezione",
@@ -168,7 +168,7 @@
     {
       "id": "comunque",
       "src": "comunque",
-      "dst": "kuitenkin, joka"
+      "dst": "kuitenkin, joka tapauksessa"
     },
     {
       "id": "tanto",
@@ -199,6 +199,11 @@
       "id": "magro",
       "src": "magro",
       "dst": "vähärasvainen"
+    },
+    {
+      "id": "essere-la-dieta",
+      "src": "essere la dieta",
+      "dst": "olla dieetillä"
     },
     {
       "id": "la-dieta",
@@ -271,6 +276,11 @@
       "dst": "Mitäs sanot, jos...?"
     },
     {
+      "id": "fare-un-salto",
+      "src": "fare un salto",
+      "dst": "pistäytyä, käväistä"
+    },
+    {
       "id": "la-pasticceria",
       "src": "la pasticceria",
       "dst": "konditoria"
@@ -324,6 +334,11 @@
       "id": "su-facciamo-in-fretta",
       "src": "Su, facciamo in fretta.",
       "dst": "Hopi hopi, pidetäänpä kiirettä."
+    },
+    {
+      "id": "fare-in-fretta",
+      "src": "fare in fretta",
+      "dst": "tehdä jotakin kiireesti / nopeasti"
     },
     {
       "id": "la-fretta",
