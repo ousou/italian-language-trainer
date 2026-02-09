@@ -83,7 +83,7 @@
     {
       "id": "ti-piace",
       "src": "ti piace",
-      "dst": "pidät (\"sinulle on mieluisaa\")"
+      "dst": "pidät (yksikkö)"
     },
     {
       "id": "spesso",
@@ -92,18 +92,18 @@
     },
     {
       "id": "sportiva",
-      "src": "sportiva",
-      "dst": "säännöllisesti"
+      "src": "praticare un'attività sportiva",
+      "dst": "harrastaa jotakin urheilua"
     },
     {
       "id": "regolarmente",
       "src": "regolarmente",
-      "dst": "Mitkä?"
+      "dst": "säännöllisesti"
     },
     {
       "id": "quali",
       "src": "quali?",
-      "dst": "sinun"
+      "dst": "mitkä"
     },
     {
       "id": "i-tuoi-hobby-preferiti",
@@ -111,8 +111,8 @@
       "dst": "lempiharrastuksesi"
     },
     {
-      "id": "tuoi",
-      "src": "tuoi",
+      "id": "hobby",
+      "src": "l'hobby",
       "dst": "harrastus"
     },
     {
@@ -162,7 +162,7 @@
     },
     {
       "id": "i-indirizzo",
-      "src": "I' indirizzo",
+      "src": "l'indirizzo",
       "dst": "osoite"
     },
     {
@@ -242,7 +242,7 @@
     },
     {
       "id": "i-economia",
-      "src": "I' economia",
+      "src": "l'economia",
       "dst": "talous"
     },
     {
@@ -262,7 +262,7 @@
     },
     {
       "id": "i-argomento",
-      "src": "I' argomento",
+      "src": "l'argomento",
       "dst": "aihe"
     },
     {
@@ -288,7 +288,7 @@
     {
       "id": "mi-piace",
       "src": "mi piace",
-      "dst": "pidän"
+      "dst": "pidän (yksikkö)"
     },
     {
       "id": "percio",
@@ -308,7 +308,7 @@
     {
       "id": "mi-piacciono",
       "src": "mi piacciono",
-      "dst": "pidän (\"minulle ovat mieluisia\")"
+      "dst": "pidän (monikko)"
     },
     {
       "id": "le-attivita-culturali",
@@ -327,7 +327,7 @@
     },
     {
       "id": "i-arte",
-      "src": "I' arte",
+      "src": "l'arte",
       "dst": "taide"
     },
     {
