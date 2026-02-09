@@ -11,6 +11,16 @@
       "dst": "kuules"
     },
     {
+      "id": "l-andata-e-ritorno",
+      "src": "l'andata e ritorno",
+      "dst": "meno-paluulippu"
+    },
+    {
+      "id": "andare-a-trovere",
+      "src": "andare a trovere",
+      "dst": "mennä käymään jonkun luona"
+    },
+    {
       "id": "la-famiglia",
       "src": "la famiglia",
       "dst": "perhe"
@@ -23,7 +33,7 @@
     {
       "id": "la-madre",
       "src": "la madre",
-      "dst": "\"\" iti"
+      "dst": "äiti"
     },
     {
       "id": "la-sorella",
@@ -52,7 +62,7 @@
     },
     {
       "id": "i-onomastico",
-      "src": "I' onomastico",
+      "src": "l'onomastico",
       "dst": "nimipäivä"
     },
     {
@@ -102,7 +112,7 @@
     },
     {
       "id": "losciopero",
-      "src": "losciopero",
+      "src": "lo sciopero",
       "dst": "lakko"
     },
     {
@@ -143,7 +153,7 @@
     {
       "id": "il-posto",
       "src": "il posto",
-      "dst": "(istuma)paikka"
+      "dst": "paikka"
     },
     {
       "id": "il-finestrino",
@@ -194,6 +204,16 @@
       "id": "il-tabellone",
       "src": "il tabellone",
       "dst": "(aseman) aikataulu"
+    },
+    {
+      "id": "prima-di",
+      "src": "prima di",
+      "dst": "ennen jonkin tekemistä"
+    },
+    {
+      "id": "salire",
+      "src": "salire",
+      "dst": "nousta kyytiin"
     }
   ]
 }
