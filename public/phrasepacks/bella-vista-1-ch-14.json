@@ -67,13 +67,18 @@
     },
     {
       "id": "i-affare",
-      "src": "I' affare",
+      "src": "l'affare",
       "dst": "kauppa"
     },
     {
       "id": "il-consiglio",
       "src": "il consiglio",
       "dst": "neuvo"
+    },
+    {
+      "id": "ma-figurati",
+      "src": "Ma figurati.",
+      "dst": "No, älä nyt turhaan kiittele."
     },
     {
       "id": "girare",
@@ -172,18 +177,18 @@
     },
     {
       "id": "il-negozio-di",
-      "src": "il negozio di",
+      "src": "il negozio di abbigliamento",
       "dst": "vaatekauppa"
     },
     {
-      "id": "abbigliamento",
-      "src": "abbigliamento",
-      "dst": "vaatteet, vaatetus"
+      "id": "essere-d-aiuto",
+      "src": "essere d'aiuto",
+      "dst": "olla avuksi"
     },
     {
       "id": "i-abbigliamento",
-      "src": "I' abbigliamento",
-      "dst": "olla avuksi"
+      "src": "l'abbigliamento",
+      "dst": "vaatteet, vaatetus"
     },
     {
       "id": "la-vetrina",
@@ -292,7 +297,7 @@
     },
     {
       "id": "i-altro",
-      "src": "I' altro",
+      "src": "l'altro",
       "dst": "toinen, muu"
     },
     {
@@ -306,8 +311,13 @@
       "dst": "Hmm, oletko sitä mieltä?"
     },
     {
+      "id": "stare-a-pennello",
+      "src": "stare a pennello",
+      "dst": "sopia kuin valettu"
+    },
+    {
       "id": "piu-particolare",
-      "src": "più particolare",
+      "src": "più particolare dell'altro",
       "dst": "erikoisempi kuin se toinen"
     },
     {
