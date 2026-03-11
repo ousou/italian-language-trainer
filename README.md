@@ -13,6 +13,7 @@ Served at: https://ousou.github.io/italian-language-trainer/
 - **Zero backend**: static hosting only; data stored locally via IndexedDB.
 - **No login**: private by default; your data never leaves your device unless you export it.
 - **Offline-first**: installable PWA, fully usable on planes, metros, or abroad with spotty connections.
+- **Offline pack switching**: built-in phrase and verb packs are cached locally after first successful load so you can change packs while offline.
 - **Three study modes**: 1) Words (IT⇄FI/SE) 2) Phrasebooks by scenario (restaurant, hotel, directions, etc.) and 3) Verb conjugation drills.
 - **Smart review**: spaced-repetition scheduling (SM-2/Leitner) with gentle, human-friendly defaults.
 - **Multidevice friendly**: optional import/export files to move progress between devices.

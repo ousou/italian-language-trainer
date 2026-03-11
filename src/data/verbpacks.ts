@@ -1,4 +1,5 @@
 import type { AnswerSpec, VerbConjugationTable, VerbItem, VerbPack, VerbPerson } from '../types.ts';
+import { cachePackPayload, getCachedPackPayload } from './packCache.ts';
 
 export interface VerbPackMeta {
   id: string;
@@ -101,20 +102,35 @@ export async function fetchVerbPack(id: string): Promise<VerbPack> {
     throw new Error(`Unknown verb pack: ${id}`);
   }
 
-  const response = await fetch(meta.path);
+  try {
+    const response = await fetch(meta.path);
 
-  if (!response.ok) {
+    if (!response.ok) {
+      throw new Error(`Failed to load verb pack: ${meta.title}`);
+    }
+
+    const data = (await response.json()) as RawVerbPack;
+    cachePackPayload('verb', id, data);
+    return normalizeVerbPack(data);
+  } catch (networkError) {
+    const cached = getCachedPackPayload('verb', id) as RawVerbPack | undefined;
+    if (cached) {
+      try {
+        return normalizeVerbPack(cached);
+      } catch {
+        // Corrupt cache should not hide the original loading issue.
+      }
+    }
+
+    if (networkError instanceof Error) {
+      throw networkError;
+    }
     throw new Error(`Failed to load verb pack: ${meta.title}`);
   }
+}
 
-  const data = (await response.json()) as RawVerbPack;
-
-  try {
-    return normalizeVerbPack(data);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : `Unexpected verb pack format for ${meta.title}`;
-    throw new Error(message);
-  }
+export async function prefetchVerbPacks(): Promise<void> {
+  await Promise.allSettled(AVAILABLE_VERBPACKS.map((pack) => fetchVerbPack(pack.id)));
 }
 
 export function getVerbPackMeta(id: string): VerbPackMeta | undefined {

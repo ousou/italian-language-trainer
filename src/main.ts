@@ -1,7 +1,7 @@
 import './style.css';
 import type { AnswerSpec, DrillDirection, LanguageCode, VocabPack, VerbPack } from './types.ts';
-import { AVAILABLE_PHRASEPACKS, fetchPhrasePack } from './data/phrasepacks.ts';
-import { AVAILABLE_VERBPACKS, fetchVerbPack } from './data/verbpacks.ts';
+import { AVAILABLE_PHRASEPACKS, fetchPhrasePack, prefetchPhrasePacks } from './data/phrasepacks.ts';
+import { AVAILABLE_VERBPACKS, fetchVerbPack, prefetchVerbPacks } from './data/verbpacks.ts';
 import {
   listAllReviewCards,
   listAllReviewEvents,
@@ -2504,3 +2504,5 @@ function createSvgTitle(value: string): SVGTitleElement {
 }
 
 render();
+void prefetchPhrasePacks();
+void prefetchVerbPacks();
