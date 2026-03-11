@@ -1,4 +1,5 @@
 import type { LanguageCode, VocabItem, VocabPack } from '../types.ts';
+import { cachePackPayload, getCachedPackPayload } from './packCache.ts';
 
 export interface PhrasePackMeta {
   id: string;
@@ -166,20 +167,40 @@ export async function fetchPhrasePack(id: string): Promise<VocabPack> {
     throw new Error(`Unknown phrase pack: ${id}`);
   }
 
-  const response = await fetch(meta.path);
+  let response: Response;
+  try {
+    response = await fetch(meta.path);
+  } catch (networkError) {
+    const cached = getCachedPackPayload('phrase', id) as RawPhrasePack | undefined;
+    if (cached) {
+      try {
+        return normalizePack(cached);
+      } catch {
+        // Corrupt cache should not hide the original loading issue.
+      }
+    }
+
+    if (networkError instanceof Error) {
+      throw networkError;
+    }
+    throw new Error(`Failed to load phrase pack: ${meta.title}`);
+  }
 
   if (!response.ok) {
     throw new Error(`Failed to load phrase pack: ${meta.title}`);
   }
 
   const data = (await response.json()) as RawPhrasePack;
+  cachePackPayload('phrase', id, data);
+  return normalizePack(data);
+}
 
-  try {
-    return normalizePack(data);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : `Unexpected phrase pack format for ${meta.title}`;
-    throw new Error(message);
-  }
+export async function prefetchPhrasePacks(): Promise<void> {
+  const uncachedPackIds = AVAILABLE_PHRASEPACKS.filter(
+    (pack) => getCachedPackPayload('phrase', pack.id) === undefined
+  ).map((pack) => pack.id);
+
+  await Promise.allSettled(uncachedPackIds.map((id) => fetchPhrasePack(id)));
 }
 
 export function getPhrasePackMeta(id: string): PhrasePackMeta | undefined {
