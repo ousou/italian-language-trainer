@@ -167,16 +167,9 @@ export async function fetchPhrasePack(id: string): Promise<VocabPack> {
     throw new Error(`Unknown phrase pack: ${id}`);
   }
 
+  let response: Response;
   try {
-    const response = await fetch(meta.path);
-
-    if (!response.ok) {
-      throw new Error(`Failed to load phrase pack: ${meta.title}`);
-    }
-
-    const data = (await response.json()) as RawPhrasePack;
-    cachePackPayload('phrase', id, data);
-    return normalizePack(data);
+    response = await fetch(meta.path);
   } catch (networkError) {
     const cached = getCachedPackPayload('phrase', id) as RawPhrasePack | undefined;
     if (cached) {
@@ -192,10 +185,22 @@ export async function fetchPhrasePack(id: string): Promise<VocabPack> {
     }
     throw new Error(`Failed to load phrase pack: ${meta.title}`);
   }
+
+  if (!response.ok) {
+    throw new Error(`Failed to load phrase pack: ${meta.title}`);
+  }
+
+  const data = (await response.json()) as RawPhrasePack;
+  cachePackPayload('phrase', id, data);
+  return normalizePack(data);
 }
 
 export async function prefetchPhrasePacks(): Promise<void> {
-  await Promise.allSettled(AVAILABLE_PHRASEPACKS.map((pack) => fetchPhrasePack(pack.id)));
+  const uncachedPackIds = AVAILABLE_PHRASEPACKS.filter(
+    (pack) => getCachedPackPayload('phrase', pack.id) === undefined
+  ).map((pack) => pack.id);
+
+  await Promise.allSettled(uncachedPackIds.map((id) => fetchPhrasePack(id)));
 }
 
 export function getPhrasePackMeta(id: string): PhrasePackMeta | undefined {

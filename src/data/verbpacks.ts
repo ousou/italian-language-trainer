@@ -102,16 +102,9 @@ export async function fetchVerbPack(id: string): Promise<VerbPack> {
     throw new Error(`Unknown verb pack: ${id}`);
   }
 
+  let response: Response;
   try {
-    const response = await fetch(meta.path);
-
-    if (!response.ok) {
-      throw new Error(`Failed to load verb pack: ${meta.title}`);
-    }
-
-    const data = (await response.json()) as RawVerbPack;
-    cachePackPayload('verb', id, data);
-    return normalizeVerbPack(data);
+    response = await fetch(meta.path);
   } catch (networkError) {
     const cached = getCachedPackPayload('verb', id) as RawVerbPack | undefined;
     if (cached) {
@@ -127,10 +120,22 @@ export async function fetchVerbPack(id: string): Promise<VerbPack> {
     }
     throw new Error(`Failed to load verb pack: ${meta.title}`);
   }
+
+  if (!response.ok) {
+    throw new Error(`Failed to load verb pack: ${meta.title}`);
+  }
+
+  const data = (await response.json()) as RawVerbPack;
+  cachePackPayload('verb', id, data);
+  return normalizeVerbPack(data);
 }
 
 export async function prefetchVerbPacks(): Promise<void> {
-  await Promise.allSettled(AVAILABLE_VERBPACKS.map((pack) => fetchVerbPack(pack.id)));
+  const uncachedPackIds = AVAILABLE_VERBPACKS.filter(
+    (pack) => getCachedPackPayload('verb', pack.id) === undefined
+  ).map((pack) => pack.id);
+
+  await Promise.allSettled(uncachedPackIds.map((id) => fetchVerbPack(id)));
 }
 
 export function getVerbPackMeta(id: string): VerbPackMeta | undefined {
