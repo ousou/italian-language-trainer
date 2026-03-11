@@ -330,6 +330,7 @@ RUN_LLM_TESTS=1 pytest tests/test_integration_llm.py
 pnpm i
 pnpm dev
 pnpm build
+pnpm lint
 pnpm preview
 ```
 
@@ -365,6 +366,12 @@ No secrets needed. Optional env vars: `VITE_APP_NAME`, `VITE_DEFAULT_PAIR=it-fi`
 ---
 
 ## 🧪 Testing
+
+- Lint checks with ESLint:
+
+```bash
+pnpm lint
+```
 
 - Unit tests with Vitest:
 

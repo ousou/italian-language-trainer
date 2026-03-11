@@ -86,7 +86,7 @@ describe('parseHistoryExport', () => {
   });
 
   it('rejects invalid payloads', () => {
-    expect(() => parseHistoryExport('{\"version\":1}')).toThrowError();
+    expect(() => parseHistoryExport('{"version":1}')).toThrowError();
     expect(() => parseHistoryExport('not-json')).toThrowError();
   });
 });

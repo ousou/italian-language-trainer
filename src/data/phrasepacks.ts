@@ -180,10 +180,9 @@ export async function fetchPhrasePack(id: string): Promise<VocabPack> {
       }
     }
 
-    if (networkError instanceof Error) {
-      throw networkError;
-    }
-    throw new Error(`Failed to load phrase pack: ${meta.title}`);
+    throw new Error(`Failed to load phrase pack: ${meta.title}`, {
+      cause: networkError
+    });
   }
 
   if (!response.ok) {

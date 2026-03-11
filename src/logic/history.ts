@@ -48,7 +48,7 @@ export function parseHistoryExport(raw: string): HistorySnapshot {
   try {
     parsed = JSON.parse(raw);
   } catch (error) {
-    throw new Error('History file is not valid JSON.');
+    throw new Error('History file is not valid JSON.', { cause: error });
   }
 
   if (!isRecord(parsed) || parsed.version !== 1) {

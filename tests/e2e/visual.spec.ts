@@ -28,7 +28,7 @@ async function openVerbConjugation(page: import('@playwright/test').Page): Promi
 
   await page.locator('.answer-input').fill('essere');
   await page.getByRole('button', { name: 'Check infinitive' }).click();
-  await expect(page.locator('.verb-row input[data-verb-person=\"io\"]')).toBeEnabled();
+  await expect(page.locator('.verb-row input[data-verb-person="io"]')).toBeEnabled();
 }
 
 async function openHome(page: import('@playwright/test').Page): Promise<void> {

@@ -115,10 +115,9 @@ export async function fetchVerbPack(id: string): Promise<VerbPack> {
       }
     }
 
-    if (networkError instanceof Error) {
-      throw networkError;
-    }
-    throw new Error(`Failed to load verb pack: ${meta.title}`);
+    throw new Error(`Failed to load verb pack: ${meta.title}`, {
+      cause: networkError
+    });
   }
 
   if (!response.ok) {

@@ -71,16 +71,15 @@ export function applyReviewResult(card: ReviewCard, input: ReviewInput): ReviewC
   const incorrect = card.incorrect + (input.correct ? 0 : 1);
   const lastResult: ReviewResult = input.correct ? 'correct' : 'incorrect';
 
-  let repetitions = card.repetitions;
-  let intervalDays = card.intervalDays;
-  let streak = card.streak;
-  let lapses = card.lapses;
+  let repetitions: number;
+  let intervalDays: number;
+  let streak: number;
+  const lapses = card.lapses + (quality < 3 ? 1 : 0);
 
   if (quality < 3) {
     repetitions = 0;
     intervalDays = 1;
     streak = 0;
-    lapses += 1;
   } else {
     repetitions = card.repetitions + 1;
     intervalDays = calculateIntervalDays(repetitions, card.intervalDays, nextEf);
